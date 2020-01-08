@@ -106,7 +106,43 @@ namespace SuperLU_ASYNCOMM {
 	//onesidecomm_bc += SuperLU_timer_() - t1;
  }
 
- #endif  
+#endif
+
+#ifdef pget
+    template< typename T>
+    inline void TreeReduce_slu<T>::forwardMessageOneSide(int* RDcount, int Pc){
+	    //double t1;
+        Int new_iProc;
+        if(this->myRank_!=this->myRoot_){
+            //t1 = SuperLU_timer_();
+		    Int iProc = this->myRoot_;
+		    new_iProc = iProc%Pc;
+
+            foMPI_Accumulate(&RDcount[new_iProc], 1, MPI_INT, new_iProc, new_iProc, 1, MPI_INT,foMPI_REPLACE, rd_winl);
+	        RDcount[new_iProc] += 1;
+            //onesidecomm_bc += SuperLU_timer_() - t1;
+	}
+ }
+
+  template< typename T>
+    inline void TreeReduce_slu<T>::forwardMessageOneSideU(int* RDcount, int Pc){
+        Int new_iProc;
+	    //double t1;
+        //t1 = SuperLU_timer_();
+        if(this->myRank_!=this->myRoot_){
+            //t1 = SuperLU_timer_();
+		    Int iProc = this->myRoot_;
+		    new_iProc = iProc%Pc;
+
+            foMPI_Accumulate(&RDcount[new_iProc], 1, MPI_INT, new_iProc, new_iProc, 1, MPI_INT,foMPI_REPLACE, rd_winl);
+		    RDcount[new_iProc] += 1;
+	}
+ }
+
+#endif
+
+
+
   template< typename T> 
     inline void TreeReduce_slu<T>::forwardMessageSimple(T * locBuffer, Int msgSize){
         MPI_Status status;

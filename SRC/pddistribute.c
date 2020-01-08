@@ -322,8 +322,6 @@ dReDistribute_A(SuperMatrix *A, ScalePermstruct_t *ScalePermstruct,
 #ifdef oneside
 foMPI_Win bc_winl;
 foMPI_Win rd_winl;
-foMPI_Win bc_winl_u;
-foMPI_Win rd_winl_u;
 MPI_Comm row_comm;
 MPI_Comm col_comm;
 int* BufSize;
@@ -345,7 +343,33 @@ pddistribute(fact_t fact, int_t n, SuperMatrix *A,
 	     ScalePermstruct_t *ScalePermstruct,
 	     Glu_freeable_t *Glu_freeable, LUstruct_t *LUstruct,
 	     gridinfo_t *grid, int nrhs)
-#else        
+#elif defined (pget)
+foMPI_Win bc_winl;
+foMPI_Win rd_winl;
+foMPI_Win bc_winl_get;
+foMPI_Win rd_winl_get;
+int* bc_pget_count;
+int* rd_pget_count;
+MPI_Comm row_comm;
+MPI_Comm col_comm;
+int* BufSize;
+int* BufSize_rd;
+int *keep_validBCQindex;
+int *keep_validRDQindex;
+int *recv_size_all;
+int* BufSize_u;
+int* BufSize_urd;
+int *keep_validBCQindex_u;
+int *keep_validRDQindex_u;
+int *recv_size_all_u;
+double *x;
+double *lsum;
+float
+pddistribute(fact_t fact, int_t n, SuperMatrix *A,
+	     ScalePermstruct_t *ScalePermstruct,
+	     Glu_freeable_t *Glu_freeable, LUstruct_t *LUstruct,
+	     gridinfo_t *grid, int nrhs)
+#else
 float
 pddistribute(fact_t fact, int_t n, SuperMatrix *A,
 	     ScalePermstruct_t *ScalePermstruct,
@@ -494,7 +518,8 @@ pddistribute(fact_t fact, int_t n, SuperMatrix *A,
 	int_t  ik, il, lk, rel, knsupc, idx_r;
 	int_t  lptr1_tmp, idx_i, idx_v,m, uu, aln_i;
 	int_t nub;
-	int tag;	
+	int tag;
+
         
 #if ( PRNTlevel>=1 )
     int_t nLblocks = 0, nUblocks = 0;
@@ -517,7 +542,7 @@ pddistribute(fact_t fact, int_t n, SuperMatrix *A,
     dword = sizeof(double);
 	aln_i = ceil(CACHELINE/(double)iword);											
 //#endif
-#ifdef oneside
+#if defined (oneside) || defined (pget)
     int Pr, Pc;
     int BC_buffer_size=0; //= Pr * maxrecvsz*(nfrecvx+1) + Pr; 
     int RD_buffer_size=0; //= Pc * maxrecvsz*(nfrecvmod+1) + Pc; 
@@ -590,7 +615,8 @@ pddistribute(fact_t fact, int_t n, SuperMatrix *A,
     if ( !(oneside_buf_offset = (int*)SUPERLU_MALLOC( ( Pr+Pc) * sizeof(int))) )  
 	    ABORT("Malloc fails for oneside_buf_offset[].");	
 	memset(oneside_buf_offset, 0, (Pr+Pc) * sizeof(int));
-        
+#else
+	int nrhs;
 #endif
 
 #if ( DEBUGlevel>=1 )
@@ -1423,49 +1449,51 @@ pddistribute(fact_t fact, int_t n, SuperMatrix *A,
 				msgsize = SuperSize( jb );
 #ifdef oneside                                
 				LBtree_ptr[ljb] = BcTree_Create_oneside(grid->comm, ranks, rank_cnt, msgsize,SeedSTD_BC[ljb],'d',BufSize,Pc);  	
-#else                                
-				LBtree_ptr[ljb] = BcTree_Create(grid->comm, ranks, rank_cnt, msgsize,SeedSTD_BC[ljb],'d');  	
-                                //BcTree_GetBufSize(*BufSize);  	
+#elif defined (pget)
+                LBtree_ptr[ljb] = BcTree_Create_oneside(grid->comm, ranks, rank_cnt, msgsize,SeedSTD_BC[ljb],'d',BufSize,Pc);
+#else
+                LBtree_ptr[ljb] = BcTree_Create(grid->comm, ranks, rank_cnt, msgsize,SeedSTD_BC[ljb],'d');
+                //BcTree_GetBufSize(*BufSize);
 #endif
-                                BcTree_SetTag(LBtree_ptr[ljb],BC_L,'d');
+                BcTree_SetTag(LBtree_ptr[ljb],BC_L,'d');
 
-				// printf("iam %5d btree rank_cnt %5d \n",iam,rank_cnt);
-				// fflush(stdout);
+                // printf("iam %5d btree rank_cnt %5d \n",iam,rank_cnt);
+                // fflush(stdout);
 
-				// if(iam==15 || iam==3){
-				// printf("iam %5d btree lk %5d tag %5d root %5d\n",iam, ljb,jb,BcTree_IsRoot(LBtree_ptr[ljb],'d'));
-				// fflush(stdout);
-				// }
+                // if(iam==15 || iam==3){
+                // printf("iam %5d btree lk %5d tag %5d root %5d\n",iam, ljb,jb,BcTree_IsRoot(LBtree_ptr[ljb],'d'));
+                // fflush(stdout);
+                // }
 
-				// #if ( PRNTlevel>=1 )		
-				if(Root==myrow){
-					rank_cnt_ref=1;
-					for (j = 0; j < grid->nprow; ++j) {
-						if ( fsendx_plist[ljb][j] != EMPTY ) {	
-							++rank_cnt_ref;		
-						}
-					}
-					assert(rank_cnt==rank_cnt_ref);		
+                // #if ( PRNTlevel>=1 )
+                if(Root==myrow){
+                    rank_cnt_ref=1;
+                    for (j = 0; j < grid->nprow; ++j) {
+                        if ( fsendx_plist[ljb][j] != EMPTY ) {
+                            ++rank_cnt_ref;
+                        }
+                    }
+                    assert(rank_cnt==rank_cnt_ref);
 
-					// printf("Partial Bcast Procs: col%7d np%4d\n",jb,rank_cnt);
+                    // printf("Partial Bcast Procs: col%7d np%4d\n",jb,rank_cnt);
 
-					// // printf("Partial Bcast Procs: %4d %4d: ",iam, rank_cnt);
-					// // for(j=0;j<rank_cnt;++j)printf("%4d",ranks[j]);
-					// // printf("\n");
-				}
-				// #endif
-			}	
-		}
-		}
-	}
+                    // // printf("Partial Bcast Procs: %4d %4d: ",iam, rank_cnt);
+                    // // for(j=0;j<rank_cnt;++j)printf("%4d",ranks[j]);
+                    // // printf("\n");
+                }
+                // #endif
+            }
+        }
+        }
+    }
 
-	
-	SUPERLU_FREE(ActiveFlag);
-	SUPERLU_FREE(ActiveFlagAll);
-	SUPERLU_FREE(ranks);
-	SUPERLU_FREE(SeedSTD_BC);
-#ifdef oneside	
-    req_count = 0;
+
+        SUPERLU_FREE(ActiveFlag);
+        SUPERLU_FREE(ActiveFlagAll);
+        SUPERLU_FREE(ranks);
+        SUPERLU_FREE(SeedSTD_BC);
+#if defined (oneside) || defined (pget)
+        req_count = 0;
     BufSize[iam_col]=0;
     for (i=0; i<Pr;i++){
              for(j=0;j<i;j++){
@@ -1473,7 +1501,7 @@ pddistribute(fact_t fact, int_t n, SuperMatrix *A,
              }
              if (iam_col!=i){ 
                      MPI_Irecv(&recv_size_all[i], 1, MPI_INT, i, 0, col_comm, &col_req[req_count]);
-     	            MPI_Isend(&oneside_buf_offset[i],1, MPI_INT, i, 0, col_comm, &col_req[req_count+1]);
+     	             MPI_Isend(&oneside_buf_offset[i],1, MPI_INT, i, 0, col_comm, &col_req[req_count+1]);
                      req_count += 2;
              }
      }        
@@ -1502,151 +1530,153 @@ pddistribute(fact_t fact, int_t n, SuperMatrix *A,
 #endif
 
 #if ( PROFlevel>=1 )
-t = SuperLU_timer_() - t;
+        t = SuperLU_timer_() - t;
 if ( !iam) printf(".. Construct Bcast tree for L: %.2f\t\n", t);
-#endif			
+#endif
 
 
 #if ( PROFlevel>=1 )
-		t = SuperLU_timer_();
-#endif			
-	/* construct the Reduce tree for L ... */
-	/* the following is used as reference */
-	nlb = CEILING( nsupers, grid->nprow );/* Number of local block rows */
-	if ( !(mod_bit = intMalloc_dist(nlb)) )
-		ABORT("Malloc fails for mod_bit[].");
-	if ( !(frecv = intMalloc_dist(nlb)) )
-		ABORT("Malloc fails for frecv[].");
+        t = SuperLU_timer_();
+#endif
+        /* construct the Reduce tree for L ... */
+        /* the following is used as reference */
+        nlb = CEILING( nsupers, grid->nprow );/* Number of local block rows */
+        if ( !(mod_bit = intMalloc_dist(nlb)) )
+        ABORT("Malloc fails for mod_bit[].");
+        if ( !(frecv = intMalloc_dist(nlb)) )
+        ABORT("Malloc fails for frecv[].");
 
-	for (k = 0; k < nlb; ++k) mod_bit[k] = 0;
-	for (k = 0; k < nsupers; ++k) {
-		pr = PROW( k, grid );
-		if ( myrow == pr ) {
-			lib = LBi( k, grid );    /* local block number */
-			kcol = PCOL( k, grid );
-			if (mycol == kcol || fmod[lib] )
-				mod_bit[lib] = 1;  /* contribution from off-diagonal and diagonal*/
-		}
-	}
-	/* Every process receives the count, but it is only useful on the
-	   diagonal processes.  */
-	MPI_Allreduce( mod_bit, frecv, nlb, mpi_int_t, MPI_SUM, grid->rscp.comm);
-
-
-
-	k = CEILING( nsupers, grid->nprow );/* Number of local block rows */
-	if ( !(LRtree_ptr = (RdTree*)SUPERLU_MALLOC(k * sizeof(RdTree))) )
-		ABORT("Malloc fails for LRtree_ptr[].");
-	if ( !(ActiveFlag = intCalloc_dist(grid->npcol*2)) )
-		ABORT("Calloc fails for ActiveFlag[].");	
-	if ( !(ranks = (int*)SUPERLU_MALLOC(grid->npcol * sizeof(int))) )
-		ABORT("Malloc fails for ranks[].");	
-
-	// if ( !(idxs = intCalloc_dist(nsupers)) )
-		// ABORT("Calloc fails for idxs[].");	
-
-	// if ( !(nzrows = (int_t**)SUPERLU_MALLOC(nsupers * sizeof(int_t*))) )
-		// ABORT("Malloc fails for nzrows[].");
-
-	if ( !(SeedSTD_RD = (double*)SUPERLU_MALLOC(k * sizeof(double))) )
-		ABORT("Malloc fails for SeedSTD_RD[].");	
-
-	for (i=0;i<k;i++){
-		SeedSTD_RD[i]=rand();		
-	}
-
-	MPI_Allreduce(MPI_IN_PLACE,&SeedSTD_RD[0],k,MPI_DOUBLE,MPI_MAX,grid->rscp.comm);					  
+        for (k = 0; k < nlb; ++k) mod_bit[k] = 0;
+        for (k = 0; k < nsupers; ++k) {
+            pr = PROW( k, grid );
+            if ( myrow == pr ) {
+                lib = LBi( k, grid );    /* local block number */
+                kcol = PCOL( k, grid );
+                if (mycol == kcol || fmod[lib] )
+                    mod_bit[lib] = 1;  /* contribution from off-diagonal and diagonal*/
+            }
+        }
+        /* Every process receives the count, but it is only useful on the
+           diagonal processes.  */
+        MPI_Allreduce( mod_bit, frecv, nlb, mpi_int_t, MPI_SUM, grid->rscp.comm);
 
 
-	// for (jb = 0; jb < nsupers; ++jb) { /* for each block column ... */
-		// fsupc = FstBlockC( jb );
-		// len=xlsub[fsupc+1]-xlsub[fsupc];
-		// idxs[jb] = len-1;
-		// if(len>0){
-			// if ( !(nzrows[jb] = intMalloc_dist(len)) )
-				// ABORT("Malloc fails for nzrows[jb]");
-			// for(i=xlsub[fsupc];i<xlsub[fsupc+1];++i){
-				// irow = lsub[i];
-				// nzrows[jb][i-xlsub[fsupc]]=irow;
-			// }
-			// quickSort(nzrows[jb],0,len-1,0);
-		// }
-		// else{
-			// nzrows[jb] = NULL;
-		// }
-	// }
+
+        k = CEILING( nsupers, grid->nprow );/* Number of local block rows */
+        if ( !(LRtree_ptr = (RdTree*)SUPERLU_MALLOC(k * sizeof(RdTree))) )
+        ABORT("Malloc fails for LRtree_ptr[].");
+        if ( !(ActiveFlag = intCalloc_dist(grid->npcol*2)) )
+        ABORT("Calloc fails for ActiveFlag[].");
+        if ( !(ranks = (int*)SUPERLU_MALLOC(grid->npcol * sizeof(int))) )
+        ABORT("Malloc fails for ranks[].");
+
+        // if ( !(idxs = intCalloc_dist(nsupers)) )
+        // ABORT("Calloc fails for idxs[].");
+
+        // if ( !(nzrows = (int_t**)SUPERLU_MALLOC(nsupers * sizeof(int_t*))) )
+        // ABORT("Malloc fails for nzrows[].");
+
+        if ( !(SeedSTD_RD = (double*)SUPERLU_MALLOC(k * sizeof(double))) )
+        ABORT("Malloc fails for SeedSTD_RD[].");
+
+        for (i=0;i<k;i++){
+            SeedSTD_RD[i]=rand();
+        }
+
+        MPI_Allreduce(MPI_IN_PLACE,&SeedSTD_RD[0],k,MPI_DOUBLE,MPI_MAX,grid->rscp.comm);
 
 
-	for (lib = 0; lib <k ; ++lib) {
-		LRtree_ptr[lib]=NULL;
-	}
+        // for (jb = 0; jb < nsupers; ++jb) { /* for each block column ... */
+        // fsupc = FstBlockC( jb );
+        // len=xlsub[fsupc+1]-xlsub[fsupc];
+        // idxs[jb] = len-1;
+        // if(len>0){
+        // if ( !(nzrows[jb] = intMalloc_dist(len)) )
+        // ABORT("Malloc fails for nzrows[jb]");
+        // for(i=xlsub[fsupc];i<xlsub[fsupc+1];++i){
+        // irow = lsub[i];
+        // nzrows[jb][i-xlsub[fsupc]]=irow;
+        // }
+        // quickSort(nzrows[jb],0,len-1,0);
+        // }
+        // else{
+        // nzrows[jb] = NULL;
+        // }
+        // }
 
-	
-	if ( !(ActiveFlagAll = intMalloc_dist(grid->npcol*k)) )
-		ABORT("Calloc fails for ActiveFlagAll[].");				
-	for (j=0;j<grid->npcol*k;++j)ActiveFlagAll[j]=-3*nsupers;	
-				
-	for (jb = 0; jb < nsupers; ++jb) { /* for each block column ... */
-		fsupc = FstBlockC( jb );
-		pc = PCOL( jb, grid );
-		for(i=xlsub[fsupc];i<xlsub[fsupc+1];++i){
-			irow = lsub[i];
-			ib = BlockNum( irow );
-			pr = PROW( ib, grid );
-			if ( myrow == pr ) { /* Block row ib in my process row */
-				lib = LBi( ib, grid ); /* Local block number */
-				ActiveFlagAll[pc+lib*grid->npcol]=MAX(ActiveFlagAll[pc+lib*grid->npcol],jb);
-			}
-		}
-	}
 
-	
-	for (lib=0;lib<k;++lib){
-		ib = myrow+lib*grid->nprow;  /* not sure */
-		if(ib<nsupers){
-			pr = PROW( ib, grid );
-			for (j=0;j<grid->npcol;++j)ActiveFlag[j]=ActiveFlagAll[j+lib*grid->npcol];;
-			for (j=0;j<grid->npcol;++j)ActiveFlag[j+grid->npcol]=j;
-			for (j=0;j<grid->npcol;++j)ranks[j]=-1;
-			Root=-1; 
-			Iactive = 0;				
+        for (lib = 0; lib <k ; ++lib) {
+            LRtree_ptr[lib]=NULL;
+        }
 
-			for (j=0;j<grid->npcol;++j){
-				if(ActiveFlag[j]!=-3*nsupers){
-				jb = ActiveFlag[j];
-				pc = PCOL( jb, grid );
-				if(jb==ib)Root=pc;
-				if(mycol==pc)Iactive=1;		
-				}					
-			}
-		
-		
-			quickSortM(ActiveFlag,0,grid->npcol-1,grid->npcol,1,2);
 
-			if(Iactive==1){
-				assert( Root>-1 );
-				rank_cnt = 1;
-				ranks[0]=Root;
-				for (j = 0; j < grid->npcol; ++j){
-					if(ActiveFlag[j]!=-3*nsupers && ActiveFlag[j+grid->npcol]!=Root){
-						ranks[rank_cnt]=ActiveFlag[j+grid->npcol];
-						++rank_cnt;
-					}
-				}
-				if(rank_cnt>1){
+        if ( !(ActiveFlagAll = intMalloc_dist(grid->npcol*k)) )
+        ABORT("Calloc fails for ActiveFlagAll[].");
+        for (j=0;j<grid->npcol*k;++j)ActiveFlagAll[j]=-3*nsupers;
 
-					for (ii=0;ii<rank_cnt;ii++)   // use global ranks rather than local ranks
-						ranks[ii] = PNUM( pr, ranks[ii], grid );		
+        for (jb = 0; jb < nsupers; ++jb) { /* for each block column ... */
+            fsupc = FstBlockC( jb );
+            pc = PCOL( jb, grid );
+            for(i=xlsub[fsupc];i<xlsub[fsupc+1];++i){
+                irow = lsub[i];
+                ib = BlockNum( irow );
+                pr = PROW( ib, grid );
+                if ( myrow == pr ) { /* Block row ib in my process row */
+                    lib = LBi( ib, grid ); /* Local block number */
+                    ActiveFlagAll[pc+lib*grid->npcol]=MAX(ActiveFlagAll[pc+lib*grid->npcol],jb);
+                }
+            }
+        }
 
-					// rseed=rand();
-					// rseed=1.0;
-					msgsize = SuperSize( ib );
 
-					// if(ib==0){
+        for (lib=0;lib<k;++lib){
+            ib = myrow+lib*grid->nprow;  /* not sure */
+            if(ib<nsupers){
+                pr = PROW( ib, grid );
+                for (j=0;j<grid->npcol;++j)ActiveFlag[j]=ActiveFlagAll[j+lib*grid->npcol];;
+                for (j=0;j<grid->npcol;++j)ActiveFlag[j+grid->npcol]=j;
+                for (j=0;j<grid->npcol;++j)ranks[j]=-1;
+                Root=-1;
+                Iactive = 0;
+
+                for (j=0;j<grid->npcol;++j){
+                    if(ActiveFlag[j]!=-3*nsupers){
+                        jb = ActiveFlag[j];
+                        pc = PCOL( jb, grid );
+                        if(jb==ib)Root=pc;
+                        if(mycol==pc)Iactive=1;
+                    }
+                }
+
+
+                quickSortM(ActiveFlag,0,grid->npcol-1,grid->npcol,1,2);
+
+                if(Iactive==1){
+                    assert( Root>-1 );
+                    rank_cnt = 1;
+                    ranks[0]=Root;
+                    for (j = 0; j < grid->npcol; ++j){
+                        if(ActiveFlag[j]!=-3*nsupers && ActiveFlag[j+grid->npcol]!=Root){
+                            ranks[rank_cnt]=ActiveFlag[j+grid->npcol];
+                            ++rank_cnt;
+                        }
+                    }
+                    if(rank_cnt>1){
+
+                        for (ii=0;ii<rank_cnt;ii++)   // use global ranks rather than local ranks
+                            ranks[ii] = PNUM( pr, ranks[ii], grid );
+
+                        // rseed=rand();
+                        // rseed=1.0;
+                        msgsize = SuperSize( ib );
+
+                        // if(ib==0){
 #ifdef oneside
-                                        LRtree_ptr[lib] = RdTree_Create_oneside(grid->comm, ranks, rank_cnt, msgsize,SeedSTD_RD[lib],'d',BufSize_rd,Pc);  	
-#else     
-                                        LRtree_ptr[lib] = RdTree_Create(grid->comm, ranks, rank_cnt, msgsize,SeedSTD_RD[lib],'d');  	
+                        LRtree_ptr[lib] = RdTree_Create_oneside(grid->comm, ranks, rank_cnt, msgsize,SeedSTD_RD[lib],'d',BufSize_rd,Pc);
+#elif defined (pget)
+                    LRtree_ptr[lib] = RdTree_Create_oneside(grid->comm, ranks, rank_cnt, msgsize,SeedSTD_RD[lib],'d',BufSize_rd,Pc);
+#else
+                    LRtree_ptr[lib] = RdTree_Create(grid->comm, ranks, rank_cnt, msgsize,SeedSTD_RD[lib],'d');
 #endif					
                                         RdTree_SetTag(LRtree_ptr[lib], RD_L,'d');
 					// }
@@ -1689,7 +1719,7 @@ if ( !iam) printf(".. Construct Bcast tree for L: %.2f\t\n", t);
 		// if(nzrows[i])SUPERLU_FREE(nzrows[i]);
 	// }
 	// SUPERLU_FREE(nzrows);
-#ifdef oneside     
+#if defined (oneside) || defined (pget)
     req_count = 0;
     BufSize_rd[iam_row]=0;
     for (i=0; i<Pc;i++){
@@ -1827,8 +1857,8 @@ if ( !iam) printf(".. Construct Reduce tree for L: %.2f\t\n", t);
 				// rseed=rand();
 				// rseed=1.0;
 				msgsize = SuperSize( jb );
-#ifdef oneside				
-                UBtree_ptr[ljb] = BcTree_Create_oneside(grid->comm, ranks, rank_cnt, msgsize,SeedSTD_BC[ljb],'d',BufSize_u, Pc);  	
+#if defined (oneside) || defined (pget)
+                UBtree_ptr[ljb] = BcTree_Create_oneside(grid->comm, ranks, rank_cnt, msgsize,SeedSTD_BC[ljb],'d',BufSize_u, Pc);
 #else                
                 UBtree_ptr[ljb] = BcTree_Create(grid->comm, ranks, rank_cnt, msgsize,SeedSTD_BC[ljb],'d');  	
 #endif				
@@ -1859,7 +1889,7 @@ if ( !iam) printf(".. Construct Reduce tree for L: %.2f\t\n", t);
 	SUPERLU_FREE(ranks);				
 	SUPERLU_FREE(SeedSTD_BC);				
 		
-#ifdef oneside	
+#if defined (oneside) || defined (pget)
     req_count = 0;
 	memset(oneside_buf_offset, 0, (Pr+Pc) * sizeof(int));
     BufSize_u[iam_col]=0;
@@ -2058,8 +2088,8 @@ if ( !iam) printf(".. Construct Bcast tree for U: %.2f\t\n", t);
 					msgsize = SuperSize( ib );
 
 					// if(ib==0){
-#ifdef oneside
-					URtree_ptr[lib] = RdTree_Create_oneside(grid->comm, ranks, rank_cnt, msgsize,SeedSTD_RD[lib],'d',BufSize_urd, Pc);  	
+#if defined (oneside) || defined (pget)
+					URtree_ptr[lib] = RdTree_Create_oneside(grid->comm, ranks, rank_cnt, msgsize,SeedSTD_RD[lib],'d',BufSize_urd, Pc);
 #else					
                     URtree_ptr[lib] = RdTree_Create(grid->comm, ranks, rank_cnt, msgsize,SeedSTD_RD[lib],'d');  	
 #endif					
@@ -2094,7 +2124,7 @@ if ( !iam) printf(".. Construct Bcast tree for U: %.2f\t\n", t);
 		// if(nzrows[i])SUPERLU_FREE(nzrows[i]);
 	// }
 	// SUPERLU_FREE(nzrows);				
-#ifdef oneside     
+#if defined (oneside) || defined (pget)
     req_count = 0;
     BufSize_urd[iam_row]=0;
     for (i=0; i<Pc;i++){
@@ -2246,7 +2276,64 @@ if ( !iam) printf(".. Construct Reduce tree for U: %.2f\t\n", t);
     //}
 	//foMPI_Win_create(RD_taskq_u, (RD_buffer_size)*sizeof(double), sizeof(double), MPI_INFO_NULL, row_comm, &rd_winl_u);
     
-#endif
+#elif defined (pget)
+    int maxrecvsz = sp_ienv_dist(3)* nrhs + SUPERLU_MAX( XK_H, LSUM_H );
+    // RDMA buffer for signals ()
+    bc_pget_count = (int*)SUPERLU_MALLOC( Pr * sizeof(int));
+    rd_pget_count = (int*)SUPERLU_MALLOC( Pc * sizeof(int));
+    foMPI_Win_create(bc_pget_count, (Pr)*sizeof(int), sizeof(int), MPI_INFO_NULL, col_comm, &bc_winl);
+    foMPI_Win_create(rd_pget_count, (Pc)*sizeof(int), sizeof(int), MPI_INFO_NULL, row_comm, &rd_winl);
+    // RDMA buffer for x (broadcast) and lsum (row reduction)
+
+//    double *lsum_rdma;
+//    double *x_rdma;
+//
+//    if ( !(lsum_rdma = (double*)SUPERLU_MALLOC( maxrecvsz* sizeof(double))))
+//        ABORT("Malloc fails for lsum_rdma[].");
+//
+//    if ( !(x = (double*)SUPERLU_MALLOC((maxrecvsz) * sizeof(double))) )
+//        ABORT("Calloc fails for x_rdma[].");
+//    foMPI_Win_create(x, ((maxrecvsz))*sizeof(double), sizeof(double), MPI_INFO_NULL, col_comm, &bc_winl_get);
+//    foMPI_Win_create(lsum, (maxrecvsz)*sizeof(double), sizeof(double), MPI_INFO_NULL, row_comm, &rd_winl_get);
+
+    int ldalsum = Llu->ldalsum;
+    nlb = CEILING( nsupers, Pr );
+
+    int_t sizelsum,sizertemp,aln_d;
+    int num_thread = 1;
+
+    aln_d = ceil(CACHELINE/(double)dword);
+    sizelsum = (((size_t)ldalsum)*nrhs + nlb*LSUM_H);
+    sizelsum = ((sizelsum + (aln_d - 1)) / aln_d) * aln_d;
+    int thread_id=0;
+    #ifdef _OPENMP
+    #pragma omp parallel default(shared)
+        {
+        	if (omp_get_thread_num () == 0) {
+        		num_thread = omp_get_num_threads();
+        	}
+    		thread_id = omp_get_thread_num();
+        }
+    #endif
+
+    if( grid->iam==0 ) {
+	    printf("In distribute, num_thread: %5d\n", num_thread);
+	    fflush(stdout);
+    }
+    
+    printf("In distribute, size of x=%d, size of lsum=%d\n",ldalsum * nrhs + nlb * XK_H,sizelsum*num_thread);
+    fflush(stdout);
+
+    if ( !(lsum = (double*)SUPERLU_MALLOC(sizelsum*num_thread * sizeof(double))))
+        ABORT("Malloc fails for lsum[].");
+    
+
+    if ( !(x = (double*)SUPERLU_MALLOC((ldalsum * nrhs + nlb * XK_H) * sizeof(double))) )
+        ABORT("Calloc fails for x[].");
+    foMPI_Win_create(x, ((ldalsum * nrhs + nlb * XK_H))*sizeof(double), sizeof(double), MPI_INFO_NULL, col_comm, &bc_winl_get);
+    foMPI_Win_create(lsum, (sizelsum*num_thread)*sizeof(double), sizeof(double), MPI_INFO_NULL, row_comm, &rd_winl_get);
+
+#endif // pget/oneside
 
 #if ( DEBUGlevel>=1 )
     /* Memory allocated but not freed:

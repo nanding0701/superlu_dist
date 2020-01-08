@@ -235,6 +235,38 @@ namespace SuperLU_ASYNCOMM {
 	    //onesidecomm_bc += SuperLU_timer_() - t1;
     }
 #endif
+
+#ifdef pget
+    // int MPI_Accumulate(const void *origin_addr, int origin_count, MPI_Datatype origin_datatype,
+ //                    int target_rank, MPI_Aint target_disp, int target_count,
+ //                    MPI_Datatype  target_datatype, MPI_Op op, MPI_Win win)
+  template< typename T>
+    inline void TreeBcast_slu<T>::forwardMessageOneSide(int* BCcount, int Pc){
+	    //double t1;
+        Int new_iProc;
+        //Int new_msgSize = msgSize +1;
+        for( Int idxRecv = 0; idxRecv < this->myDests_.size(); ++idxRecv ){
+                Int iProc = this->myDests_[idxRecv];
+                //t1 = SuperLU_timer_();
+		        new_iProc = iProc/Pc;
+                foMPI_Accumulate(&BCcount[new_iProc], 1, MPI_INT, new_iProc, new_iProc, 1, MPI_INT,foMPI_REPLACE, bc_winl);
+                BCcount[new_iProc] += 1;
+	            //onesidecomm_bc += SuperLU_timer_() - t1;
+	    } // for (iProc)
+    }
+
+  template< typename T>
+    inline void TreeBcast_slu<T>::forwardMessageOneSideU(int* BCcount, int Pc){
+        long BCsendoffset=0;
+        Int new_iProc;
+        for( Int idxRecv = 0; idxRecv < this->myDests_.size(); ++idxRecv ){
+                Int iProc = this->myDests_[idxRecv];
+		        new_iProc = iProc/Pc;
+                foMPI_Accumulate(&BCcount[new_iProc], 1, MPI_INT, new_iProc, new_iProc, 1, MPI_INT,foMPI_REPLACE, bc_winl);
+                BCcount[new_iProc] += 1;
+	    } // for (iProc)
+    }
+#endif
   template< typename T> 
     inline void TreeBcast_slu<T>::forwardMessageSimple(T * locBuffer, Int msgSize){
         MPI_Status status;

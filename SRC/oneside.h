@@ -16,7 +16,12 @@ extern int *keep_validRDQindex_u;
 extern double onesidecomm_bc;
 extern int *recv_size_all;
 extern int *recv_size_all_u;
-extern double* BC_taskq;
-extern double* RD_taskq;
-extern int num_refine;
-//extern double *onesidedgemm;
+#ifdef pget
+extern foMPI_Win bc_winl_get;
+extern foMPI_Win rd_winl_get;
+extern int* bc_pget_count;
+extern int* rd_pget_count;
+extern double *lsum;
+extern double *x;
+#endif
+

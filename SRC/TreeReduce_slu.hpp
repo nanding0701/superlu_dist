@@ -4,7 +4,7 @@
 // #include "asyncomm.hpp"
 // #include "timer.h"
 #include "TreeBcast_slu.hpp"
-#ifdef oneside
+#if defined (oneside) || defined (pget)
 #include "oneside.h"
 #endif
 
@@ -45,10 +45,13 @@ namespace SuperLU_ASYNCOMM{
         virtual T * GetLocalBuffer();
 
 #ifdef oneside
-	virtual void forwardMessageOneSide(T * locBuffer, Int msgSize, int* iam_row, int* RDcount, long* RDbase, int* maxrecvsz, int Pc);
-	virtual void forwardMessageOneSideU(T * locBuffer, Int msgSize, int* iam_row, int* RDcount, long* RDbase, int* maxrecvsz, int Pc);
+	    virtual void forwardMessageOneSide(T * locBuffer, Int msgSize, int* iam_row, int* RDcount, long* RDbase, int* maxrecvsz, int Pc);
+	    virtual void forwardMessageOneSideU(T * locBuffer, Int msgSize, int* iam_row, int* RDcount, long* RDbase, int* maxrecvsz, int Pc);
+#elif defined (pget)
+	    virtual void forwardMessageOneSide(int* RDcount, int Pc);
+	    virtual void forwardMessageOneSideU(int* RDcount, int Pc);
 #endif
-            virtual void forwardMessageSimple(T * locBuffer, Int msgSize);
+	    virtual void forwardMessageSimple(T * locBuffer, Int msgSize);
 		virtual void allocateRequest();	
 		virtual void waitSendRequest();
     };

@@ -915,7 +915,6 @@ pzgstrs(int_t n, LUstruct_t *LUstruct,
 	
 #if ( DEBUGlevel>=1 )
     CHECK_MALLOC(iam, "Enter pzgstrs()");
-    num_refine += 1;
 #endif
 
     stat->ops[SOLVE] = 0.0;
@@ -2536,10 +2535,6 @@ for (i=0;i<nroot_send;i++){
 		 * Compute the internal nodes asychronously by all processes.
 		 */
 #ifdef oneside
-#if ( DEBUGlevel>=1 )
-    printf("iam=%d, U num_refine=%d,Leaf nodes solved,nbrecvx=%d,nbrecvmod=%d,totalsolveBC=%d,totalsolveRD=%d\n",iam,num_refine,nfrecvx,nfrecvmod,totalsolveBC,totalsolveRD);
-    fflush(stdout);
-#endif
 recvRankNum=-1;
 shift=0;
 while(nbrecv1< nbrecvx+nbrecvmod){

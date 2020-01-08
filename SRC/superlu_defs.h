@@ -30,9 +30,11 @@ at the top-level directory.
  * File name:	superlu_defs.h
  * Purpose:     Definitions which are precision-neutral
  */
-#ifdef oneside
+#if defined (oneside) || defined (pget)
 #include "oneside.h"
 #endif
+
+
 #ifdef _CRAY
     #include <fortran.h>
 #endif
@@ -177,6 +179,9 @@ at the top-level directory.
 #ifdef oneside
 #define XK_H     3 /* The header preceding each X block. */
 #define LSUM_H   3  /* The header preceding each MOD block. */
+#elif defined (pget)
+#define XK_H     2 /* The header preceding each X block. */
+#define LSUM_H   2  /* The header preceding each MOD block. */
 #else
 #define XK_H     2  /* The header preceding each X block. */
 #define LSUM_H   2  /* The header preceding each MOD block. */
@@ -831,7 +836,6 @@ typedef void* StdList;
 
 // typedef enum {NO, YES}  yes_no_t;
 extern RdTree   RdTree_Create(MPI_Comm comm, int* ranks, int rank_cnt, int msgSize, double rseed, char precision);  
-extern RdTree   RdTree_Create_oneside(MPI_Comm comm, int* ranks, int rank_cnt, int msgSize, double rseed, char precision, int* BufSize, int Pc);  
 extern void   	RdTree_Destroy(RdTree Tree, char precision);
 extern void 	RdTree_SetTag(RdTree Tree, int tag, char precision);
 extern yes_no_t RdTree_IsRoot(RdTree Tree, char precision);
@@ -840,15 +844,21 @@ extern int  	RdTree_GetDestCount(RdTree Tree, char precision);
 extern int  	RdTree_GetMsgSize(RdTree Tree, char precision);
 extern void 	RdTree_waitSendRequest(RdTree Tree, char precision);
 
-extern BcTree   BcTree_Create_oneside(MPI_Comm comm, int* ranks, int rank_cnt, int msgSize, double rseed, char precision, int* BufSize, int Pc);  
-extern BcTree   BcTree_Create(MPI_Comm comm, int* ranks, int rank_cnt, int msgSize, double rseed, char precision);  
+extern BcTree   BcTree_Create(MPI_Comm comm, int* ranks, int rank_cnt, int msgSize, double rseed, char precision);
 extern void   	BcTree_Destroy(BcTree Tree, char precision);
 extern void 	BcTree_SetTag(BcTree Tree, int tag, char precision);
 extern yes_no_t BcTree_IsRoot(BcTree Tree, char precision);
 #ifdef oneside
+extern RdTree   RdTree_Create_oneside(MPI_Comm comm, int* ranks, int rank_cnt, int msgSize, double rseed, char precision, int* BufSize, int Pc);
+extern BcTree   BcTree_Create_oneside(MPI_Comm comm, int* ranks, int rank_cnt, int msgSize, double rseed, char precision, int* BufSize, int Pc);
 unsigned long long calcul_hash(const void* buffer, size_t length);
 extern void 	BcTree_forwardMessageOneSide(BcTree Tree, double* localBuffer, int msgSize, char precision, int* BClocal_buf_id, int* BCcount, long* BCbase, int* maxrecvsz, int Pc );
 extern void 	RdTree_forwardMessageOneSide(RdTree Tree, double* localBuffer, int msgSize, char precision, int* RDlocal_buf_id, int* RDcount, long* RDbase, int* maxrecvsz, int Pc);
+#elif defined (pget)
+extern RdTree   RdTree_Create_oneside(MPI_Comm comm, int* ranks, int rank_cnt, int msgSize, double rseed, char precision, int* BufSize, int Pc);
+extern BcTree   BcTree_Create_oneside(MPI_Comm comm, int* ranks, int rank_cnt, int msgSize, double rseed, char precision, int* BufSize, int Pc);
+extern void 	BcTree_forwardMessageOneSide(BcTree Tree, char precision,int* BCcount, int Pc);
+extern void 	RdTree_forwardMessageOneSide(RdTree Tree, char precision,int* RDcount, int Pc);
 #endif
 extern void 	BcTree_forwardMessageSimple(BcTree Tree, void* localBuffer, int msgSize, char precision);
 extern void 	RdTree_forwardMessageSimple(RdTree Tree, void* localBuffer, int msgSize, char precision);

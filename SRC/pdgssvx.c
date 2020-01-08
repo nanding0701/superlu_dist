@@ -1133,7 +1133,7 @@ pdgssvx(superlu_dist_options_t *options, SuperMatrix *A,
 	       NOTE: the row permutation Pc*Pr is applied internally in the
   	       distribution routine. */
 	    t = SuperLU_timer_();
-#ifdef oneside        
+#if defined (oneside) || defined (pget)
 	    dist_mem_use = pddistribute(Fact, n, A, ScalePermstruct,
                                       Glu_freeable, LUstruct, grid, nrhs);
 #else	    
@@ -1410,7 +1410,7 @@ pdgssvx(superlu_dist_options_t *options, SuperMatrix *A,
     // {  	
 	// #pragma omp master
 	// {
-	pdgstrs(n, LUstruct, ScalePermstruct, grid, X, m_loc, 
+	pdgstrs(n, LUstruct, ScalePermstruct, grid, X, m_loc,
 		fst_row, ldb, nrhs, SOLVEstruct, stat, info);
 	// }
 	// }
