@@ -255,10 +255,10 @@ namespace SuperLU_ASYNCOMM {
 		        BCsendoffset = BCbase[new_iProc] + BCcount[new_iProc]*(RDMA_FLAG_SIZE);
 		        //printf("In BC Accumulate (%d->%d), flag is put into %d, bc_rdma_start=%d,%d,%d\n",myrank,iProc,BCsendoffset,bc_rdma_start[0],bc_rdma_start[1],bc_rdma_start[2]);
 		        //fflush(stdout);
-		        //foMPI_Win_lock(foMPI_LOCK_EXCLUSIVE,new_iProc,0,bc_winl_get);
+		        foMPI_Win_lock(foMPI_LOCK_SHARED,new_iProc,0,bc_winl);
                 foMPI_Accumulate(bc_rdma_start, RDMA_FLAG_SIZE, MPI_INT, new_iProc, BCsendoffset, RDMA_FLAG_SIZE, MPI_INT,foMPI_REPLACE, bc_winl);
-		        foMPI_Win_flush_local(new_iProc,bc_winl);
-                //foMPI_Win_unlock(new_iProc,bc_winl_get);
+		        //foMPI_Win_flush_local(new_iProc,bc_winl);
+                foMPI_Win_unlock(new_iProc,bc_winl);
 		        //printf("In BC Accumulate END (%d->%d), flag is put into %d\n",myrank,iProc,BCsendoffset);
 		        //fflush(stdout);
 		        BCcount[new_iProc] += 1;
