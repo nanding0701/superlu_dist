@@ -1492,10 +1492,10 @@ pddistribute(fact_t fact, int_t n, SuperMatrix *A,
     BufSize[iam_col]=0;
 
 ////BufSize[i]: I will receive how many messages from rank i
-    for (i=0; i<Pr;i++){
-        printf("iam=%d, iam_col=%d, BufSize[%d]=%d\n",iam, iam_col,i,BufSize[i]);
-        fflush(stdout);
-    }
+//    for (i=0; i<Pr;i++){
+//        printf("iam=%d, iam_col=%d, BufSize[%d]=%d\n",iam, iam_col,i,BufSize[i]);
+//        fflush(stdout);
+//    }
 
 
     for (i=0; i<Pr;i++){
@@ -2345,8 +2345,8 @@ if ( !iam) printf(".. Construct Reduce tree for U: %.2f\t\n", t);
 	//    fflush(stdout);
     //}
     
-    printf("In distribute, iam=%d,size of x=%d, size of lsum=%d\n",iam,ldalsum * nrhs + nlb * XK_H,sizelsum*num_thread);
-    fflush(stdout);
+    //printf("In distribute, iam=%d,size of x=%d, size of lsum=%d\n",iam,ldalsum * nrhs + nlb * XK_H,sizelsum*num_thread);
+    //fflush(stdout);
 
     if ( !(lsum = (double*)SUPERLU_MALLOC(sizelsum*num_thread * sizeof(double))))
         ABORT("Malloc fails for lsum[].");
@@ -2378,8 +2378,8 @@ if ( !iam) printf(".. Construct Reduce tree for U: %.2f\t\n", t);
     //printf("In distribute, total RDMA size (delta compared to v6) = %d\n",2*maxrecvsz+RDMA_FLAG_SIZE * (nfrecvx>nbrecvx?nfrecvx:nbrecvx) + RDMA_FLAG_SIZE * (nfrecvmod>nbrecvmod?nfrecvmod:nbrecvmod));
     //fflush(stdout);
 
-    printf("In distribute (%d), mysendmsg_num=%d,mysendmsg_num_rd=%d,mysendmsg_num_u=%d,mysendmsg_num_urd=%d\n",iam,mysendmsg_num, mysendmsg_num_rd, mysendmsg_num_u, mysendmsg_num_urd);
-    fflush(stdout);
+    //printf("In distribute (%d), mysendmsg_num=%d,mysendmsg_num_rd=%d,mysendmsg_num_u=%d,mysendmsg_num_urd=%d\n",iam,mysendmsg_num, mysendmsg_num_rd, mysendmsg_num_u, mysendmsg_num_urd);
+    //fflush(stdout);
 
 #endif // pget/oneside
 

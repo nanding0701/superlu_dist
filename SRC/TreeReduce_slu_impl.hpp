@@ -114,13 +114,19 @@ namespace SuperLU_ASYNCOMM {
 	    //double t1;
         Int new_iProc;
         int RDsendoffset;
+        int myrank;
+        MPI_Comm_rank(MPI_COMM_WORLD,&myrank);
         if(this->myRank_!=this->myRoot_){
             //t1 = SuperLU_timer_();
 		    Int iProc = this->myRoot_;
 		    new_iProc = iProc%Pc;
             RDsendoffset = RDbase[new_iProc] + RDcount[new_iProc]*(RDMA_FLAG_SIZE);
+            //printf("In RD Accumulate (%d->%d), flag is put into %d, rd_rdma_start=%d,%d,%d\n",myrank,new_iProc,RDsendoffset,rd_rdma_start[0],rd_rdma_start[1],rd_rdma_start[2]);
+            //fflush(stdout);
             foMPI_Accumulate(rd_rdma_start, RDMA_FLAG_SIZE, MPI_INT, new_iProc, RDsendoffset, RDMA_FLAG_SIZE, MPI_INT,foMPI_REPLACE, rd_winl);
             foMPI_Win_flush_local(new_iProc,rd_winl);
+            //printf("In RD Accumulate (%d->%d), END flag is put into %d\n",myrank,new_iProc,RDsendoffset);
+            //fflush(stdout);
             RDcount[new_iProc] += 1;
             //onesidecomm_bc += SuperLU_timer_() - t1;
 	}

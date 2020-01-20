@@ -245,8 +245,8 @@ namespace SuperLU_ASYNCOMM {
 	    //double t1;
         Int new_iProc;
         int BCsendoffset;
-        int myrank;
-        MPI_Comm_rank(MPI_COMM_WORLD,&myrank);
+        //int myrank;
+        //MPI_Comm_rank(MPI_COMM_WORLD,&myrank);
         //Int new_msgSize = msgSize +1;
         for( Int idxRecv = 0; idxRecv < this->myDests_.size(); ++idxRecv ){
                 Int iProc = this->myDests_[idxRecv];
