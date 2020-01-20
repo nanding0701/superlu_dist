@@ -184,7 +184,7 @@ namespace SuperLU_ASYNCOMM {
 	
 	
 #ifdef oneside
- // int MPI_Accumulate(const void *origin_addr, int origin_count, MPI_Datatype origin_datatype, 
+ // int MPI_Accumulate(const void *origin_addr, int origin_count, MPI_Datatype origin_datatype,
  //                    int target_rank, MPI_Aint target_disp, int target_count, 
  //                    MPI_Datatype  target_datatype, MPI_Op op, MPI_Win win) 
   template< typename T> 
@@ -241,28 +241,43 @@ namespace SuperLU_ASYNCOMM {
  //                    int target_rank, MPI_Aint target_disp, int target_count,
  //                    MPI_Datatype  target_datatype, MPI_Op op, MPI_Win win)
   template< typename T>
-    inline void TreeBcast_slu<T>::forwardMessageOneSide(int* BCcount, int Pc){
+    inline void TreeBcast_slu<T>::forwardMessageOneSide(int* bc_rdma_start, int Pc,int* BCcount, int* BCbase){
 	    //double t1;
         Int new_iProc;
+        int BCsendoffset;
+        int myrank;
+        MPI_Comm_rank(MPI_COMM_WORLD,&myrank);
         //Int new_msgSize = msgSize +1;
         for( Int idxRecv = 0; idxRecv < this->myDests_.size(); ++idxRecv ){
                 Int iProc = this->myDests_[idxRecv];
                 //t1 = SuperLU_timer_();
 		        new_iProc = iProc/Pc;
-                foMPI_Accumulate(&BCcount[new_iProc], 1, MPI_INT, new_iProc, new_iProc, 1, MPI_INT,foMPI_REPLACE, bc_winl);
-                BCcount[new_iProc] += 1;
+		        BCsendoffset = BCbase[new_iProc] + BCcount[new_iProc]*(RDMA_FLAG_SIZE);
+		        //printf("In BC Accumulate (%d->%d), flag is put into %d, bc_rdma_start=%d,%d,%d\n",myrank,iProc,BCsendoffset,bc_rdma_start[0],bc_rdma_start[1],bc_rdma_start[2]);
+		        //fflush(stdout);
+		        //foMPI_Win_lock(foMPI_LOCK_EXCLUSIVE,new_iProc,0,bc_winl_get);
+                foMPI_Accumulate(bc_rdma_start, RDMA_FLAG_SIZE, MPI_INT, new_iProc, BCsendoffset, RDMA_FLAG_SIZE, MPI_INT,foMPI_REPLACE, bc_winl);
+		        foMPI_Win_flush_local(new_iProc,bc_winl);
+                //foMPI_Win_unlock(new_iProc,bc_winl_get);
+		        //printf("In BC Accumulate END (%d->%d), flag is put into %d\n",myrank,iProc,BCsendoffset);
+		        //fflush(stdout);
+		        BCcount[new_iProc] += 1;
 	            //onesidecomm_bc += SuperLU_timer_() - t1;
 	    } // for (iProc)
     }
 
   template< typename T>
-    inline void TreeBcast_slu<T>::forwardMessageOneSideU(int* BCcount, int Pc){
-        long BCsendoffset=0;
+    inline void TreeBcast_slu<T>::forwardMessageOneSideU(int* bc_rdma_start, int Pc,int* BCcount, int* BCbase){
         Int new_iProc;
+        int BCsendoffset;
         for( Int idxRecv = 0; idxRecv < this->myDests_.size(); ++idxRecv ){
                 Int iProc = this->myDests_[idxRecv];
 		        new_iProc = iProc/Pc;
-                foMPI_Accumulate(&BCcount[new_iProc], 1, MPI_INT, new_iProc, new_iProc, 1, MPI_INT,foMPI_REPLACE, bc_winl);
+		        BCsendoffset = BCbase[new_iProc] + BCcount[new_iProc]*(RDMA_FLAG_SIZE);
+		        //foMPI_Win_lock(foMPI_LOCK_EXCLUSIVE,new_iProc,0,bc_winl);
+                foMPI_Accumulate(bc_rdma_start, RDMA_FLAG_SIZE, MPI_INT, new_iProc, BCsendoffset, RDMA_FLAG_SIZE, MPI_INT,foMPI_REPLACE, bc_winl);
+		        //foMPI_Win_unlock(new_iProc,bc_winl);
+		        foMPI_Win_flush_local(new_iProc,bc_winl);
                 BCcount[new_iProc] += 1;
 	    } // for (iProc)
     }

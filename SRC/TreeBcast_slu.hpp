@@ -112,8 +112,8 @@ namespace SuperLU_ASYNCOMM {
 	virtual void forwardMessageOneSide(T * locBuffer, Int msgSize,  int* iam_col, int *BCcount, long* BCbase, int* maxrecvsz, int Pc);
 	virtual void forwardMessageOneSideU(T * locBuffer, Int msgSize,  int* iam_col, int *BCcount, long* BCbase, int* maxrecvsz, int Pc);
 #elif defined (pget)
-	virtual void forwardMessageOneSide(int* BCcount, int Pc);
-	virtual void forwardMessageOneSideU(int* BCcount, int Pc);
+	virtual void forwardMessageOneSide(int* bc_rdma_start, int Pc, int* BCcount, int* BCbase);
+	virtual void forwardMessageOneSideU(int* bc_rdma_start, int Pc,int* BCcount, int* BCbase);
 #endif
     virtual void forwardMessageSimple(T * locBuffer, Int msgSize);
 	virtual void waitSendRequest();

@@ -33,7 +33,193 @@ namespace SuperLU_ASYNCOMM{
     //        unsigned long long const hash = XXH64(buffer, length, seed);
     //        return hash;
     //}
-#endif    
+
+
+    BcTree BcTree_Create_oneside(MPI_Comm comm, Int* ranks, Int rank_cnt, Int msgSize, double rseed, char precision, int* BufSize, int Pc){
+		assert(msgSize>0);
+		if(precision=='d'){
+			TreeBcast_slu<double>* BcastTree = TreeBcast_slu<double>::Create(comm,ranks,rank_cnt,msgSize,rseed);
+ 			//printf("Out my root is %d/%d\n",BcastTree->GetRoot(),BcastTree->GetRoot()/Pc);
+ 			BufSize[BcastTree->GetRoot()/Pc] += 1;
+			return (BcTree) BcastTree;
+		}
+		if(precision=='z'){
+			TreeBcast_slu<doublecomplex>* BcastTree = TreeBcast_slu<doublecomplex>::Create(comm,ranks,rank_cnt,msgSize,rseed);
+ 			BufSize[BcastTree->GetRoot()/Pc] += 1;
+			return (BcTree) BcastTree;
+		}
+	}
+
+	void BcTree_forwardMessageOneSide(BcTree Tree, double* localBuffer, Int msgSize, char precision, int* iam_col, int* BCcount, long* BCbase, int* maxrecvsz, int Pc){
+		if(precision=='d'){
+			TreeBcast_slu<double>* BcastTree = (TreeBcast_slu<double>*) Tree;
+	 		//double t1;
+            //t1 = SuperLU_timer_();
+            //printf("k=%lf,sum=%lf\n", localBuffer[0], localBuffer[XK_H-1]);
+            //fflush(stdout);
+
+            //localBuffer[XK_H-1] = calcul_hash(&localBuffer[XK_H],sizeof(double)*(msgSize-XK_H));
+            //localBuffer[XK_H-1] = localBuffer[msgSize-1];//calcul_hash(&localBuffer[XK_H],sizeof(double)*(msgSize-XK_H));
+            //if (localBuffer[XK_H-1] == calcul_hash(&localBuffer[XK_H],sizeof(double)*(msgSize-XK_H))){
+            //
+            //printf("EUQAL!!!! k=%lf,size=%d,sum=%lf, realwum=%llu\n",localBuffer[0],msgSize-XK_H, localBuffer[XK_H-1], calcul_hash(&localBuffer[XK_H],sizeof(double)*(msgSize-XK_H)));
+            //fflush(stdout);
+            //}
+            localBuffer[XK_H-1] = crc_16((unsigned char*)&localBuffer[XK_H],sizeof(double)*(msgSize-XK_H));
+            BcastTree->forwardMessageOneSide((double*)localBuffer,msgSize, iam_col, BCcount, BCbase, maxrecvsz, Pc);
+	        //onesidecomm_bc += SuperLU_timer_() - t1;
+		}
+		if(precision=='z'){
+            localBuffer[XK_H*2-2] = crc_8((unsigned char*)&localBuffer[XK_H*2],sizeof(double)*2*(msgSize-XK_H));
+            //int iam;
+            //MPI_Comm_rank(MPI_COMM_WORLD, &iam);
+            //
+            //printf("iam=%d, In Oneside interface k=%lf, checksum start at %d, size %d, checksum=%lf\n",iam, localBuffer[0],XK_H*2, sizeof(double)*2*(msgSize-XK_H),localBuffer[XK_H*2-2]);
+            //fflush(stdout);
+            //
+            TreeBcast_slu<doublecomplex>* BcastTree = (TreeBcast_slu<doublecomplex>*) Tree;
+            //for(int i=0; i<msgSize*2; i++){
+            //    printf("iam=%d, k=%lf, val[%d]=%lf\n",iam, localBuffer[0], i,localBuffer[i]);
+            //    fflush(stdout);
+            //}
+            BcastTree->forwardMessageOneSideU((doublecomplex*)localBuffer,msgSize, iam_col, BCcount, BCbase, maxrecvsz, Pc);
+            //printf("iam=%d, End In Oneside interface k=%lf, checksum=%lf\n",iam,localBuffer[0],localBuffer[XK_H*2-2]);
+            //fflush(stdout);
+		}
+	}
+
+		RdTree RdTree_Create_oneside(MPI_Comm comm, Int* ranks, Int rank_cnt, Int msgSize, double rseed, char precision, int* BufSize_rd, int Pc){
+		assert(msgSize>0);
+		if(precision=='d'){
+		        TreeReduce_slu<double>* ReduceTree = TreeReduce_slu<double>::Create(comm,ranks,rank_cnt,msgSize,rseed);
+                //int dn_rank;
+                //MPI_Comm_rank(MPI_COMM_WORLD,&dn_rank);
+                for(Int i=0;i<ReduceTree->GetDestCount();++i){
+ 			        //printf("Total=%d, Pc=%d,iam=%d, my root is %d/%d\n",ReduceTree->GetDestCount(), Pc, dn_rank,ReduceTree->GetDest(i),ReduceTree->GetDest(i)%Pc);
+                    //fflush(stdout);
+                    BufSize_rd[ReduceTree->GetDest(i)%Pc] += 1;
+		        }
+
+                        return (RdTree) ReduceTree;
+		}
+		if(precision=='z'){
+		    TreeReduce_slu<doublecomplex>* ReduceTree = TreeReduce_slu<doublecomplex>::Create(comm,ranks,rank_cnt,msgSize,rseed);
+            //int dn_rank;
+            //MPI_Comm_rank(MPI_COMM_WORLD,&dn_rank);
+            for(Int i=0;i<ReduceTree->GetDestCount();++i){
+ 		        //printf("Total=%d, Pc=%d,iam=%d, my root is %d/%d\n",ReduceTree->GetDestCount(), Pc, dn_rank,ReduceTree->GetDest(i),ReduceTree->GetDest(i)%Pc);
+                //fflush(stdout);
+                BufSize_rd[ReduceTree->GetDest(i)%Pc] += 1;
+		    }
+		return (RdTree) ReduceTree;
+		}
+	}
+
+
+    void RdTree_forwardMessageOneSide(RdTree Tree, double* localBuffer, Int msgSize, char precision, int* iam_row, int* RDcount, long* RDbase, int* maxrecvsz, int Pc){
+		if(precision=='d'){
+		        TreeReduce_slu<double>* ReduceTree = (TreeReduce_slu<double>*) Tree;
+                //////printf("\n HERE!!! send=%lf,%lf,loc=%lf\n",sendbufval[0],sendbufval[msgSize],checksum);
+                //////fflush(stdout);
+	 		    //double t1;
+                //t1 = SuperLU_timer_();
+                //printf("k=%lf,sum=%lf\n", localBuffer[0], localBuffer[LSUM_H-1]);
+                //fflush(stdout);
+                //localBuffer[LSUM_H-1]=localBuffer[msgSize-1] ;//calcul_hash(&localBuffer[LSUM_H],sizeof(double)*(msgSize-LSUM_H));
+                //localBuffer[LSUM_H-1]=calcul_hash(&localBuffer[LSUM_H],sizeof(double)*(msgSize-LSUM_H));
+                localBuffer[LSUM_H-1]=crc_16((unsigned char*)&localBuffer[LSUM_H],sizeof(double)*(msgSize-LSUM_H));
+		        ReduceTree->forwardMessageOneSide((double*)localBuffer, msgSize, iam_row, RDcount, RDbase, maxrecvsz, Pc);
+		        //onesidecomm_bc += SuperLU_timer_() - t1;
+        }
+		if(precision=='z'){
+            localBuffer[LSUM_H*2-2] = crc_8((unsigned char*)&localBuffer[LSUM_H*2],sizeof(double)*2*(msgSize-LSUM_H));
+            //localBuffer[LSUM_H*2-2] = crc_8((unsigned char*)&localBuffer[LSUM_H*2],sizeof(double)*2*(msgSize-LSUM_H));
+		    TreeReduce_slu<doublecomplex>* ReduceTree = (TreeReduce_slu<doublecomplex>*) Tree;
+		    ReduceTree->forwardMessageOneSideU((doublecomplex*)localBuffer,msgSize, iam_row, RDcount, RDbase, maxrecvsz, Pc);
+		}
+	}
+#endif
+
+#ifdef pget
+    BcTree BcTree_Create_oneside(MPI_Comm comm, Int* ranks, Int rank_cnt, Int msgSize, double rseed, char precision, int* BufSize, int Pc, int* mysendmsg_num){
+		assert(msgSize>0);
+		if(precision=='d'){
+			TreeBcast_slu<double>* BcastTree = TreeBcast_slu<double>::Create(comm,ranks,rank_cnt,msgSize,rseed);
+ 			//printf("Out my root is %d/%d\n",BcastTree->GetRoot(),BcastTree->GetRoot()/Pc);
+ 			BufSize[BcastTree->GetRoot()/Pc] += 1;
+ 			*mysendmsg_num+=BcastTree->GetNumMsgToSend();
+			return (BcTree) BcastTree;
+		}
+		if(precision=='z'){
+			TreeBcast_slu<doublecomplex>* BcastTree = TreeBcast_slu<doublecomplex>::Create(comm,ranks,rank_cnt,msgSize,rseed);
+ 			BufSize[BcastTree->GetRoot()/Pc] += 1;
+ 			*mysendmsg_num+=BcastTree->GetNumMsgToSend();
+			return (BcTree) BcastTree;
+		}
+	}
+
+	RdTree RdTree_Create_oneside(MPI_Comm comm, Int* ranks, Int rank_cnt, Int msgSize, double rseed, char precision, int* BufSize_rd, int Pc, int* mysendmsg_num_rd){
+		assert(msgSize>0);
+		if(precision=='d'){
+		        TreeReduce_slu<double>* ReduceTree = TreeReduce_slu<double>::Create(comm,ranks,rank_cnt,msgSize,rseed);
+                //int dn_rank;
+                //MPI_Comm_rank(MPI_COMM_WORLD,&dn_rank);
+                for(Int i=0;i<ReduceTree->GetDestCount();++i){
+ 			        //printf("Total=%d, Pc=%d,iam=%d, my root is %d/%d\n",ReduceTree->GetDestCount(), Pc, dn_rank,ReduceTree->GetDest(i),ReduceTree->GetDest(i)%Pc);
+                    //fflush(stdout);
+                    BufSize_rd[ReduceTree->GetDest(i)%Pc] += 1;
+		        }
+
+     			*mysendmsg_num_rd+= ReduceTree->GetNumMsgToSend();
+
+                        return (RdTree) ReduceTree;
+		}
+		if(precision=='z'){
+		    TreeReduce_slu<doublecomplex>* ReduceTree = TreeReduce_slu<doublecomplex>::Create(comm,ranks,rank_cnt,msgSize,rseed);
+            //int dn_rank;
+            //MPI_Comm_rank(MPI_COMM_WORLD,&dn_rank);
+            for(Int i=0;i<ReduceTree->GetDestCount();++i){
+ 		        //printf("Total=%d, Pc=%d,iam=%d, my root is %d/%d\n",ReduceTree->GetDestCount(), Pc, dn_rank,ReduceTree->GetDest(i),ReduceTree->GetDest(i)%Pc);
+                //fflush(stdout);
+                BufSize_rd[ReduceTree->GetDest(i)%Pc] += 1;
+		    }
+		return (RdTree) ReduceTree;
+		}
+	}
+
+	void BcTree_forwardMessageOneSide(BcTree Tree, char precision,int* bc_rdma_start, int Pc, int* BCcount, int* BCbase){
+		if(precision=='d'){
+			TreeBcast_slu<double>* BcastTree = (TreeBcast_slu<double>*) Tree;
+	 		//double t1;
+            //t1 = SuperLU_timer_();
+            //printf("k=%lf,sum=%lf\n", localBuffer[0], localBuffer[XK_H-1]);
+            //fflush(stdout);
+            BcastTree->forwardMessageOneSide(bc_rdma_start,Pc,BCcount, BCbase);
+	        //onesidecomm_bc += SuperLU_timer_() - t1;
+		}
+		if(precision=='z'){
+            TreeBcast_slu<doublecomplex>* BcastTree = (TreeBcast_slu<doublecomplex>*) Tree;
+            BcastTree->forwardMessageOneSideU(bc_rdma_start,Pc,BCcount, BCbase);
+		}
+	}
+
+
+    void RdTree_forwardMessageOneSide(RdTree Tree,  char precision, int* rd_rdma_start, int Pc,int* RDcount, int* RDbase){
+		if(precision=='d'){
+		    TreeReduce_slu<double>* ReduceTree = (TreeReduce_slu<double>*) Tree;
+	 		//double t1;
+            //t1 = SuperLU_timer_();
+            //printf("k=%lf,sum=%lf\n", localBuffer[0], localBuffer[LSUM_H-1]);
+            //fflush(stdout);
+		    ReduceTree->forwardMessageOneSide(rd_rdma_start,Pc,RDcount, RDbase);
+		    //onesidecomm_bc += SuperLU_timer_() - t1;
+        }
+		if(precision=='z'){
+		    TreeReduce_slu<doublecomplex>* ReduceTree = (TreeReduce_slu<doublecomplex>*) Tree;
+		    ReduceTree->forwardMessageOneSideU(rd_rdma_start,Pc,RDcount, RDbase);
+		}
+	}
+#endif
 
 
 	BcTree BcTree_Create(MPI_Comm comm, Int* ranks, Int rank_cnt, Int msgSize, double rseed, char precision){
@@ -85,134 +271,7 @@ namespace SuperLU_ASYNCOMM{
 	}
 
 	
-#ifdef oneside
-    BcTree BcTree_Create_oneside(MPI_Comm comm, Int* ranks, Int rank_cnt, Int msgSize, double rseed, char precision, int* BufSize, int Pc){
-		assert(msgSize>0);
-		if(precision=='d'){
-			TreeBcast_slu<double>* BcastTree = TreeBcast_slu<double>::Create(comm,ranks,rank_cnt,msgSize,rseed);
- 			//printf("Out my root is %d/%d\n",BcastTree->GetRoot(),BcastTree->GetRoot()/Pc);
- 			BufSize[BcastTree->GetRoot()/Pc] += 1;
-			return (BcTree) BcastTree;
-		}
-		if(precision=='z'){
-			TreeBcast_slu<doublecomplex>* BcastTree = TreeBcast_slu<doublecomplex>::Create(comm,ranks,rank_cnt,msgSize,rseed);
- 			BufSize[BcastTree->GetRoot()/Pc] += 1;
-			return (BcTree) BcastTree;
-		}
-	}
 
-	void BcTree_forwardMessageOneSide(BcTree Tree, double* localBuffer, Int msgSize, char precision, int* iam_col, int* BCcount, long* BCbase, int* maxrecvsz, int Pc){
-		if(precision=='d'){
-			TreeBcast_slu<double>* BcastTree = (TreeBcast_slu<double>*) Tree;
-	 		//double t1;
-            //t1 = SuperLU_timer_();
-            //printf("k=%lf,sum=%lf\n", localBuffer[0], localBuffer[XK_H-1]);
-            //fflush(stdout);
-            
-            //localBuffer[XK_H-1] = calcul_hash(&localBuffer[XK_H],sizeof(double)*(msgSize-XK_H));
-            //localBuffer[XK_H-1] = localBuffer[msgSize-1];//calcul_hash(&localBuffer[XK_H],sizeof(double)*(msgSize-XK_H));
-            //if (localBuffer[XK_H-1] == calcul_hash(&localBuffer[XK_H],sizeof(double)*(msgSize-XK_H))){
-            //
-            //printf("EUQAL!!!! k=%lf,size=%d,sum=%lf, realwum=%llu\n",localBuffer[0],msgSize-XK_H, localBuffer[XK_H-1], calcul_hash(&localBuffer[XK_H],sizeof(double)*(msgSize-XK_H)));
-            //fflush(stdout);
-            //}
-            localBuffer[XK_H-1] = crc_16((unsigned char*)&localBuffer[XK_H],sizeof(double)*(msgSize-XK_H));
-            BcastTree->forwardMessageOneSide((double*)localBuffer,msgSize, iam_col, BCcount, BCbase, maxrecvsz, Pc);	
-	        //onesidecomm_bc += SuperLU_timer_() - t1;
-		}
-		if(precision=='z'){
-            localBuffer[XK_H*2-2] = crc_8((unsigned char*)&localBuffer[XK_H*2],sizeof(double)*2*(msgSize-XK_H));
-            //int iam;
-            //MPI_Comm_rank(MPI_COMM_WORLD, &iam);
-            //
-            //printf("iam=%d, In Oneside interface k=%lf, checksum start at %d, size %d, checksum=%lf\n",iam, localBuffer[0],XK_H*2, sizeof(double)*2*(msgSize-XK_H),localBuffer[XK_H*2-2]);
-            //fflush(stdout);
-            //
-            TreeBcast_slu<doublecomplex>* BcastTree = (TreeBcast_slu<doublecomplex>*) Tree;
-            //for(int i=0; i<msgSize*2; i++){
-            //    printf("iam=%d, k=%lf, val[%d]=%lf\n",iam, localBuffer[0], i,localBuffer[i]);
-            //    fflush(stdout);
-            //}
-            BcastTree->forwardMessageOneSideU((doublecomplex*)localBuffer,msgSize, iam_col, BCcount, BCbase, maxrecvsz, Pc);	
-            //printf("iam=%d, End In Oneside interface k=%lf, checksum=%lf\n",iam,localBuffer[0],localBuffer[XK_H*2-2]);
-            //fflush(stdout);
-		}	
-	}
-
-	
-    void RdTree_forwardMessageOneSide(RdTree Tree, double* localBuffer, Int msgSize, char precision, int* iam_row, int* RDcount, long* RDbase, int* maxrecvsz, int Pc){
-		if(precision=='d'){
-		        TreeReduce_slu<double>* ReduceTree = (TreeReduce_slu<double>*) Tree;
-                //////printf("\n HERE!!! send=%lf,%lf,loc=%lf\n",sendbufval[0],sendbufval[msgSize],checksum);
-                //////fflush(stdout);
-	 		    //double t1;
-                //t1 = SuperLU_timer_();
-                //printf("k=%lf,sum=%lf\n", localBuffer[0], localBuffer[LSUM_H-1]);
-                //fflush(stdout);
-                //localBuffer[LSUM_H-1]=localBuffer[msgSize-1] ;//calcul_hash(&localBuffer[LSUM_H],sizeof(double)*(msgSize-LSUM_H));
-                //localBuffer[LSUM_H-1]=calcul_hash(&localBuffer[LSUM_H],sizeof(double)*(msgSize-LSUM_H));
-                localBuffer[LSUM_H-1]=crc_16((unsigned char*)&localBuffer[LSUM_H],sizeof(double)*(msgSize-LSUM_H));
-		        ReduceTree->forwardMessageOneSide((double*)localBuffer, msgSize, iam_row, RDcount, RDbase, maxrecvsz, Pc);	
-		        //onesidecomm_bc += SuperLU_timer_() - t1;
-        }
-		if(precision=='z'){
-            localBuffer[LSUM_H*2-2] = crc_8((unsigned char*)&localBuffer[LSUM_H*2],sizeof(double)*2*(msgSize-LSUM_H));
-            //localBuffer[LSUM_H*2-2] = crc_8((unsigned char*)&localBuffer[LSUM_H*2],sizeof(double)*2*(msgSize-LSUM_H));
-		    TreeReduce_slu<doublecomplex>* ReduceTree = (TreeReduce_slu<doublecomplex>*) Tree;
-		    ReduceTree->forwardMessageOneSideU((doublecomplex*)localBuffer,msgSize, iam_row, RDcount, RDbase, maxrecvsz, Pc);	
-		}
-	}
-#endif
-
-#ifdef pget
-    BcTree BcTree_Create_oneside(MPI_Comm comm, Int* ranks, Int rank_cnt, Int msgSize, double rseed, char precision, int* BufSize, int Pc){
-		assert(msgSize>0);
-		if(precision=='d'){
-			TreeBcast_slu<double>* BcastTree = TreeBcast_slu<double>::Create(comm,ranks,rank_cnt,msgSize,rseed);
- 			//printf("Out my root is %d/%d\n",BcastTree->GetRoot(),BcastTree->GetRoot()/Pc);
- 			BufSize[BcastTree->GetRoot()/Pc] += 1;
-			return (BcTree) BcastTree;
-		}
-		if(precision=='z'){
-			TreeBcast_slu<doublecomplex>* BcastTree = TreeBcast_slu<doublecomplex>::Create(comm,ranks,rank_cnt,msgSize,rseed);
- 			BufSize[BcastTree->GetRoot()/Pc] += 1;
-			return (BcTree) BcastTree;
-		}
-	}
-
-	void BcTree_forwardMessageOneSide(BcTree Tree, char precision,int* BCcount, int Pc){
-		if(precision=='d'){
-			TreeBcast_slu<double>* BcastTree = (TreeBcast_slu<double>*) Tree;
-	 		//double t1;
-            //t1 = SuperLU_timer_();
-            //printf("k=%lf,sum=%lf\n", localBuffer[0], localBuffer[XK_H-1]);
-            //fflush(stdout);
-            BcastTree->forwardMessageOneSide(BCcount,Pc);
-	        //onesidecomm_bc += SuperLU_timer_() - t1;
-		}
-		if(precision=='z'){
-            TreeBcast_slu<doublecomplex>* BcastTree = (TreeBcast_slu<doublecomplex>*) Tree;
-            BcastTree->forwardMessageOneSideU(BCcount,Pc);
-		}
-	}
-
-
-    void RdTree_forwardMessageOneSide(RdTree Tree,  char precision, int* RDcount, int Pc){
-		if(precision=='d'){
-		    TreeReduce_slu<double>* ReduceTree = (TreeReduce_slu<double>*) Tree;
-	 		//double t1;
-            //t1 = SuperLU_timer_();
-            //printf("k=%lf,sum=%lf\n", localBuffer[0], localBuffer[LSUM_H-1]);
-            //fflush(stdout);
-		    ReduceTree->forwardMessageOneSide(RDcount,Pc);
-		    //onesidecomm_bc += SuperLU_timer_() - t1;
-        }
-		if(precision=='z'){
-		    TreeReduce_slu<doublecomplex>* ReduceTree = (TreeReduce_slu<doublecomplex>*) Tree;
-		    ReduceTree->forwardMessageOneSideU(RDcount,Pc);
-		}
-	}
-#endif
 	void BcTree_forwardMessageSimple(BcTree Tree, void* localBuffer, Int msgSize, char precision){
 		if(precision=='d'){
 		TreeBcast_slu<double>* BcastTree = (TreeBcast_slu<double>*) Tree;
@@ -316,32 +375,7 @@ namespace SuperLU_ASYNCOMM{
 		return (*list).begin()==(*list).end()?YES:NO;
 	}		
 	
-	RdTree RdTree_Create_oneside(MPI_Comm comm, Int* ranks, Int rank_cnt, Int msgSize, double rseed, char precision, int* BufSize_rd, int Pc){
-		assert(msgSize>0);
-		if(precision=='d'){
-		        TreeReduce_slu<double>* ReduceTree = TreeReduce_slu<double>::Create(comm,ranks,rank_cnt,msgSize,rseed);
-                //int dn_rank;
-                //MPI_Comm_rank(MPI_COMM_WORLD,&dn_rank);
-                for(Int i=0;i<ReduceTree->GetDestCount();++i){
- 			        //printf("Total=%d, Pc=%d,iam=%d, my root is %d/%d\n",ReduceTree->GetDestCount(), Pc, dn_rank,ReduceTree->GetDest(i),ReduceTree->GetDest(i)%Pc);
-                    //fflush(stdout);
-                    BufSize_rd[ReduceTree->GetDest(i)%Pc] += 1;
-		        }
-                        
-                        return (RdTree) ReduceTree;
-		}
-		if(precision=='z'){
-		    TreeReduce_slu<doublecomplex>* ReduceTree = TreeReduce_slu<doublecomplex>::Create(comm,ranks,rank_cnt,msgSize,rseed);
-            //int dn_rank;
-            //MPI_Comm_rank(MPI_COMM_WORLD,&dn_rank);
-            for(Int i=0;i<ReduceTree->GetDestCount();++i){
- 		        //printf("Total=%d, Pc=%d,iam=%d, my root is %d/%d\n",ReduceTree->GetDestCount(), Pc, dn_rank,ReduceTree->GetDest(i),ReduceTree->GetDest(i)%Pc);
-                //fflush(stdout);
-                BufSize_rd[ReduceTree->GetDest(i)%Pc] += 1;
-		    }
-		return (RdTree) ReduceTree;
-		}
-	}
+
 	
         RdTree RdTree_Create(MPI_Comm comm, Int* ranks, Int rank_cnt, Int msgSize, double rseed, char precision){
 		assert(msgSize>0);

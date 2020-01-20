@@ -344,26 +344,14 @@ pddistribute(fact_t fact, int_t n, SuperMatrix *A,
 	     Glu_freeable_t *Glu_freeable, LUstruct_t *LUstruct,
 	     gridinfo_t *grid, int nrhs)
 #elif defined (pget)
-foMPI_Win bc_winl;
-foMPI_Win rd_winl;
-foMPI_Win bc_winl_get;
-foMPI_Win rd_winl_get;
-int* bc_pget_count;
-int* rd_pget_count;
-MPI_Comm row_comm;
-MPI_Comm col_comm;
-int* BufSize;
-int* BufSize_rd;
-int *keep_validBCQindex;
-int *keep_validRDQindex;
-int *recv_size_all;
-int* BufSize_u;
-int* BufSize_urd;
-int *keep_validBCQindex_u;
-int *keep_validRDQindex_u;
-int *recv_size_all_u;
-double *x;
-double *lsum;
+foMPI_Win bc_winl, rd_winl, bc_winl_get,rd_winl_get,tmp_rd_winl_get,tmp_bc_winl_get;
+MPI_Comm row_comm,col_comm;
+int *rd_pget_count, *bc_pget_count;
+int *BufSize,*BufSize_rd,*BufSize_u,*BufSize_urd;
+int *keep_validBCQindex,*keep_validRDQindex,*keep_validBCQindex_u, *keep_validRDQindex_u;
+int *recv_size_all,*recv_size_all_u;
+double *x, *lsum, *tmp_buf_bc, *tmp_buf_rd;
+int mysendmsg_num, mysendmsg_num_u, mysendmsg_num_rd, mysendmsg_num_urd;
 float
 pddistribute(fact_t fact, int_t n, SuperMatrix *A,
 	     ScalePermstruct_t *ScalePermstruct,
@@ -617,6 +605,13 @@ pddistribute(fact_t fact, int_t n, SuperMatrix *A,
 	memset(oneside_buf_offset, 0, (Pr+Pc) * sizeof(int));
 #else
 	int nrhs;
+#endif
+
+#ifdef pget
+	mysendmsg_num=0;
+    mysendmsg_num_u=0;
+	mysendmsg_num_rd=0;
+    mysendmsg_num_urd=0;
 #endif
 
 #if ( DEBUGlevel>=1 )
@@ -1448,9 +1443,9 @@ pddistribute(fact_t fact, int_t n, SuperMatrix *A,
 				// rseed=1.0;
 				msgsize = SuperSize( jb );
 #ifdef oneside                                
-				LBtree_ptr[ljb] = BcTree_Create_oneside(grid->comm, ranks, rank_cnt, msgsize,SeedSTD_BC[ljb],'d',BufSize,Pc);  	
+				LBtree_ptr[ljb] = BcTree_Create_oneside(grid->comm, ranks, rank_cnt, msgsize,SeedSTD_BC[ljb],'d',BufSize,Pc);
 #elif defined (pget)
-                LBtree_ptr[ljb] = BcTree_Create_oneside(grid->comm, ranks, rank_cnt, msgsize,SeedSTD_BC[ljb],'d',BufSize,Pc);
+                LBtree_ptr[ljb] = BcTree_Create_oneside(grid->comm, ranks, rank_cnt, msgsize,SeedSTD_BC[ljb],'d',BufSize,Pc,&mysendmsg_num);
 #else
                 LBtree_ptr[ljb] = BcTree_Create(grid->comm, ranks, rank_cnt, msgsize,SeedSTD_BC[ljb],'d');
                 //BcTree_GetBufSize(*BufSize);
@@ -1493,13 +1488,25 @@ pddistribute(fact_t fact, int_t n, SuperMatrix *A,
         SUPERLU_FREE(ranks);
         SUPERLU_FREE(SeedSTD_BC);
 #if defined (oneside) || defined (pget)
-        req_count = 0;
+    req_count = 0;
     BufSize[iam_col]=0;
+
+////BufSize[i]: I will receive how many messages from rank i
+    for (i=0; i<Pr;i++){
+        printf("iam=%d, iam_col=%d, BufSize[%d]=%d\n",iam, iam_col,i,BufSize[i]);
+        fflush(stdout);
+    }
+
+
     for (i=0; i<Pr;i++){
              for(j=0;j<i;j++){
+                     //oneside_buf_offset[i]: When rank i put flags to my flag buffer, the relative first offet for rank i is oneside_buf_offset[i].
+                     // Eg., RDMA_FLAG_SIZE*oneside_buf_offset[i] is the real offset to get flag from rank i
                      oneside_buf_offset[i] += BufSize[j];
              }
-             if (iam_col!=i){ 
+//             printf("iam=%d, iam_col=%d, L oneside_buf_offset[%d]=%d\n",iam, iam_col,i,oneside_buf_offset[i]);
+//             fflush(stdout);
+             if (iam_col!=i){
                      MPI_Irecv(&recv_size_all[i], 1, MPI_INT, i, 0, col_comm, &col_req[req_count]);
      	             MPI_Isend(&oneside_buf_offset[i],1, MPI_INT, i, 0, col_comm, &col_req[req_count+1]);
                      req_count += 2;
@@ -1507,26 +1514,19 @@ pddistribute(fact_t fact, int_t n, SuperMatrix *A,
      }        
      MPI_Waitall(2*(Pr-1), col_req, col_status);
      recv_size_all[iam_col]=0;
+//    for (i=0; i<Pr;i++){
+//        // recv_size_all: when they want to send flag message to me, what's my relative offsets for my different parents.
+//        printf("iam=%d, iam_col=%d, recv_size_all[%d]=%d\n",iam, iam_col,i,recv_size_all[i]);
+//        fflush(stdout);
+//    }
 
      j=0; 
      for(i=0; i<Pr; i++){
-        //printf("Bufsuze=%d\n",BufSize[i]);
          if(BufSize[i]>0){
             keep_validBCQindex[j]=i;
-            //printf("iam=%d, iam_col=%d, I need to check from %d, size=%d\n",iam, iam_col,keep_validBCQindex[j],BufSize[i]);
             j += 1;
         }    
      }
-
-	//BC_buffer_size=(1+BC_buffer_size)*maxrecvsz;
-    //printf("iam=%d, BC_buffer_size_new=%d\n",iam,BC_buffer_size);
-    //fflush(stdout);
-    //BC_taskq = (double*)SUPERLU_MALLOC( BC_buffer_size * sizeof(double));
-    //for(i=0; i<BC_buffer_size; i++){
-    //        BC_taskq[i] = -1.00;
-    //}
-    //foMPI_Win_create(BC_taskq, (BC_buffer_size)*sizeof(double), sizeof(double), MPI_INFO_NULL, col_comm, &bc_winl);
-
 #endif
 
 #if ( PROFlevel>=1 )
@@ -1674,7 +1674,7 @@ if ( !iam) printf(".. Construct Bcast tree for L: %.2f\t\n", t);
 #ifdef oneside
                         LRtree_ptr[lib] = RdTree_Create_oneside(grid->comm, ranks, rank_cnt, msgsize,SeedSTD_RD[lib],'d',BufSize_rd,Pc);
 #elif defined (pget)
-                    LRtree_ptr[lib] = RdTree_Create_oneside(grid->comm, ranks, rank_cnt, msgsize,SeedSTD_RD[lib],'d',BufSize_rd,Pc);
+                    LRtree_ptr[lib] = RdTree_Create_oneside(grid->comm, ranks, rank_cnt, msgsize,SeedSTD_RD[lib],'d',BufSize_rd,Pc, &mysendmsg_num_rd);
 #else
                     LRtree_ptr[lib] = RdTree_Create(grid->comm, ranks, rank_cnt, msgsize,SeedSTD_RD[lib],'d');
 #endif					
@@ -1857,9 +1857,11 @@ if ( !iam) printf(".. Construct Reduce tree for L: %.2f\t\n", t);
 				// rseed=rand();
 				// rseed=1.0;
 				msgsize = SuperSize( jb );
-#if defined (oneside) || defined (pget)
+#ifdef oneside
                 UBtree_ptr[ljb] = BcTree_Create_oneside(grid->comm, ranks, rank_cnt, msgsize,SeedSTD_BC[ljb],'d',BufSize_u, Pc);
-#else                
+#elif  defined (pget)
+                UBtree_ptr[ljb] = BcTree_Create_oneside(grid->comm, ranks, rank_cnt, msgsize,SeedSTD_BC[ljb],'d',BufSize_u, Pc,&mysendmsg_num_u);
+#else
                 UBtree_ptr[ljb] = BcTree_Create(grid->comm, ranks, rank_cnt, msgsize,SeedSTD_BC[ljb],'d');  	
 #endif				
                 BcTree_SetTag(UBtree_ptr[ljb],BC_U,'d');
@@ -1893,11 +1895,17 @@ if ( !iam) printf(".. Construct Reduce tree for L: %.2f\t\n", t);
     req_count = 0;
 	memset(oneside_buf_offset, 0, (Pr+Pc) * sizeof(int));
     BufSize_u[iam_col]=0;
+//    for (i=0; i<Pr;i++){
+//        printf("iam=%d, iam_col=%d, BufSize_u[%d]=%d\n",iam, iam_row,i,BufSize_u[i]);
+//        fflush(stdout);
+//    }
     for (i=0; i<Pr;i++){
              for(j=0;j<i;j++){
                      oneside_buf_offset[i] += BufSize_u[j];
              }
-             if (iam_col!=i){ 
+//             printf("iam=%d, iam_col=%d, oneside_buf_offset[%d]=%d\n",iam, iam_col,i,oneside_buf_offset[i]);
+//             fflush(stdout);
+             if (iam_col!=i){
                      MPI_Irecv(&recv_size_all_u[i], 1, MPI_INT, i, 0, col_comm, &col_req[req_count]);
      	             MPI_Isend(&oneside_buf_offset[i],1, MPI_INT, i, 0, col_comm, &col_req[req_count+1]);
                      req_count += 2;
@@ -1908,10 +1916,12 @@ if ( !iam) printf(".. Construct Reduce tree for L: %.2f\t\n", t);
 
      j=0; 
      for(i=0; i<Pr; i++){
+     //       printf("iam=%d, iam_col=%d,  recv_size_all_u[%d]=%d\n",iam, iam_col,i,recv_size_all_u[i]);
+     //       fflush(stdout);
          if(BufSize_u[i]>0){
             keep_validBCQindex_u[j]=i;
-            //printf("iam=%d, iam_col=%d, I need to check from %d, size=%d\n",iam, iam_col,keep_validBCQindex_u[j],BufSize_u[i]);
-            //fflush(stdout);
+     //       printf("iam=%d, iam_col=%d, I need to check from %d, size=%d\n",iam, iam_col,keep_validBCQindex_u[j],BufSize_u[i]);
+     //       fflush(stdout);
             j += 1;
         }    
      }
@@ -2088,9 +2098,11 @@ if ( !iam) printf(".. Construct Bcast tree for U: %.2f\t\n", t);
 					msgsize = SuperSize( ib );
 
 					// if(ib==0){
-#if defined (oneside) || defined (pget)
+#ifdef oneside
 					URtree_ptr[lib] = RdTree_Create_oneside(grid->comm, ranks, rank_cnt, msgsize,SeedSTD_RD[lib],'d',BufSize_urd, Pc);
-#else					
+#elif defined (pget)
+					URtree_ptr[lib] = RdTree_Create_oneside(grid->comm, ranks, rank_cnt, msgsize,SeedSTD_RD[lib],'d',BufSize_urd, Pc, &mysendmsg_num_urd);
+#else
                     URtree_ptr[lib] = RdTree_Create(grid->comm, ranks, rank_cnt, msgsize,SeedSTD_RD[lib],'d');  	
 #endif					
                     RdTree_SetTag(URtree_ptr[lib], RD_U,'d');
@@ -2144,6 +2156,8 @@ if ( !iam) printf(".. Construct Bcast tree for U: %.2f\t\n", t);
     for(i=0; i<Pc; i++){
        if(BufSize_urd[i]!=0){
            keep_validRDQindex_u[j]=i;
+           //printf("iam=%d, iam_row=%d, I need to check from %d, size=%d\n",iam, iam_row,keep_validRDQindex_u[j],BufSize_urd[i]);
+           //fflush(stdout);
            j += 1;
        }    
     }
@@ -2278,24 +2292,34 @@ if ( !iam) printf(".. Construct Reduce tree for U: %.2f\t\n", t);
     
 #elif defined (pget)
     int maxrecvsz = sp_ienv_dist(3)* nrhs + SUPERLU_MAX( XK_H, LSUM_H );
+
     // RDMA buffer for signals ()
-    bc_pget_count = (int*)SUPERLU_MALLOC( Pr * sizeof(int));
-    rd_pget_count = (int*)SUPERLU_MALLOC( Pc * sizeof(int));
-    foMPI_Win_create(bc_pget_count, (Pr)*sizeof(int), sizeof(int), MPI_INFO_NULL, col_comm, &bc_winl);
-    foMPI_Win_create(rd_pget_count, (Pc)*sizeof(int), sizeof(int), MPI_INFO_NULL, row_comm, &rd_winl);
+    int nfrecvmod=0;
+    for (lk=0;lk<CEILING( nsupers, grid->nprow );++lk){
+        if(LRtree_ptr[lk]!=NULL){
+            RdTree_allocateRequest(LRtree_ptr[lk],'d');
+            nfrecvmod += RdTree_GetDestCount(LRtree_ptr[lk],'d');
+        }
+    }
+    int nbrecvmod=0 ;
+	for (lk=0;lk<CEILING( nsupers, grid->nprow );++lk){
+		if(URtree_ptr[lk]!=NULL){
+			RdTree_allocateRequest(URtree_ptr[lk],'d');
+			nbrecvmod += RdTree_GetDestCount(URtree_ptr[lk],'d');
+		}
+    }
+    int bc_flag_size=RDMA_FLAG_SIZE * (nfrecvx>nbrecvx?nfrecvx:nbrecvx);
+    int rd_flag_size=RDMA_FLAG_SIZE * (nfrecvmod>nbrecvmod?nfrecvmod:nbrecvmod);
+
+    //printf("iam %d, size of bc_flag_size=%d\n",iam,bc_flag_size);
+    //fflush(stdout);
+    bc_pget_count = (int*)SUPERLU_MALLOC( bc_flag_size * sizeof(int));
+    rd_pget_count = (int*)SUPERLU_MALLOC( rd_flag_size * sizeof(int));
+    foMPI_Win_create(bc_pget_count, bc_flag_size * sizeof(int), sizeof(int), MPI_INFO_NULL, col_comm, &bc_winl);
+    foMPI_Win_create(rd_pget_count, rd_flag_size * sizeof(int), sizeof(int), MPI_INFO_NULL, row_comm, &rd_winl);
+
+
     // RDMA buffer for x (broadcast) and lsum (row reduction)
-
-//    double *lsum_rdma;
-//    double *x_rdma;
-//
-//    if ( !(lsum_rdma = (double*)SUPERLU_MALLOC( maxrecvsz* sizeof(double))))
-//        ABORT("Malloc fails for lsum_rdma[].");
-//
-//    if ( !(x = (double*)SUPERLU_MALLOC((maxrecvsz) * sizeof(double))) )
-//        ABORT("Calloc fails for x_rdma[].");
-//    foMPI_Win_create(x, ((maxrecvsz))*sizeof(double), sizeof(double), MPI_INFO_NULL, col_comm, &bc_winl_get);
-//    foMPI_Win_create(lsum, (maxrecvsz)*sizeof(double), sizeof(double), MPI_INFO_NULL, row_comm, &rd_winl_get);
-
     int ldalsum = Llu->ldalsum;
     nlb = CEILING( nsupers, Pr );
 
@@ -2316,12 +2340,12 @@ if ( !iam) printf(".. Construct Reduce tree for U: %.2f\t\n", t);
         }
     #endif
 
-    if( grid->iam==0 ) {
-	    printf("In distribute, num_thread: %5d\n", num_thread);
-	    fflush(stdout);
-    }
+    //if( grid->iam==0 ) {
+	//    printf("In distribute, num_thread: %5d\n", num_thread);
+	//    fflush(stdout);
+    //}
     
-    printf("In distribute, size of x=%d, size of lsum=%d\n",ldalsum * nrhs + nlb * XK_H,sizelsum*num_thread);
+    printf("In distribute, iam=%d,size of x=%d, size of lsum=%d\n",iam,ldalsum * nrhs + nlb * XK_H,sizelsum*num_thread);
     fflush(stdout);
 
     if ( !(lsum = (double*)SUPERLU_MALLOC(sizelsum*num_thread * sizeof(double))))
@@ -2330,8 +2354,32 @@ if ( !iam) printf(".. Construct Reduce tree for U: %.2f\t\n", t);
 
     if ( !(x = (double*)SUPERLU_MALLOC((ldalsum * nrhs + nlb * XK_H) * sizeof(double))) )
         ABORT("Calloc fails for x[].");
-    foMPI_Win_create(x, ((ldalsum * nrhs + nlb * XK_H))*sizeof(double), sizeof(double), MPI_INFO_NULL, col_comm, &bc_winl_get);
+
+    foMPI_Win_create(x, (ldalsum * nrhs + nlb * XK_H)*sizeof(double), sizeof(double), MPI_INFO_NULL, col_comm, &bc_winl_get);
     foMPI_Win_create(lsum, (sizelsum*num_thread)*sizeof(double), sizeof(double), MPI_INFO_NULL, row_comm, &rd_winl_get);
+
+    // for double buffer
+    bc_flag_size=maxrecvsz * (nfrecvx>nbrecvx?nfrecvx:nbrecvx);
+    rd_flag_size=maxrecvsz * (nfrecvmod>nbrecvmod?nfrecvmod:nbrecvmod);
+    // Additonal tmp RDMA buffer for x (broadcast) and lsum (row reduction)
+    //if ( !( tmp_buf_bc= (double*)SUPERLU_MALLOC((bc_flag_size) * sizeof(double))) ) ABORT("Calloc fails for tmp_buf_bc[].");
+    //MPI_Alloc_mem(MPI_Aint size, MPI_Info info, void  *baseptr);
+    MPI_Alloc_mem((bc_flag_size) * sizeof(double),MPI_INFO_NULL,&tmp_buf_bc);
+
+    //if ( !( tmp_buf_rd= (double*)SUPERLU_MALLOC((rd_flag_size) * sizeof(double))) ) ABORT("Calloc fails for tmp_buf_rd[].");
+    MPI_Alloc_mem((rd_flag_size) * sizeof(double),MPI_INFO_NULL,&tmp_buf_rd);
+
+    for(i=0;i<bc_flag_size;i++) tmp_buf_bc[i]=-1;
+    for(i=0;i<rd_flag_size;i++) tmp_buf_rd[i]=-1;
+
+    foMPI_Win_create(tmp_buf_bc, (bc_flag_size)*sizeof(double), sizeof(double), MPI_INFO_NULL, col_comm, &tmp_bc_winl_get);
+    foMPI_Win_create(tmp_buf_rd, (rd_flag_size)*sizeof(double), sizeof(double), MPI_INFO_NULL, row_comm, &tmp_rd_winl_get);
+
+    //printf("In distribute, total RDMA size (delta compared to v6) = %d\n",2*maxrecvsz+RDMA_FLAG_SIZE * (nfrecvx>nbrecvx?nfrecvx:nbrecvx) + RDMA_FLAG_SIZE * (nfrecvmod>nbrecvmod?nfrecvmod:nbrecvmod));
+    //fflush(stdout);
+
+    printf("In distribute (%d), mysendmsg_num=%d,mysendmsg_num_rd=%d,mysendmsg_num_u=%d,mysendmsg_num_urd=%d\n",iam,mysendmsg_num, mysendmsg_num_rd, mysendmsg_num_u, mysendmsg_num_urd);
+    fflush(stdout);
 
 #endif // pget/oneside
 

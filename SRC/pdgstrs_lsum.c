@@ -990,20 +990,26 @@ void dlsum_fmod_inv_master
  int num_thread,
 #ifdef oneside
  int* iam_row,
- int* RDcount, 
+ int* RDcount,
  long* RDbase, 
  int* iam_col, 
- int* BCcount, 
+ int* BCcount,
  long* BCbase, 
  int Pc, 
  int maxrecvsz
 #elif defined (pget)
-int* iam_row,
- int* RDcount,
+ int* iam_row,
+ int* rd_rdma_start,
  int* iam_col,
- int* BCcount,
+ int* bc_rdma_start,
  int Pc,
- int maxrecvsz
+ int maxrecvsz,
+ int* BCcount,
+ int* BCbase,
+ int* RDcount,
+ int* RDbase,
+ int* mylocal_bc_put_flag_offset,
+ int* mylocal_rd_put_flag_offset
 #endif
 )
 {
@@ -1270,7 +1276,11 @@ int* iam_row,
 #ifdef oneside
 					RdTree_forwardMessageOneSide(LRtree_ptr[lk],&lsum[il - LSUM_H ],RdTree_GetMsgSize(LRtree_ptr[lk],'d')*nrhs+LSUM_H,'d', iam_row, RDcount, RDbase, &maxrecvsz, Pc);
 #elif defined (pget)
-					RdTree_forwardMessageOneSide(LRtree_ptr[lk],'d',RDcount, Pc);
+                    rd_rdma_start[*mylocal_rd_put_flag_offset]=il-LSUM_H;
+                    rd_rdma_start[*mylocal_rd_put_flag_offset+1]=RdTree_GetMsgSize(LRtree_ptr[lk],'d')*nrhs+LSUM_H;
+                    rd_rdma_start[*mylocal_rd_put_flag_offset+2]=1;
+					RdTree_forwardMessageOneSide(LRtree_ptr[lk],'d', &rd_rdma_start[*mylocal_rd_put_flag_offset], Pc,RDcount,RDbase);
+                    *mylocal_rd_put_flag_offset += RDMA_FLAG_SIZE;
 #else
                     RdTree_forwardMessageSimple(LRtree_ptr[lk],&lsum[il - LSUM_H ],RdTree_GetMsgSize(LRtree_ptr[lk],'d')*nrhs+LSUM_H,'d');
 #endif
@@ -1365,7 +1375,11 @@ int* iam_row,
 #ifdef oneside						
                         BcTree_forwardMessageOneSide(LBtree_ptr[lk],&x[ii - XK_H],BcTree_GetMsgSize(LBtree_ptr[lk],'d')*nrhs+XK_H,'d',iam_col, BCcount, BCbase, &maxrecvsz, Pc);
 #elif defined (pget)
-                        BcTree_forwardMessageOneSide(LBtree_ptr[lk],'d',BCcount, Pc);
+                        bc_rdma_start[*mylocal_bc_put_flag_offset]=ii-XK_H;
+                        bc_rdma_start[*mylocal_bc_put_flag_offset+1]=BcTree_GetMsgSize(LBtree_ptr[lk],'d')*nrhs+XK_H;
+                        bc_rdma_start[*mylocal_bc_put_flag_offset+2]=1;
+                        BcTree_forwardMessageOneSide(LBtree_ptr[lk],'d',&bc_rdma_start[*mylocal_bc_put_flag_offset], Pc,BCcount,BCbase);
+                        *mylocal_bc_put_flag_offset += RDMA_FLAG_SIZE;
 #else
                         BcTree_forwardMessageSimple(LBtree_ptr[lk],&x[ii - XK_H],BcTree_GetMsgSize(LBtree_ptr[lk],'d')*nrhs+XK_H,'d');
 #endif                    
@@ -1389,14 +1403,12 @@ int* iam_row,
                         dlsum_fmod_inv_master(lsum, x, &x[ii], rtemp, nrhs, iknsupc, ik,
 								fmod, nlb1, xsup,
 								grid, Llu, stat,sizelsum,sizertemp,1+recurlevel,maxsuper,thread_id,num_thread,
-                                iam_row, RDcount, iam_col, BCcount, Pc,maxrecvsz);
+                                iam_row, rd_rdma_start, iam_col, bc_rdma_start, Pc,maxrecvsz, BCcount,BCbase,RDcount,RDbase, mylocal_bc_put_flag_offset, mylocal_rd_put_flag_offset);
 #else
                         dlsum_fmod_inv_master(lsum, x, &x[ii], rtemp, nrhs, iknsupc, ik,
                                               fmod, nlb1, xsup,
                                               grid, Llu, stat,sizelsum,sizertemp,1+recurlevel,maxsuper,thread_id,num_thread);
 #endif
-
-
 					}
 
 					// } /* if frecv[lk] == 0 */
@@ -1918,11 +1930,17 @@ void dlsum_bmod_inv_master
  int maxrecvsz
 #elif defined (pget)
 int* iam_row,
- int* RDcount,
+ int* rd_rdma_start,
  int* iam_col,
- int* BCcount,
+ int* bc_rdma_start,
  int Pc,
- int maxrecvsz
+ int maxrecvsz,
+ int* BCcount,
+ int* BCbase,
+ int* RDcount,
+ int* RDbase,
+ int* mylocal_bc_put_flag_offset,
+ int* mylocal_rd_put_flag_offset
 #endif
  )
 {
@@ -2111,7 +2129,11 @@ int* iam_row,
 #ifdef oneside				
                 RdTree_forwardMessageOneSide(URtree_ptr[ik],&lsum[il - LSUM_H ],RdTree_GetMsgSize(URtree_ptr[ik],'d')*nrhs+LSUM_H,'d', iam_row, RDcount, RDbase, &maxrecvsz, Pc);
 #elif defined (pget)
-                RdTree_forwardMessageOneSide(URtree_ptr[ik],'d', RDcount, Pc);
+                rd_rdma_start[*mylocal_rd_put_flag_offset]=il-LSUM_H;
+                rd_rdma_start[*mylocal_rd_put_flag_offset+1]=RdTree_GetMsgSize(URtree_ptr[ik],'d')*nrhs+LSUM_H;
+                rd_rdma_start[*mylocal_rd_put_flag_offset+2]=1;
+                RdTree_forwardMessageOneSide(URtree_ptr[ik],'d', &rd_rdma_start[*mylocal_rd_put_flag_offset], Pc, RDcount, RDbase);
+                *mylocal_rd_put_flag_offset += RDMA_FLAG_SIZE;
 #else
                 RdTree_forwardMessageSimple(URtree_ptr[ik],&lsum[il - LSUM_H ],RdTree_GetMsgSize(URtree_ptr[ik],'d')*nrhs+LSUM_H,'d');
 #endif
@@ -2204,7 +2226,11 @@ int* iam_row,
 #ifdef oneside					
                         BcTree_forwardMessageOneSide(UBtree_ptr[lk1],&x[ii - XK_H],BcTree_GetMsgSize(UBtree_ptr[lk1],'d')*nrhs+XK_H,'d',iam_col, BCcount, BCbase, &maxrecvsz, Pc); 
 #elif defined (pget)
-                        BcTree_forwardMessageOneSide(UBtree_ptr[lk1],'d',BCcount, Pc);
+                        bc_rdma_start[*mylocal_bc_put_flag_offset]=ii-XK_H;
+                        bc_rdma_start[*mylocal_bc_put_flag_offset+1]=BcTree_GetMsgSize(UBtree_ptr[lk1],'d')*nrhs+XK_H;
+                        bc_rdma_start[*mylocal_bc_put_flag_offset+2]=1;
+                        BcTree_forwardMessageOneSide(UBtree_ptr[lk1],'d', &bc_rdma_start[*mylocal_bc_put_flag_offset], Pc, BCcount, BCbase);
+                        *mylocal_bc_put_flag_offset += RDMA_FLAG_SIZE;
 #else
                         BcTree_forwardMessageSimple(UBtree_ptr[lk1],&x[ii - XK_H],BcTree_GetMsgSize(UBtree_ptr[lk1],'d')*nrhs+XK_H,'d'); 
 #endif
@@ -2219,7 +2245,7 @@ int* iam_row,
 						// #endif
 						{
 #ifdef oneside
-						dlsum_bmod_inv_master(lsum, x, &x[ii], rtemp, nrhs, gik, bmod, Urbs,Urbs2,
+						    dlsum_bmod_inv_master(lsum, x, &x[ii], rtemp, nrhs, gik, bmod, Urbs,Urbs2,
 								Ucb_indptr, Ucb_valptr, xsup, grid, Llu,
 								send_req, stat, sizelsum,sizertemp,thread_id,num_thread,
                                 iam_row, RDcount, RDbase, iam_col, BCcount, BCbase, Pc, maxrecvsz);
@@ -2227,11 +2253,11 @@ int* iam_row,
                             dlsum_bmod_inv_master(lsum, x, &x[ii], rtemp, nrhs, gik, bmod, Urbs,Urbs2,
 								Ucb_indptr, Ucb_valptr, xsup, grid, Llu,
 								send_req, stat, sizelsum,sizertemp,thread_id,num_thread,
-                                iam_row, RDcount, iam_col, BCcount, Pc, maxrecvsz);
+                                iam_row, rd_rdma_start, iam_col, bc_rdma_start, Pc, maxrecvsz, BCcount, BCbase, RDcount,RDbase,mylocal_bc_put_flag_offset, mylocal_rd_put_flag_offset);
 #else
                             dlsum_bmod_inv_master(lsum, x, &x[ii], rtemp, nrhs, gik, bmod, Urbs,Urbs2,
-                                                  Ucb_indptr, Ucb_valptr, xsup, grid, Llu,
-                                                  send_req, stat, sizelsum,sizertemp,thread_id,num_thread);
+                                Ucb_indptr, Ucb_valptr, xsup, grid, Llu,
+                                send_req, stat, sizelsum,sizertemp,thread_id,num_thread);
 #endif
 
 						}

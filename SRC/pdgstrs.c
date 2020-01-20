@@ -150,21 +150,12 @@ _fcd ftcs3;
  * ============
  * </pre>
  */
-#ifdef pget
-int_t
-pdReDistribute_B_to_X(double *B, int_t m_loc, int nrhs, int_t ldb,
-                      int_t fst_row, int_t *ilsum,
-		      ScalePermstruct_t *ScalePermstruct,
-		      Glu_persist_t *Glu_persist,
-		      gridinfo_t *grid, SOLVEstruct_t *SOLVEstruct)
-#else
 int_t
 pdReDistribute_B_to_X(double *B, int_t m_loc, int nrhs, int_t ldb,
                       int_t fst_row, int_t *ilsum, double *x,
 		      ScalePermstruct_t *ScalePermstruct,
 		      Glu_persist_t *Glu_persist,
 		      gridinfo_t *grid, SOLVEstruct_t *SOLVEstruct)
-#endif
 {
     int  *SendCnt, *SendCnt_nrhs, *RecvCnt, *RecvCnt_nrhs;
     int  *sdispls, *sdispls_nrhs, *rdispls, *rdispls_nrhs;
@@ -754,7 +745,7 @@ pdgstrs(int_t n, LUstruct_t *LUstruct,
     double *lusup, *dest;
 #ifdef pget
     double *recvbuf, *recvbuf_on, *tempv,
-            *recvbufall, *recvbuf_BC_fwd,*recvbuf0, *xin;
+            *recvbufall, *recvbuf_BC_fwd, *xin;
 #else
     double *recvbuf, *recvbuf_on, *tempv,
             *recvbufall, *recvbuf_BC_fwd, *recvbuf0, *xin;
@@ -979,8 +970,9 @@ pdgstrs(int_t n, LUstruct_t *LUstruct,
 
 
 #ifdef pget
-    printf("In solve,size of x=%d, size of lsum=%d\n",ldalsum * nrhs + nlb * XK_H,sizelsum*num_thread);
-    fflush(stdout);
+
+    //printf("(%d) In solve,size of x=%d, size of lsum=%d\n",iam,ldalsum * nrhs + nlb * XK_H,sizelsum*num_thread);
+    //fflush(stdout);
     #ifdef _OPENMP
         #pragma omp parallel default(shared) private(ii)
         {
@@ -1042,13 +1034,8 @@ pdgstrs(int_t n, LUstruct_t *LUstruct,
      *---------------------------------------------------*/
     /* Redistribute B into X on the diagonal processes. */
      //PROFILE_PHYSICS_INIT();
-#ifdef pget     
-    pdReDistribute_B_to_X(B, m_loc, nrhs, ldb, fst_row, ilsum, 
+    pdReDistribute_B_to_X(B, m_loc, nrhs, ldb, fst_row, ilsum, x,
 			  ScalePermstruct, Glu_persist, grid, SOLVEstruct);
-#else     
-    pdReDistribute_B_to_X(B, m_loc, nrhs, ldb, fst_row, ilsum, x, 
-			  ScalePermstruct, Glu_persist, grid, SOLVEstruct);
-#endif
 //PROFILE_PHYSICS_FINISH();
 #if ( PRNTlevel>=1 )
     t = SuperLU_timer_() - t;
@@ -1161,13 +1148,13 @@ if(procs==1){
     int *validBCQindex_u;
     int *validRDQindex_u;
 
-    BCcount = (int*)SUPERLU_MALLOC( Pr * sizeof(int));   // this needs to be optimized for 1D row mapping
-    RDcount = (int*)SUPERLU_MALLOC( Pc * sizeof(int));   // this needs to be optimized for 1D row mapping
+    BCcount = (int*)SUPERLU_MALLOC( Pr * sizeof(int));
+    RDcount = (int*)SUPERLU_MALLOC( Pc * sizeof(int));
     memset(BCcount, 0, ( Pr * sizeof(int)));
     memset(RDcount, 0, ( Pc * sizeof(int)));
            
-    BCbase = (long*)SUPERLU_MALLOC( Pr * sizeof(long));   // this needs to be optimized for 1D row mapping
-    RDbase = (long*)SUPERLU_MALLOC( Pc * sizeof(long));   // this needs to be optimized for 1D row mapping
+    BCbase = (long*)SUPERLU_MALLOC( Pr * sizeof(long));
+    RDbase = (long*)SUPERLU_MALLOC( Pc * sizeof(long));
     memset(BCbase, 0, ( Pr * sizeof(long)));
     memset(RDbase, 0, ( Pc * sizeof(long)));
     
@@ -1182,7 +1169,7 @@ if(procs==1){
     
     if( Pr > 1){
         for (i=0;i<Pr;i++){
-                BCbase[i] = recv_size_all[i]*maxrecvsz*2;
+                BCbase[i] = recv_size_all[i]*maxrecvsz;
                 validBCQindex[i]=keep_validBCQindex[i];
                 validBCQindex_u[i]=keep_validBCQindex_u[i];
 #if ( DEBUGlevel>=1 )        
@@ -1193,7 +1180,7 @@ if(procs==1){
     }
     if(Pc > 1){
             for (i=0;i<Pc;i++){
-                    RDbase[i] = recv_size_all[Pr+i]*maxrecvsz*2;
+                    RDbase[i] = recv_size_all[Pr+i]*maxrecvsz;
                     validRDQindex[i]=keep_validRDQindex[i];
                     validRDQindex_u[i]=keep_validRDQindex_u[i];
 #if ( DEBUGlevel>=1 )        
@@ -1213,7 +1200,7 @@ if(procs==1){
     
     for (bcidx=0;bcidx<Pr;bcidx++){
         for(int tmp=0;tmp<bcidx;tmp++){
-            BC_taskbuf_offset[bcidx] += BufSize[tmp]*maxrecvsz*2;
+            BC_taskbuf_offset[bcidx] += BufSize[tmp]*maxrecvsz;
         }       
 #if ( DEBUGlevel>=1 )        
         printf("iam=%d, BC_taskbuf_offset[%d]=%lu\n",iam,bcidx,BC_taskbuf_offset[bcidx]);
@@ -1222,7 +1209,7 @@ if(procs==1){
     }
     for (rdidx=0;rdidx<Pc;rdidx++){
         for(int tmp=0;tmp<rdidx;tmp++){ 
-                RD_taskbuf_offset[rdidx] += BufSize_rd[tmp]*maxrecvsz*2; 
+                RD_taskbuf_offset[rdidx] += BufSize_rd[tmp]*maxrecvsz;
         }        
 #if ( DEBUGlevel>=1 )        
         printf("iam=%d, RD_taskbuf_offset[%d]=%lu\n",iam,rdidx,RD_taskbuf_offset[rdidx]);
@@ -1248,23 +1235,27 @@ if(procs==1){
 #elif defined (pget)
     int iam_col=MYROW( iam, grid );
 	int iam_row=MYCOL( iam, grid );
-    int *BCcount, *RDcount;
+
+
     double nfrecv1=0;
     int ird=0, tidx=0, bcidx=0, rdidx=0, tmp_id=0;
-    int *BCis_solved, *RDis_solved;
-    int totalsolveBC=0, totalsolveRD=0;
-    int shift=0;
-    int recvRankNum=-1;
-    int *validBCQindex;
-    int *validRDQindex;
-    int *validBCQindex_u;
-    int *validRDQindex_u;
 
+    /* for RDMA flag offset, each meassge has a unqie offset */
+	int *BCcount, *RDcount;
     BCcount = (int*)SUPERLU_MALLOC( Pr * sizeof(int));   // this needs to be optimized for 1D row mapping
     RDcount = (int*)SUPERLU_MALLOC( Pc * sizeof(int));   // this needs to be optimized for 1D row mapping
     memset(BCcount, 0, ( Pr * sizeof(int)));
     memset(RDcount, 0, ( Pc * sizeof(int)));
 
+   /* shifting valid sender */
+    int totalsolveBC=0, totalsolveRD=0;
+    int shift=0;
+    int recvRankNum=-1;
+
+    int *validBCQindex;
+    int *validRDQindex;
+    int *validBCQindex_u;
+    int *validRDQindex_u;
 
     if ( !(validBCQindex = (int*)SUPERLU_MALLOC( Pr * sizeof(int))) )
     	ABORT("Malloc fails for validBCQindex[]");
@@ -1275,40 +1266,94 @@ if(procs==1){
     if ( !(validRDQindex_u = (int*)SUPERLU_MALLOC( Pc *sizeof(int))) )
     	ABORT("Malloc fails for validRDQindex_u[]");
 
+    int *BCbase,*RDbase;
+    BCbase = (int*)SUPERLU_MALLOC( Pr * sizeof(int));
+    RDbase = (int*)SUPERLU_MALLOC( Pc * sizeof(int));
+
     if( Pr > 1){
         for (i=0;i<Pr;i++){
+                BCbase[i] = recv_size_all[i]*RDMA_FLAG_SIZE;
                 validBCQindex[i]=keep_validBCQindex[i];
                 validBCQindex_u[i]=keep_validBCQindex_u[i];
 #if ( DEBUGlevel>=1 )
-                printf("iam=%d,validBCQindex[%d]=%d,validBCQindex_u[%d]=%d\n",iam,i,validBCQindex[i],i,validBCQindex_u[i]);
+                printf("iam=%d,validBCQindex[%d]=%d,validBCQindex_u[%d]=%d, BCbase[%d]=%d\n",iam,i,validBCQindex[i],i,validBCQindex_u[i],i,BCbase[i]);
                 fflush(stdout);
 #endif
         }
     }
     if(Pc > 1){
             for (i=0;i<Pc;i++){
+                    RDbase[i] = recv_size_all[Pr+i]*RDMA_FLAG_SIZE;
                     validRDQindex[i]=keep_validRDQindex[i];
                     validRDQindex_u[i]=keep_validRDQindex_u[i];
 #if ( DEBUGlevel>=1 )
-                    printf("iam=%d,validRDQindex[%d]=%d,validRDQindex_u[%d]=%d\n",iam,i,validRDQindex[i],i,validRDQindex_u[i]);
+                    printf("iam=%d,validRDQindex[%d]=%d,validRDQindex_u[%d]=%d,RDbase[%d]=%d\n",iam,i,validRDQindex[i],i,validRDQindex_u[i],i,RDbase[i]);
                     fflush(stdout);
 #endif
             }
     }
 
-	nfrecvx_buf=0;
+    int *mylocal_BCbase,*mylocal_RDbase;
+    mylocal_BCbase = (int*)SUPERLU_MALLOC( Pr * sizeof(int));
+    mylocal_RDbase = (int*)SUPERLU_MALLOC( Pc * sizeof(int));
+    memset(mylocal_BCbase, 0, ( Pr * sizeof(int)));
+    memset(mylocal_RDbase, 0, ( Pc * sizeof(int)));
 
+    for (i=0; i<Pr;i++){
+             for(j=0;j<i;j++){
+                     //oneside_buf_offset[i]: When rank i put flags to my flag buffer, the relative offet is oneside_buf_offset[i].
+                     // Eg., RDMA_FLAG_SIZE*oneside_buf_offset[i] is the real offset to get flag from rank i
+                     mylocal_BCbase[i] += BufSize[j]*RDMA_FLAG_SIZE;
+             }
+             //printf("In solve, iam=%d, iam_col=%d, L mylocal_BCbase[%d]=%d\n",iam, iam_col,i,mylocal_BCbase[i]);
+             //fflush(stdout);
+     }
+
+
+    for (i=0; i<Pc;i++){
+             for(j=0;j<i;j++){
+                     //oneside_buf_offset[i]: When rank i put flags to my flag buffer, the relative offet is oneside_buf_offset[i].
+                     // Eg., RDMA_FLAG_SIZE*oneside_buf_offset[i] is the real offset to get flag from rank i
+                     mylocal_RDbase[i] += BufSize_rd[j]*RDMA_FLAG_SIZE;
+             }
+             //printf("In solve, iam=%d, iam_row=%d, L mylocal_RDbase[%d]=%d\n",iam, iam_row,i,mylocal_RDbase[i]);
+             //fflush(stdout);
+     }
+	nfrecvx_buf=0;
+/* tracking solved tasks */
+    int *BCis_solved, *RDis_solved;
     BCis_solved = (int*)SUPERLU_MALLOC( Pr * sizeof(int));   // this needs to be optimized for 1D row mapping
     RDis_solved = (int*)SUPERLU_MALLOC( Pc * sizeof(int));   // this needs to be optimized for 1D row mapping
     memset(BCis_solved, 0, Pr * sizeof(int));
     memset(RDis_solved, 0, Pc * sizeof(int));
 
+
+    for (i=0;i< RDMA_FLAG_SIZE * (nfrecvx>nbrecvx?nfrecvx:nbrecvx);i++) bc_pget_count[i] = -1;
+    for (i=0;i< RDMA_FLAG_SIZE * (nfrecvmod>nbrecvmod?nfrecvmod:nbrecvmod);i++) rd_pget_count[i] = -1;
+
+    int get_msgsize=0;
+    int get_offset=0;
+    int get_fromwhere=0; //1=x/lsum 2=tmp_buf_bc/tmp_buf_rd
+    int mycur_offset=0, mynext_offset=0;
+
+    int* bc_rdma_start;
+    int* rd_rdma_start;
+
+    bc_rdma_start = (int*)SUPERLU_MALLOC( RDMA_FLAG_SIZE* (mysendmsg_num>mysendmsg_num_u?mysendmsg_num:mysendmsg_num_u) * sizeof(int));   // this needs to be optimized for 1D row mapping
+    rd_rdma_start = (int*)SUPERLU_MALLOC( RDMA_FLAG_SIZE* (mysendmsg_num_rd>mysendmsg_num_urd?mysendmsg_num_rd:mysendmsg_num_urd) * sizeof(int));   // this needs to be optimized for 1D row mapping
+
+    int mylocal_bc_put_flag_offset=0;
+    int mylocal_rd_put_flag_offset=0;
+
+
+    onesidecomm_bc=0;
     foMPI_Win_lock_all(0, bc_winl);
     foMPI_Win_lock_all(0, rd_winl);
 
     foMPI_Win_lock_all(0, bc_winl_get);
     foMPI_Win_lock_all(0, rd_winl_get);
-    onesidecomm_bc=0;
+    foMPI_Win_lock_all(0, tmp_bc_winl_get);
+    foMPI_Win_lock_all(0, tmp_rd_winl_get);
 #if ( DEBUGlevel>=1 )
     printf("iam=%d, End setup oneside L solve\n",iam);
 	printf("(%2d) nfrecvx %4d,  nfrecvmod %4d,  nleaf %4d\n,  nbtree %4d\n,  nrtree %4d\n",
@@ -1316,11 +1361,11 @@ if(procs==1){
     fflush(stdout);
 #endif
 #else
-	
-        if ( !(recvbuf_BC_fwd = (double*)SUPERLU_MALLOC(maxrecvsz*(nfrecvx+1) * sizeof(double))) )  // this needs to be optimized for 1D row 		ABORT("Malloc fails for recvbuf_BC_fwd[].");	
-		ABORT("Malloc fails for recvbuf_BC_fwd[].");	
-    	nfrecvx_buf=0;			
-			//PROFILE_DYNAMIC_FINISH();						
+
+        if ( !(recvbuf_BC_fwd = (double*)SUPERLU_MALLOC(maxrecvsz*(nfrecvx+1) * sizeof(double))) )  // this needs to be optimized for 1D row 		ABORT("Malloc fails for recvbuf_BC_fwd[].");
+		ABORT("Malloc fails for recvbuf_BC_fwd[].");
+    	nfrecvx_buf=0;
+			//PROFILE_DYNAMIC_FINISH();
 #endif
 
 
@@ -1334,13 +1379,13 @@ if(procs==1){
 	t = SuperLU_timer_() - t;
 	if ( !iam) printf(".. Setup L-solve time\t%8.4f\n", t);
 	fflush(stdout);
-	MPI_Barrier( grid->comm );	
+	MPI_Barrier( grid->comm );
 	t = SuperLU_timer_() ;
 #endif
 
 #if ( VAMPIR>=1 )
-	// VT_initialize(); 
-	VT_traceon();	
+	// VT_initialize();
+	VT_traceon();
 #endif
 
 #ifdef USE_VTUNE
@@ -1359,27 +1404,27 @@ if(procs==1){
 
 //PROFILE_BAROCLINIC_INIT();
 #ifdef _OPENMP
-#pragma omp parallel default (shared) 
+#pragma omp parallel default (shared)
 #endif
-	{	
+	{
 		{
-		
-if(Llu->inv == 1){		
+
+if(Llu->inv == 1){
 
 #ifdef _OPENMP
-#pragma	omp	for firstprivate(nrhs,beta,alpha,x,rtemp,ldalsum) private (ii,k,knsupc,lk,luptr,lsub,nsupr,lusup,t1,t2,Linv,i,lib,rtemp_loc,nleaf_send_tmp) nowait	
+#pragma	omp	for firstprivate(nrhs,beta,alpha,x,rtemp,ldalsum) private (ii,k,knsupc,lk,luptr,lsub,nsupr,lusup,t1,t2,Linv,i,lib,rtemp_loc,nleaf_send_tmp) nowait
 #endif
 			for (jj=0;jj<nleaf;jj++){
 				k=leafsups[jj];
 
 				// #ifdef _OPENMP
-				// #pragma	omp	task firstprivate (k,nrhs,beta,alpha,x,rtemp,ldalsum) private (ii,knsupc,lk,luptr,lsub,nsupr,lusup,thread_id,t1,t2,Linv,i,lib,rtemp_loc)	 	
+				// #pragma	omp	task firstprivate (k,nrhs,beta,alpha,x,rtemp,ldalsum) private (ii,knsupc,lk,luptr,lsub,nsupr,lusup,thread_id,t1,t2,Linv,i,lib,rtemp_loc)
 				// #endif
 				{
 
 #if ( PROFlevel>=1 )
 					TIC(t1);
-#endif	 
+#endif
 					rtemp_loc = &rtemp[sizertemp* thread_id];
 
 
@@ -1578,7 +1623,14 @@ if(Llu->inv == 1){
 #ifdef oneside
                     BcTree_forwardMessageOneSide(LBtree_ptr[lk],&x[ii - XK_H],BcTree_GetMsgSize(LBtree_ptr[lk],'d')*nrhs+XK_H,'d', &iam_col, BCcount, BCbase, &maxrecvsz,Pc);
 #elif defined (pget)
-                    BcTree_forwardMessageOneSide(LBtree_ptr[lk],'d',BCcount, Pc);
+                    bc_rdma_start[mylocal_bc_put_flag_offset]=ii-XK_H;
+                    bc_rdma_start[mylocal_bc_put_flag_offset+1]=BcTree_GetMsgSize(LBtree_ptr[lk],'d')*nrhs+XK_H;
+                    bc_rdma_start[mylocal_bc_put_flag_offset+2]=1;
+                    //printf("In BC leaf node forward (%d),mylocal_bc_put_flag_offset=%d, bc_rdma_start=%d,%d,%d\n",iam,mylocal_bc_put_flag_offset,bc_rdma_start[mylocal_bc_put_flag_offset],bc_rdma_start[mylocal_bc_put_flag_offset+1],bc_rdma_start[mylocal_bc_put_flag_offset+2]);
+		            //fflush(stdout);
+
+		            BcTree_forwardMessageOneSide(LBtree_ptr[lk],'d',&bc_rdma_start[mylocal_bc_put_flag_offset], Pc, BCcount, BCbase);
+                    mylocal_bc_put_flag_offset += RDMA_FLAG_SIZE;
 #else
 					BcTree_forwardMessageSimple(LBtree_ptr[lk],&x[ii - XK_H],BcTree_GetMsgSize(LBtree_ptr[lk],'d')*nrhs+XK_H,'d');
 #endif
@@ -1588,7 +1640,12 @@ if(Llu->inv == 1){
 #ifdef oneside 
                     RdTree_forwardMessageOneSide(LRtree_ptr[lk],&lsum[il - LSUM_H ],RdTree_GetMsgSize(LRtree_ptr[lk],'d')*nrhs+LSUM_H,'d', &iam_row, RDcount, RDbase, &maxrecvsz, Pc);
 #elif defined (pget)
-                    RdTree_forwardMessageOneSide(LRtree_ptr[lk],'d',RDcount, Pc);
+                    rd_rdma_start[mylocal_rd_put_flag_offset+0]=il-LSUM_H;
+                    rd_rdma_start[mylocal_rd_put_flag_offset+1]=RdTree_GetMsgSize(LRtree_ptr[lk],'d')*nrhs+LSUM_H;
+                    rd_rdma_start[mylocal_rd_put_flag_offset+2]=1;
+
+                    RdTree_forwardMessageOneSide(LRtree_ptr[lk],'d',&rd_rdma_start[mylocal_rd_put_flag_offset], Pc, RDcount,RDbase);
+                    mylocal_rd_put_flag_offset += RDMA_FLAG_SIZE;
 #else
 					RdTree_forwardMessageSimple(LRtree_ptr[lk],&lsum[il - LSUM_H ],RdTree_GetMsgSize(LRtree_ptr[lk],'d')*nrhs+LSUM_H,'d');
 #endif 
@@ -1617,9 +1674,7 @@ if(Llu->inv == 1){
                 recvbuf0 = &BC_taskq[i];
                 k = *recvbuf0;
                 
-                //printf("bcbc--111--iam=%d, bcidx=%d,k=%d\n",iam,bcidx,k);
-                //fflush(stdout);
-	            
+
                 if (k < 0)  {
                    if(shift>0){
                         validBCQindex[bcidx-shift]=validBCQindex[bcidx];
@@ -1632,22 +1687,9 @@ if(Llu->inv == 1){
 
                 lk = LBj( k, grid );    /* local block number */
                 
-                //printf("bcbc--333--iam=%d, checksum=%d,should be %d\n",iam, crc_16_val, (uint16_t)recvbuf0[XK_H-1]);
-                //fflush(stdout);
-                //for(int tmp=0; tmp<checkend+3;tmp++){
-                //    printf("%f, ",recvbuf0[tmp]);
-                //    fflush(stdout);
-                //}
-                //printf("\n");
-                //fflush(stdout);
-                //if(crc_16_val!=(uint16_t)recvbuf0[XK_H-1]) {
                 checkend=BcTree_GetMsgSize(LBtree_ptr[lk],'d')*nrhs;
                 crc_16_val=crc_16((unsigned char*)&recvbuf0[XK_H],sizeof(double)*checkend);
                 //myhash=calcul_hash(&recvbuf0[XK_H],sizeof(double)*checkend);
-                ////printf("bcbc--333--k=%lf, size=%d,checksum=%llu, myhash=%lf,should be %lf / %llu \n",recvbuf0[0], checkend, calcul_hash(&recvbuf0[XK_H],sizeof(double)*checkend), myhash, recvbuf0[XK_H-1], (unsigned long long)recvbuf0[XK_H-1]);
-                ////fflush(stdout);
-                //if((myhash-recvbuf0[XK_H-1])!=0.0) {
-                //if((recvbuf0[checkend-1]-recvbuf0[XK_H-1])!=0.0) {
                 if(crc_16_val!=(uint16_t)recvbuf0[LSUM_H-1]) {
                     if(shift>0){
                         validBCQindex[bcidx-shift]=validBCQindex[bcidx];
@@ -1662,18 +1704,15 @@ if(Llu->inv == 1){
                 totalsolveBC += 1; //BC_subtotal[bcidx] - BCis_solved[bcidx];
 			    BCis_solved[recvRankNum]++;
                         
-                //printf("bcbc--3--iam=%d, BCis_solved[%d]=%d/%d\n",iam,recvRankNum,BCis_solved[recvRankNum],BufSize[recvRankNum]);
-                //fflush(stdout);
-			
+
                 if(BcTree_getDestCount(LBtree_ptr[lk],'d')>0){
 	                //BcTree_forwardMessageOneSide(LBtree_ptr[lk],recvbuf0,checkend,'d', &iam_col, BCcount, BCbase, &maxrecvsz, Pc);
 	                BcTree_forwardMessageOneSide(LBtree_ptr[lk],recvbuf0,BcTree_GetMsgSize(LBtree_ptr[lk],'d')*nrhs+XK_H,'d', &iam_col, BCcount, BCbase, &maxrecvsz, Pc);
 			    }
-                //printf("bcbc--444--iam=%d\n",iam);
-                //fflush(stdout);
-	
+
 		        lsub = Lrowind_bc_ptr[lk];
-	
+                printf("In BC solve, iam %d, k=%d, lk=%d, lsub =%d\n", iam, k, lk, lsub);
+                fflush(stdout);
 		        
                  if ( lsub ) {
                          krow = PROW( k, grid );
@@ -1690,8 +1729,7 @@ if(Llu->inv == 1){
 		                dlsum_fmod_inv_master(lsum, x, xin, rtemp, nrhs, knsupc, k,
 			        	              fmod, nb, xsup, grid, Llu,
 			                	      stat_loc,sizelsum,sizertemp,0,maxsuper,thread_id,num_thread, 
-                                      &iam_row, RDcount, &iam_col, BCcount, Pc, maxrecvsz);
-		
+			                	      &iam_row, RDcount, RDbase, &iam_col, BCcount, BCbase, Pc, maxrecvsz);
 			    } /* if lsub */
               
                if (BCis_solved[recvRankNum] == BufSize[recvRankNum]) {
@@ -1707,7 +1745,7 @@ if(Llu->inv == 1){
                         //fflush(stdout);
                    }
                }
-               //printf("iam=%d,BCis_solved[%d]=%d,BufSize[%d]=%d\n",iam,recvRankNum,BCis_solved[recvRankNum],recvRankNum,BufSize[recvRankNum]); 
+               //printf("iam=%d,BCis_solved[%d]=%d,BufSize[%d]=%d\n",iam,recvRankNum,BCis_solved[recvRankNum],recvRankNum,BufSize[recvRankNum]);
                //fflush(stdout);
             } // for bcidx 
 
@@ -1872,7 +1910,7 @@ if(Llu->inv == 1){
                				        dlsum_fmod_inv_master(lsum, x, xin, rtemp, nrhs, knsupc, k,
                				 	        	fmod, nb, xsup, grid, Llu,
                				 		        stat_loc,sizelsum,sizertemp,0,maxsuper,thread_id,num_thread,
-                                            &iam_row, RDcount,&iam_col, BCcount, Pc, maxrecvsz);
+                                            &iam_row, RDcount, RDbase, &iam_col, BCcount, BCbase, Pc, maxrecvsz);
                                     //printf("12----iam=%d,k=%d\n",iam,k);
                                     //fflush(stdout);
                			        } /* if lsub */
@@ -1920,146 +1958,239 @@ if(Llu->inv == 1){
 //fflush(stdout);
 
 #elif defined (pget)
-int get_msgsize=0;
-    while( nfrecv1 < nfrecvx+nfrecvmod ){
-        thread_id = 0;
-        if (totalsolveBC < nfrecvx){
-	        shift=0;
-            for (bcidx=0;bcidx<Pr && validBCQindex[bcidx]!=-1;bcidx++){
+//printf("Will begin pget while\n");
+//fflush(stdout);
+//int tmp_counter=0;
+while( nfrecv1 < nfrecvx+nfrecvmod ){
+    thread_id = 0;
+    if (totalsolveBC < nfrecvx){
+        shift=0;
+        for (bcidx=0;bcidx<Pr && validBCQindex[bcidx]!=-1;bcidx++){
 
-                recvRankNum=validBCQindex[bcidx];  //bcidx; //validBCQindex[bcidx];
+            recvRankNum=validBCQindex[bcidx];  //recvRankNum is rank no. in col/row sub-communicator
+            int tmp_idx=mylocal_BCbase[recvRankNum]+BCis_solved[recvRankNum]*RDMA_FLAG_SIZE;
+            //printf("In BC solve, iam %d will get from %d, mylocal_BCbase=%d, BCis_solved=%d\n",iam,recvRankNum,mylocal_BCbase[bcidx],BCis_solved[recvRankNum]);
+            //fflush(stdout);
+            if ((bc_pget_count[tmp_idx] == -1) || (bc_pget_count[tmp_idx+1] == -1) || (bc_pget_count[tmp_idx+2] == -1))  {
 
-                if (bc_pget_count[bcidx] <= BCis_solved[recvRankNum])  {
-                   if(shift>0){
+                if(shift>0){
+                    validBCQindex[bcidx-shift]=validBCQindex[bcidx];
+                    validBCQindex[bcidx]=-1;
+                    //printf("iam=%d,Now shift %d to %d\n",iam,bcidx,bcidx-shift);
+                    //fflush(stdout);
+                }
+               continue;
+            } else {
+                get_offset=bc_pget_count[tmp_idx];
+                get_msgsize=bc_pget_count[tmp_idx+1];
+                get_fromwhere=bc_pget_count[tmp_idx+2];
+                //printf("In BC solve (%d), iam %d get from %d, get_offset=%d, get_msgsize=%d, get_fromwhere=%d,mylocal_BCbase=%d, BCis_solved=%d \n",tmp_counter,iam,recvRankNum,get_offset,get_msgsize, get_fromwhere,mylocal_BCbase[bcidx],BCis_solved[recvRankNum]);
+                //fflush(stdout);
+
+                mycur_offset=mynext_offset;
+
+                if (get_fromwhere==1){
+                    //printf("In BC solve (%d), iam %d in 1, mycur_offset=%d,get_msgsize=%d\n",tmp_counter, iam,mycur_offset,get_msgsize);
+                    //fflush(stdout);
+                    //foMPI_Win_lock(foMPI_LOCK_EXCLUSIVE,recvRankNum,0,bc_winl_get);
+                    //foMPI_Win_lock(foMPI_LOCK_SHARED,recvRankNum,0,bc_winl_get);
+                    //int foMPI_Get(void *origin_addr, int origin_count, MPI_Datatype origin_datatype, int target_rank, MPI_Aint target_disp, int target_count, MPI_Datatype target_datatype, foMPI_Win win);
+                    foMPI_Get(&tmp_buf_bc[mycur_offset], get_msgsize, MPI_DOUBLE, recvRankNum, get_offset, get_msgsize, MPI_DOUBLE,bc_winl_get);
+                    //foMPI_Win_unlock(recvRankNum,bc_winl_get);
+                    foMPI_Win_flush_local(recvRankNum,bc_winl_get);
+                    //printf("In BC solve (%d), iam %d,finish get from x\n",tmp_counter,iam);
+                    //fflush(stdout);
+
+                }else{
+                    //printf("In BC solve (%d), iam %d in 2\n",tmp_counter,iam);
+                    //fflush(stdout);
+                    //foMPI_Win_lock(foMPI_LOCK_EXCLUSIVE,recvRankNum,0,tmp_bc_winl_get);
+                    //int foMPI_Get(void *origin_addr, int origin_count, MPI_Datatype origin_datatype, int target_rank, MPI_Aint target_disp, int target_count, MPI_Datatype target_datatype, foMPI_Win win);
+                    foMPI_Get(&tmp_buf_bc[mycur_offset], get_msgsize, MPI_DOUBLE, recvRankNum, get_offset, get_msgsize, MPI_DOUBLE,tmp_bc_winl_get);
+                    foMPI_Win_flush_local(recvRankNum, tmp_bc_winl_get);
+                    //foMPI_Win_unlock(recvRankNum,tmp_bc_winl_get);
+                    //printf("In BC solve (%d), iam %d,finish get from tmp_buf_bc\n",tmp_counter,iam);
+                    //fflush(stdout);
+                }
+
+
+                mynext_offset+=get_msgsize;
+
+                //printf("In BC solve (%d), iam %d, mycur_offset=%d\n",tmp_counter, iam,mycur_offset);
+                //fflush(stdout);
+
+                k = tmp_buf_bc[mycur_offset];
+                lk = LBj( k, grid );    /* local block number */
+	            lsub = Lrowind_bc_ptr[lk];
+
+                //printf("In BC solve (%d), iam %d, k=%d, lk=%d, lsub =%d\n",tmp_counter, iam, k, lk, lsub);
+                //fflush(stdout);
+
+
+
+	            totalsolveBC += 1; //BC_subtotal[bcidx] - BCis_solved[bcidx];
+		        BCis_solved[recvRankNum]++;
+                //printf("In BC solve (%d), iam %d,BCis_solved[%d]=%d,getDestCount=%d\n",tmp_counter, iam,recvRankNum,BCis_solved[recvRankNum],BcTree_getDestCount(LBtree_ptr[lk],'d'));
+                //fflush(stdout);
+
+
+                //printf("In BC solve (%d), iam %d before getDestCount\n",tmp_counter,iam );
+                //fflush(stdout);
+
+                if(BcTree_getDestCount(LBtree_ptr[lk],'d')>0){
+                    //printf("In BC solve (%d), iam %d enter getDestCount\n",tmp_counter,iam );
+                    //fflush(stdout);
+                    bc_rdma_start[mylocal_bc_put_flag_offset+0]=mycur_offset;
+                    bc_rdma_start[mylocal_bc_put_flag_offset+1]=get_msgsize;
+                    bc_rdma_start[mylocal_bc_put_flag_offset+2]=2;
+                    //printf("In BC solve (%d), will notify get x ,offset=%d,msgsize=%d\n",tmp_counter, bc_rdma_start[mylocal_bc_put_flag_offset],bc_rdma_start[mylocal_bc_put_flag_offset+1]);
+                    //fflush(stdout);
+                    BcTree_forwardMessageOneSide(LBtree_ptr[lk],'d',&bc_rdma_start[mylocal_bc_put_flag_offset], Pc,BCcount, BCbase);
+                    mylocal_bc_put_flag_offset += RDMA_FLAG_SIZE;
+		        }
+
+                //printf("In BC solve (%d), iam %d before if lsub\n",tmp_counter,iam );
+                //fflush(stdout);
+
+                if ( lsub ) {
+                     krow = PROW( k, grid );
+	                 if(myrow==krow){
+	         	        nb = lsub[0] - 1;
+	                     knsupc = SuperSize( k );
+	                     ii = X_BLK( LBi( k, grid ) );
+	           	        xin = &x[ii];
+			         }else{
+	                         nb   = lsub[0];
+	                         knsupc = SuperSize( k );
+			                 xin = &tmp_buf_bc[mycur_offset+XK_H] ;
+			         }
+                    //printf("In BC solve (%d), iam %d, before dlsum_fmod_inv_master \n",tmp_counter,iam);
+                    //fflush(stdout);
+	                dlsum_fmod_inv_master(lsum, x, xin, rtemp, nrhs, knsupc, k,
+		        	              fmod, nb, xsup, grid, Llu,
+		                	      stat_loc,sizelsum,sizertemp,0,maxsuper,thread_id,num_thread,
+                                  &iam_row, rd_rdma_start, &iam_col, bc_rdma_start, Pc, maxrecvsz,BCcount, BCbase,RDcount,RDbase,&mylocal_bc_put_flag_offset, &mylocal_rd_put_flag_offset);
+                    //printf("In BC solve (%d), iam %d, after dlsum_fmod_inv_master \n",tmp_counter, iam);
+                    //fflush(stdout);
+
+		        } /* if lsub */
+
+                if (BCis_solved[recvRankNum] == BufSize[recvRankNum]) {
+                    validBCQindex[bcidx]=-1;
+                    shift += 1;
+                    //printf("iam=%d,shift=%d\n",iam,shift);
+                    //fflush(stdout);
+                }else{
+                    if(shift>0){
                         validBCQindex[bcidx-shift]=validBCQindex[bcidx];
                         validBCQindex[bcidx]=-1;
                         //printf("iam=%d,Now shift %d to %d\n",iam,bcidx,bcidx-shift);
                         //fflush(stdout);
-                   }
-                   continue;
-                } else if (bc_pget_count[bcidx] > BCis_solved[recvRankNum]) {
-                    k = *recvbuf0;
-                    lk = LBj( k, grid );    /* local block number */
-
-                    get_msgsize=BcTree_GetMsgSize(LBtree_ptr[lk],'d')*nrhs+XK_H;
-                    //int foMPI_Get(void *origin_addr, int origin_count, MPI_Datatype origin_datatype, int target_rank, MPI_Aint target_disp, int target_count, MPI_Datatype target_datatype, foMPI_Win win);
-                    foMPI_Get(recvbuf0, get_msgsize, MPI_DOUBLE, recvRankNum, 0, get_msgsize, MPI_DOUBLE,bc_winl_get);
-
-
-                    totalsolveBC += 1; //BC_subtotal[bcidx] - BCis_solved[bcidx];
-			        BCis_solved[recvRankNum]++;
-
-
-                    if(BcTree_getDestCount(LBtree_ptr[lk],'d')>0){
-	                    BcTree_forwardMessageOneSide(LBtree_ptr[lk],'d',BCcount, Pc);
-			        }
-
-		            lsub = Lrowind_bc_ptr[lk];
-
-
-                    if ( lsub ) {
-                         krow = PROW( k, grid );
-		                 if(myrow==krow){
-		         	        nb = lsub[0] - 1;
-		                     knsupc = SuperSize( k );
-		                     ii = X_BLK( LBi( k, grid ) );
-		           	        xin = &x[ii];
-				         }else{
-		                         nb   = lsub[0];
-		                         knsupc = SuperSize( k );
-				                 xin = &recvbuf0[XK_H] ;
-				         }
-		                dlsum_fmod_inv_master(lsum, x, xin, rtemp, nrhs, knsupc, k,
-			        	              fmod, nb, xsup, grid, Llu,
-			                	      stat_loc,sizelsum,sizertemp,0,maxsuper,thread_id,num_thread,
-                                      &iam_row, RDcount, &iam_col, BCcount, Pc, maxrecvsz);
-
-			        } /* if lsub */
-
-                    if (BCis_solved[recvRankNum] == BufSize[recvRankNum]) {
-                        validBCQindex[bcidx]=-1;
-                        shift += 1;
-                        //printf("iam=%d,shift=%d\n",iam,shift);
-                        //fflush(stdout);
-                    }else{
-                        if(shift>0){
-                            validBCQindex[bcidx-shift]=validBCQindex[bcidx];
-                            validBCQindex[bcidx]=-1;
-                            //printf("iam=%d,Now shift %d to %d\n",iam,bcidx,bcidx-shift);
-                            //fflush(stdout);
-                        }
                     }
-                    //printf("iam=%d,BCis_solved[%d]=%d,BufSize[%d]=%d\n",iam,recvRankNum,BCis_solved[recvRankNum],recvRankNum,BufSize[recvRankNum]);
-                    //fflush(stdout);
-                 } // if bc_pget_count>0
-            } // for bcidx
-            //TOC(t2, t1);
-            //onesidecomm_rd += t2;
-        }
+                }
+                //printf("In BC solve (%d),iam %d,BCis_solved[%d]=%d,BufSize[%d]=%d\n",tmp_counter, iam,recvRankNum,BCis_solved[recvRankNum],recvRankNum,BufSize[recvRankNum]);
+                //fflush(stdout);
+                //tmp_counter +=1;
+             } // if bc_pget_count>0
+        } // for bcidx
+        //TOC(t2, t1);
+        //onesidecomm_rd += t2;
+    }
 
     if (totalsolveRD < nfrecvmod){
        shift=0;
        for (rdidx=0;rdidx<Pc && validRDQindex[rdidx]!=-1;rdidx++){
            recvRankNum=validRDQindex[rdidx];  //bcidx; //validBCQindex[bcidx];
-
-           if (rd_pget_count[rdidx] <= RDis_solved[recvRankNum] ){
+           int tmp_idx=mylocal_RDbase[recvRankNum]+RDis_solved[recvRankNum]*RDMA_FLAG_SIZE;
+           if (rd_pget_count[tmp_idx] == -1){
                 if(shift>0){
                     validRDQindex[rdidx-shift]=validRDQindex[rdidx];
                     validRDQindex[rdidx]=-1;
                 }
               continue;
-           } else if (rd_pget_count[rdidx] > RDis_solved[recvRankNum]) {
+           } else {
+                //printf("In RD solve, iam %d will get from %d, mylocal_RDbase=%d, RDis_solved=%d\n",iam,recvRankNum,mylocal_RDbase[rdidx],RDis_solved[recvRankNum]);
+                //fflush(stdout);
+                get_offset=rd_pget_count[tmp_idx];
+                get_msgsize=rd_pget_count[tmp_idx+1];
 
-                k = *recvbuf0;
+                //printf("In RD solve, iam %d get from %d, rd_rdma_offset=%d, get_msgsize=%d\n",iam,recvRankNum,get_offset,get_msgsize);
+                //fflush(stdout);
+                get_fromwhere=rd_pget_count[tmp_idx+2];
+                //printf("In RD solve, iam %d get from %d, get_fromwhere=%d\n",iam,recvRankNum,get_fromwhere);
+                //fflush(stdout);
+
+
+                mycur_offset=mynext_offset;
+                if (get_fromwhere==1){
+                    //printf("In RD solve, iam %d in 1\n",iam);
+                    //fflush(stdout);
+                    //int foMPI_Get(void *origin_addr, int origin_count, MPI_Datatype origin_datatype, int target_rank, MPI_Aint target_disp, int target_count, MPI_Datatype target_datatype, foMPI_Win win);
+                    foMPI_Get(&tmp_buf_rd[mycur_offset], get_msgsize, MPI_DOUBLE, recvRankNum, get_offset, get_msgsize, MPI_DOUBLE,rd_winl_get);
+                    foMPI_Win_flush_local(recvRankNum,rd_winl_get);
+                    //printf("In RD solve, iam=%d,finish get from tmp_buf_rd\n",iam);
+                    //fflush(stdout);
+                }else{
+                    //printf("In RD solve, iam %d in 2\n",iam);
+                    //fflush(stdout);
+                    //int foMPI_Get(void *origin_addr, int origin_count, MPI_Datatype origin_datatype, int target_rank, MPI_Aint target_disp, int target_count, MPI_Datatype target_datatype, foMPI_Win win);
+                    foMPI_Get(&tmp_buf_rd[mycur_offset], get_msgsize, MPI_DOUBLE, recvRankNum, get_offset, get_msgsize, MPI_DOUBLE,tmp_rd_winl_get);
+                    foMPI_Win_flush_local(recvRankNum, tmp_rd_winl_get);
+                    //printf("In RD solve, iam=%d,finish get from tmp_buf_rd\n",iam);
+                    //fflush(stdout);
+                }
+
+                mynext_offset+=get_msgsize;
+                k = tmp_buf_rd[mycur_offset];
+                //printf("iam %d,Get k=%d\n",iam,k);
+                //fflush(stdout);
                 lk = LBi( k, grid );
+                //printf("iam %d,Get lk=%d\n",iam,lk);
+                //fflush(stdout);
 
-                get_msgsize=RdTree_GetMsgSize(LRtree_ptr[lk],'d')*nrhs+LSUM_H;
-                //int foMPI_Get(void *origin_addr, int origin_count, MPI_Datatype origin_datatype, int target_rank, MPI_Aint target_disp, int target_count, MPI_Datatype target_datatype, foMPI_Win win);
-                foMPI_Get(recvbuf0, get_msgsize, MPI_DOUBLE, recvRankNum, 0, get_msgsize, MPI_DOUBLE,rd_winl_get);
                 totalsolveRD += 1; //RD_subtotal[rdidx]-RDis_solved[rdidx];
-
                 RDis_solved[recvRankNum] += 1 ;
 
                 knsupc = SuperSize( k );
-                tempv = &recvbuf0[LSUM_H];
+                tempv = &tmp_buf_rd[mycur_offset+LSUM_H];
                 il = LSUM_BLK( lk );
                 RHS_ITERATE(j) {
                                for (i = 0; i < knsupc; ++i)
                                         lsum[i + il + j*knsupc + thread_id*sizelsum] += tempv[i + j*knsupc];
                 }
 
-                       fmod_tmp=--fmod[lk*aln_i];
+                fmod_tmp=--fmod[lk*aln_i];
 
-	                   thread_id = 0;
-	                   rtemp_loc = &rtemp[sizertemp* thread_id];
-                       //printf("5----iam=%d,k=%d\n",iam,k);
-                       //fflush(stdout);
-	                   if ( fmod_tmp==0 ) {
-                            //printf("6----iam=%d,k=%d\n",iam,k);
-                            //fflush(stdout);
-		                    if(RdTree_IsRoot(LRtree_ptr[lk],'d')==YES){
-                                knsupc = SuperSize( k );
-                                //printf("7----iam=%d,k=%d\n",iam,k);
-                                //fflush(stdout);
-                                for (ii=1;ii<num_thread;ii++)
+	            thread_id = 0;
+	            rtemp_loc = &rtemp[sizertemp* thread_id];
+                //printf("5----iam=%d,k=%d\n",iam,k);
+                //fflush(stdout);
+	            if ( fmod_tmp==0 ) {
+                    //printf("6----iam=%d,k=%d\n",iam,k);
+                    //fflush(stdout);
+		            if(RdTree_IsRoot(LRtree_ptr[lk],'d')==YES){
+                        knsupc = SuperSize( k );
+                        //printf("7----iam=%d,k=%d\n",iam,k);
+                        //fflush(stdout);
+                        for (ii=1;ii<num_thread;ii++)
 #ifdef _OPENMP
 	#pragma omp simd
 #endif
- 				                for (jj=0;jj<knsupc*nrhs;jj++)
-					                lsum[il + jj ] += lsum[il + jj + ii*sizelsum];
+ 				            for (jj=0;jj<knsupc*nrhs;jj++)
+					            lsum[il + jj ] += lsum[il + jj + ii*sizelsum];
 
 				                ii = X_BLK( lk );
 			        	        RHS_ITERATE(j){
 #ifdef _OPENMP
 	#pragma omp simd
 #endif
-			  	                for (i = 0; i < knsupc; ++i)
-				        	        x[i + ii + j*knsupc] += lsum[i + il + j*knsupc ];
-                                        }
-        		        	    lk = LBj( k, grid ); /* Local block number, column-wise. */
-	                         	lsub = Lrowind_bc_ptr[lk];
-	        	                lusup = Lnzval_bc_ptr[lk];
-	        	        	    nsupr = lsub[1];
+			  	            for (i = 0; i < knsupc; ++i)
+				        	    x[i + ii + j*knsupc] += lsum[i + il + j*knsupc ];
+                                    }
+        		        	lk = LBj( k, grid ); /* Local block number, column-wise. */
+	                        lsub = Lrowind_bc_ptr[lk];
+	        	            lusup = Lnzval_bc_ptr[lk];
+	        	        	nsupr = lsub[1];
 
 //#if ( PROFlevel>=1 )
 //	 		        	        TIC(t1);
@@ -2110,9 +2241,13 @@ int get_msgsize=0;
                                 //fflush(stdout);
 
                				    if(LBtree_ptr[lk]!=NULL){
-                                    //printf("9----iam=%d,k=%d\n",iam,k);
+                                    bc_rdma_start[mylocal_bc_put_flag_offset]=ii-XK_H;
+                                    bc_rdma_start[mylocal_bc_put_flag_offset+1]=BcTree_GetMsgSize(LBtree_ptr[lk],'d')*nrhs+XK_H;
+                                    bc_rdma_start[mylocal_bc_put_flag_offset+2]=1;
+                                   	//printf("In RD solve, will notify get x ,offset=%d,msgsize=%d\n",bc_rdma_start[0],bc_rdma_start[1]);
                                     //fflush(stdout);
-       				        	    BcTree_forwardMessageOneSide(LBtree_ptr[lk],'d', BCcount, Pc);
+       				        	    BcTree_forwardMessageOneSide(LBtree_ptr[lk],'d', &bc_rdma_start[mylocal_bc_put_flag_offset], Pc, BCcount,BCbase);
+                                    mylocal_bc_put_flag_offset += RDMA_FLAG_SIZE;
                                     //printf("10----iam=%d,k=%d\n",iam,k);
                                     //fflush(stdout);
 			        	        }
@@ -2126,18 +2261,16 @@ int get_msgsize=0;
                				        knsupc = SuperSize( k );
                				 	    ii = X_BLK( LBi( k, grid ) );
                				 	    xin = &x[ii];
-                                    //printf("11----iam=%d,k=%d\n",iam,k);
+                                    //printf("iam %d, before dlsum_fmod_inv_master \n",iam);
                                     //fflush(stdout);
                				        dlsum_fmod_inv_master(lsum, x, xin, rtemp, nrhs, knsupc, k,
                				 	        	fmod, nb, xsup, grid, Llu,
                				 		        stat_loc,sizelsum,sizertemp,0,maxsuper,thread_id,num_thread,
-                                            &iam_row, RDcount, &iam_col, BCcount, Pc, maxrecvsz);
-                                    //printf("12----iam=%d,k=%d\n",iam,k);
+                                            &iam_row, rd_rdma_start, &iam_col, bc_rdma_start, Pc, maxrecvsz, BCcount, BCbase, RDcount, RDbase, &mylocal_bc_put_flag_offset, &mylocal_rd_put_flag_offset);
+               				        //printf("iam %d, after dlsum_fmod_inv_master \n",iam);
                                     //fflush(stdout);
                			        } /* if lsub */
                         }else{ // RdTree Yes
-                            //printf("13----iam=%d,k=%d\n",iam,k);
-                            //fflush(stdout);
 				       	    il = LSUM_BLK( lk );
 			              	knsupc = SuperSize( k );
 
@@ -2147,11 +2280,13 @@ int get_msgsize=0;
 #endif
 			     	                  for (jj=0;jj<knsupc*nrhs;jj++)
 			                               	lsum[il + jj] += lsum[il + jj + ii*sizelsum];
-                    //printf("14----iam=%d,k=%d\n",iam,k);
+                    rd_rdma_start[mylocal_rd_put_flag_offset]=il-LSUM_H;
+                    rd_rdma_start[mylocal_rd_put_flag_offset+1]=RdTree_GetMsgSize(LRtree_ptr[lk],'d')*nrhs+LSUM_H;
+                    rd_rdma_start[mylocal_rd_put_flag_offset+2]=1;
+                    //printf("In RD solve, will notify get lsum ,offset=%d,msgsize=%d\n",rd_rdma_start[mylocal_rd_put_flag_offset],rd_rdma_start[mylocal_rd_put_flag_offset+1]);
                     //fflush(stdout);
-					RdTree_forwardMessageOneSide(LRtree_ptr[lk],'d', RDcount, Pc);
-                    //printf("15----iam=%d,k=%d\n",iam,k);
-                    //fflush(stdout);
+					RdTree_forwardMessageOneSide(LRtree_ptr[lk],'d',&rd_rdma_start[mylocal_rd_put_flag_offset], Pc, RDcount, RDbase);
+                    mylocal_rd_put_flag_offset += RDMA_FLAG_SIZE;
                     } // end if RD xxxx YES
 			} // end of fmod_tmp=0
             if (RDis_solved[recvRankNum] == BufSize_rd[recvRankNum]) {
@@ -2469,10 +2604,12 @@ int get_msgsize=0;
             RD_taskq[i]=(-1.0);
         }
 #elif defined (pget)
-        foMPI_Win_unlock_all(bc_winl);
-        foMPI_Win_unlock_all(rd_winl);
-        foMPI_Win_unlock_all(bc_winl_get);
-        foMPI_Win_unlock_all(rd_winl_get);
+    foMPI_Win_unlock_all(bc_winl);
+    foMPI_Win_unlock_all(rd_winl);
+    foMPI_Win_unlock_all(bc_winl_get);
+    foMPI_Win_unlock_all(rd_winl_get);
+    foMPI_Win_unlock_all(tmp_bc_winl_get);
+    foMPI_Win_unlock_all(tmp_rd_winl_get);
 #else
 		SUPERLU_FREE(recvbuf_BC_fwd);
 
@@ -2689,17 +2826,77 @@ int get_msgsize=0;
     double nbrecv1=0;
     totalsolveBC=0;
     totalsolveRD=0;
-    memset(BCcount, 0, ( Pr * sizeof(int)));
-    memset(RDcount, 0, ( Pc * sizeof(int)));
+    mylocal_bc_put_flag_offset=0;
+    mylocal_rd_put_flag_offset=0;
+    memset(mylocal_BCbase, 0, ( Pr * sizeof(int)));
+    memset(mylocal_RDbase, 0, ( Pc * sizeof(int)));
     memset(BCis_solved, 0, Pr * sizeof(int));
     memset(RDis_solved, 0, Pc * sizeof(int));
-    memset(rd_pget_count, 0, Pr * sizeof(int));
-    memset(bc_pget_count, 0, Pc * sizeof(int));
+    memset(BCcount, 0, ( Pr * sizeof(int)));
+    memset(RDcount, 0, ( Pc * sizeof(int)));
 
-    foMPI_Win_lock_all(0, bc_winl);
-    foMPI_Win_lock_all(0, rd_winl);
-    foMPI_Win_lock_all(0, bc_winl_get);
-    foMPI_Win_lock_all(0, rd_winl_get);
+
+    for (i=0;i<RDMA_FLAG_SIZE*(mysendmsg_num>mysendmsg_num_u?mysendmsg_num:mysendmsg_num_u);i++) bc_rdma_start[i]=-1;
+    for (i=0;i<RDMA_FLAG_SIZE*(mysendmsg_num_rd>mysendmsg_num_urd?mysendmsg_num_rd:mysendmsg_num_urd);i++) rd_rdma_start[i]=-1;
+
+    int bc_flag_size=RDMA_FLAG_SIZE * (nfrecvx>nbrecvx?nfrecvx:nbrecvx);
+    int rd_flag_size=RDMA_FLAG_SIZE * (nfrecvmod>nbrecvmod?nfrecvmod:nbrecvmod);
+
+
+    for (i=0;i<bc_flag_size;i++) bc_pget_count[i] = -1;
+    for (i=0;i<rd_flag_size;i++) rd_pget_count[i] = -1;
+
+    if( Pr > 1){
+        for (i=0;i<Pr;i++){
+                BCbase[i] = recv_size_all_u[i]*RDMA_FLAG_SIZE;
+                //printf("In U solve, iam=%d, recv_size_all_u[%d]=%d,BCbase[%d]=%d\n",iam, i, recv_size_all_u[i],i,BCbase[i]);
+                //fflush(stdout);
+        }
+    }
+    if(Pc > 1){
+        for (i=0;i<Pc;i++){
+                RDbase[i] = recv_size_all_u[Pr+i]*RDMA_FLAG_SIZE;
+                //printf("In U solve, iam=%d, recv_size_all_u[%d]=%d,RDbase[%d]=%d\n",iam, i, recv_size_all_u[Pr+i],i,RDbase[i]);
+                //fflush(stdout);
+        }
+    }
+
+    for (i=0; i<Pr;i++){
+             for(j=0;j<i;j++){
+                     //oneside_buf_offset[i]: When rank i put flags to my flag buffer, the relative offet is oneside_buf_offset[i].
+                     // Eg., RDMA_FLAG_SIZE*oneside_buf_offset[i] is the real offset to get flag from rank i
+                     mylocal_BCbase[i] += BufSize_u[j]*RDMA_FLAG_SIZE;
+             }
+             //printf("In U solve, iam=%d, iam_col=%d, U mylocal_BCbase[%d]=%d\n",iam, iam_col,i,mylocal_BCbase[i]);
+             //fflush(stdout);
+     }
+
+
+    for (i=0; i<Pc;i++){
+             for(j=0;j<i;j++){
+                     //oneside_buf_offset[i]: When rank i put flags to my flag buffer, the relative offet is oneside_buf_offset[i].
+                     // Eg., RDMA_FLAG_SIZE*oneside_buf_offset[i] is the real offset to get flag from rank i
+                     mylocal_RDbase[i] += BufSize_urd[j]*RDMA_FLAG_SIZE;
+             }
+             //printf("In U solve, iam=%d, iam_row=%d, U mylocal_RDbase[%d]=%d\n",iam, iam_row,i,mylocal_RDbase[i]);
+             //fflush(stdout);
+     }
+
+
+   bc_flag_size=maxrecvsz* (nfrecvx>nbrecvx?nfrecvx:nbrecvx);
+   rd_flag_size=maxrecvsz * (nfrecvmod>nbrecvmod?nfrecvmod:nbrecvmod);
+
+   for(i=0;i<bc_flag_size;i++) tmp_buf_bc[i]=-1;
+   for(i=0;i<rd_flag_size;i++) tmp_buf_rd[i]=-1;
+
+   foMPI_Win_lock_all(0, bc_winl);
+   foMPI_Win_lock_all(0, rd_winl);
+   foMPI_Win_lock_all(0, bc_winl_get);
+   foMPI_Win_lock_all(0, rd_winl_get);
+   foMPI_Win_lock_all(0, tmp_bc_winl_get);
+   foMPI_Win_lock_all(0, tmp_rd_winl_get);
+   // printf("(%2d) nbrecvx %4d,  nbrecvmod %4d,  nroot %4d\n,  nbtree %4d\n,  nrtree %4d\n",
+   //		iam, nbrecvx, nbrecvmod, nroot, nbtree, nrtree);
 #else
     if ( !(recvbuf_BC_fwd = (double*)SUPERLU_MALLOC(maxrecvsz*(nbrecvx+1) * sizeof(double))) )  // this needs to be optimized for 1D row mapping
     ABORT("Malloc fails for recvbuf_BC_fwd[].");
@@ -2873,7 +3070,11 @@ int get_msgsize=0;
 #ifdef oneside
             BcTree_forwardMessageOneSide(UBtree_ptr[lk],&x[ii - XK_H],BcTree_GetMsgSize(UBtree_ptr[lk],'d')*nrhs+XK_H,'d',&iam_col,BCcount, BCbase, &maxrecvsz,Pc);
 #elif defined (pget)
-            BcTree_forwardMessageOneSide(UBtree_ptr[lk],'d',BCcount, Pc);
+            bc_rdma_start[mylocal_bc_put_flag_offset]=ii-XK_H;
+            bc_rdma_start[mylocal_bc_put_flag_offset+1]=BcTree_GetMsgSize(UBtree_ptr[lk],'d')*nrhs+XK_H;
+            bc_rdma_start[mylocal_bc_put_flag_offset+2]=1;
+            BcTree_forwardMessageOneSide(UBtree_ptr[lk],'d', &bc_rdma_start[mylocal_bc_put_flag_offset], Pc, BCcount, BCbase);
+            mylocal_bc_put_flag_offset += RDMA_FLAG_SIZE;
 #else
             BcTree_forwardMessageSimple(UBtree_ptr[lk],&x[ii - XK_H],BcTree_GetMsgSize(UBtree_ptr[lk],'d')*nrhs+XK_H,'d');
 #endif
@@ -2883,7 +3084,11 @@ int get_msgsize=0;
 #ifdef oneside
             RdTree_forwardMessageOneSide(URtree_ptr[lk],&lsum[il - LSUM_H ],RdTree_GetMsgSize(URtree_ptr[lk],'d')*nrhs+LSUM_H,'d',&iam_row, RDcount, RDbase, &maxrecvsz, Pc);
 #elif defined (pget)
-            RdTree_forwardMessageOneSide(URtree_ptr[lk],'d', RDcount, Pc);
+            rd_rdma_start[mylocal_rd_put_flag_offset]=il-LSUM_H;
+            rd_rdma_start[mylocal_rd_put_flag_offset+1]=RdTree_GetMsgSize(URtree_ptr[lk],'d')*nrhs+LSUM_H;
+            rd_rdma_start[mylocal_rd_put_flag_offset+2]=1;
+            RdTree_forwardMessageOneSide(URtree_ptr[lk],'d', &rd_rdma_start[mylocal_rd_put_flag_offset], Pc, RDcount, RDbase);
+            mylocal_rd_put_flag_offset += RDMA_FLAG_SIZE;
 #else
             RdTree_forwardMessageSimple(URtree_ptr[lk],&lsum[il - LSUM_H ],RdTree_GetMsgSize(URtree_ptr[lk],'d')*nrhs+LSUM_H,'d');
 #endif
@@ -2964,7 +3169,7 @@ while(nbrecv1< nbrecvx+nbrecvmod){
 			dlsum_bmod_inv_master(lsum, x, &recvbuf0[XK_H], rtemp, nrhs, k, bmod, Urbs,Urbs2,
 			            	Ucb_indptr, Ucb_valptr, xsup, grid, Llu,
 				            send_req, stat_loc, sizelsum,sizertemp,thread_id,num_thread,
-                            &iam_row, RDcount, &iam_col, BCcount, Pc, maxrecvsz);
+                            &iam_row, RDcount, RDbase, &iam_col, BCcount, BCbase, Pc, maxrecvsz);
             //printf("iam=%d,End dlsum_bmod_inv_master debug_count=%d,shift=%d\n",iam,debug_count,shift);
             //fflush(stdout);
 
@@ -3129,7 +3334,7 @@ while(nbrecv1< nbrecvx+nbrecvmod){
 							dlsum_bmod_inv_master(lsum, x, &x[ii], rtemp, nrhs, k, bmod, Urbs,Urbs2,
 									            Ucb_indptr, Ucb_valptr, xsup, grid, Llu,
 									            send_req, stat_loc, sizelsum,sizertemp,thread_id,num_thread,
-                                                &iam_row, RDcount, &iam_col, BCcount, Pc, maxrecvsz);
+                                                &iam_row, RDcount, RDbase, &iam_col, BCcount, BCbase, Pc, maxrecvsz);
 
 					}else{ // if(RdTree_IsRoot(URtree_ptr[lk],'d')==YES)
 						il = LSUM_BLK( lk );
@@ -3167,14 +3372,20 @@ while(nbrecv1< nbrecvx+nbrecvmod){
     recvRankNum=-1;
     shift=0;
     get_msgsize=0;
+    mynext_offset=0;
+    mycur_offset=0;
+    //tmp_counter=0;
+    //printf("iam=%d, will enter U while\n",iam);
+    //fflush(stdout);
+
     while(nbrecv1< nbrecvx+nbrecvmod){
         thread_id=0;
         if (totalsolveBC < nbrecvx){
             shift=0;
             for (bcidx=0;bcidx<Pr && validBCQindex_u[bcidx]!=-1;bcidx++){
                 recvRankNum=validBCQindex_u[bcidx];  //bcidx; //validBCQindex[bcidx];
-
-                if (bc_pget_count[bcidx] <= BCis_solved[recvRankNum] ) {
+                int tmp_idx=mylocal_BCbase[recvRankNum]+BCis_solved[recvRankNum]*RDMA_FLAG_SIZE;
+                if ((bc_pget_count[tmp_idx] == -1) || (bc_pget_count[tmp_idx+1] == -1) || (bc_pget_count[tmp_idx+2] == -1))  {
                     if(shift>0){
                         validBCQindex_u[bcidx-shift]=validBCQindex_u[bcidx];
                         validBCQindex_u[bcidx]=-1;
@@ -3182,24 +3393,69 @@ while(nbrecv1< nbrecvx+nbrecvmod){
                     //fflush(stdout);
                     }
                     continue;
-                } else if (bc_pget_count[bcidx] > BCis_solved[recvRankNum]) {
-                    k = *recvbuf0;
+                } else {
+                    get_offset=bc_pget_count[tmp_idx];
+                    get_msgsize=bc_pget_count[tmp_idx+1];
+                    get_fromwhere=bc_pget_count[tmp_idx+2];
+
+                    //printf("In U BC solve (%d), iam %d get from %d, get_offset=%d, get_msgsize=%d, get_fromwhere=%d\n",tmp_counter,iam,recvRankNum,get_offset,get_msgsize, get_fromwhere);
+                    //fflush(stdout);
+
+                    mycur_offset=mynext_offset;
+
+                    if (get_fromwhere==1){
+                        //printf("In U BC solve, iam %d in 1\n",iam);
+                        //fflush(stdout);
+                        //foMPI_Win_lock(foMPI_LOCK_EXCLUSIVE,recvRankNum,0,bc_winl_get);
+                        //int foMPI_Get(void *origin_addr, int origin_count, MPI_Datatype origin_datatype, int target_rank, MPI_Aint target_disp, int target_count, MPI_Datatype target_datatype, foMPI_Win win);
+                        foMPI_Get(&tmp_buf_bc[mycur_offset], get_msgsize, MPI_DOUBLE, recvRankNum, get_offset, get_msgsize, MPI_DOUBLE,bc_winl_get);
+                        foMPI_Win_flush_local(recvRankNum,bc_winl_get);
+                        //foMPI_Win_unlock(recvRankNum,bc_winl_get);
+                        //printf("In U BC solve, iam=%d,finish get from x\n",iam);
+                        //fflush(stdout);
+
+                    }else{
+                        //printf("In U BC solve, iam %d in 2\n",iam);
+                        //fflush(stdout);
+                        //foMPI_Win_lock(foMPI_LOCK_EXCLUSIVE,recvRankNum,0,tmp_bc_winl_get);
+                        //int foMPI_Get(void *origin_addr, int origin_count, MPI_Datatype origin_datatype, int target_rank, MPI_Aint target_disp, int target_count, MPI_Datatype target_datatype, foMPI_Win win);
+                        foMPI_Get(&tmp_buf_bc[mycur_offset], get_msgsize, MPI_DOUBLE, recvRankNum, get_offset, get_msgsize, MPI_DOUBLE,tmp_bc_winl_get);
+                        foMPI_Win_flush_local(recvRankNum,tmp_bc_winl_get);
+                        //foMPI_Win_unlock(recvRankNum,tmp_bc_winl_get);
+                        //printf("In U BC solve, iam=%d,finish get from tmp_buf_bc\n",iam);
+                        //fflush(stdout);
+                    }
+
+
+                    mynext_offset+=get_msgsize;
+
+                    k = tmp_buf_bc[mycur_offset];
                     lk = LBj( k, grid );    /* local block number */
 
-                    get_msgsize=BcTree_GetMsgSize(UBtree_ptr[lk],'d')*nrhs+XK_H;
+                    //printf("In U BC solve (%d), iam %d, k=%d, lk=%d\n",tmp_counter, iam, k, lk);
+                    //fflush(stdout);
 
-                    foMPI_Get(recvbuf0, get_msgsize, MPI_INT, recvRankNum, 0, get_msgsize, MPI_INT,bc_winl_get);
                     totalsolveBC += 1; //BC_subtotal[bcidx] - BCis_solved[bcidx];
 		            BCis_solved[recvRankNum]++;
 
                     if(BcTree_getDestCount(UBtree_ptr[lk],'d')>0){
-                        BcTree_forwardMessageOneSide(UBtree_ptr[lk],'d',BCcount, Pc);
+                        bc_rdma_start[mylocal_bc_put_flag_offset]=mycur_offset;
+                        bc_rdma_start[mylocal_bc_put_flag_offset+1]=get_msgsize;
+                        bc_rdma_start[mylocal_bc_put_flag_offset+2]=2;
+                        //printf("In U BC solve, will notify get x ,offset=%d,msgsize=%d\n",bc_rdma_start[0],bc_rdma_start[1]);
+                        //fflush(stdout);
+                        BcTree_forwardMessageOneSide(UBtree_ptr[lk],'d', &bc_rdma_start[mylocal_bc_put_flag_offset], Pc,BCcount, BCbase);
+                        mylocal_bc_put_flag_offset += RDMA_FLAG_SIZE;
                     }
+                    //printf("In U BC solve, iam %d, before dlsum_bmod_inv_master \n",iam);
+                    //fflush(stdout);
 
-			        dlsum_bmod_inv_master(lsum, x, &recvbuf0[XK_H], rtemp, nrhs, k, bmod, Urbs,Urbs2,
+			        dlsum_bmod_inv_master(lsum, x, &tmp_buf_bc[mycur_offset+XK_H], rtemp, nrhs, k, bmod, Urbs,Urbs2,
 			            	Ucb_indptr, Ucb_valptr, xsup, grid, Llu,
 				            send_req, stat_loc, sizelsum,sizertemp,thread_id,num_thread,
-                            &iam_row, RDcount, &iam_col, BCcount, Pc, maxrecvsz);
+                            &iam_row, rd_rdma_start, &iam_col, bc_rdma_start, Pc, maxrecvsz, BCcount, BCbase, RDcount, RDbase,&mylocal_bc_put_flag_offset, &mylocal_rd_put_flag_offset);
+                    //printf("In U BC solve, iam %d, after dlsum_bmod_inv_master \n",iam);
+                    //fflush(stdout);
 
                     if (BCis_solved[recvRankNum] == BufSize_u[recvRankNum]) {
                         validBCQindex_u[bcidx]=-1;
@@ -3214,6 +3470,9 @@ while(nbrecv1< nbrecvx+nbrecvmod){
                             //fflush(stdout);
                         }
                     }
+                    //printf("In U BC solve, iam=%d,BCis_solved[%d]=%d,BufSize_u[%d]=%d\n",iam,recvRankNum,BCis_solved[recvRankNum],recvRankNum,BufSize_u[recvRankNum]);
+                    //fflush(stdout);
+                    //tmp_counter +=1;
             } // if bc_pget_count>0
         } // for (bcidx=0;bcidx<Pr && validBCQindex_u[bcidx]!=-1;bcidx++)
     } // if (totalsolveBC < nbrecvx)
@@ -3222,25 +3481,40 @@ while(nbrecv1< nbrecvx+nbrecvmod){
        shift=0;
        for (rdidx=0;rdidx<Pc && validRDQindex_u[rdidx]!=-1;rdidx++){
                 recvRankNum=validRDQindex_u[rdidx];  //bcidx; //validBCQindex[bcidx];
-                //printf("rdrd--111--iam=%d, rdidx=%d,k=%d\n",iam,rdidx,k);
-                //fflush(stdout);
-	            if ( rd_pget_count[rdidx] <= rd_pget_count[rdidx]) {
+                int tmp_idx=mylocal_RDbase[bcidx]+RDis_solved[recvRankNum]*RDMA_FLAG_SIZE;
+	            if (rd_pget_count[tmp_idx] == -1) {
                    if(shift>0){
                         validRDQindex_u[rdidx-shift]=validRDQindex_u[rdidx];
                         validRDQindex_u[rdidx]=-1;
                    }
                    continue;
-                } else if (rd_pget_count[rdidx] > rd_pget_count[rdidx]){
-                    k = *recvbuf0;
+                } else {
+                    get_offset=rd_pget_count[tmp_idx];
+                    get_msgsize=rd_pget_count[tmp_idx+1];
+                    get_fromwhere=rd_pget_count[tmp_idx+2];
+
+                    mycur_offset=mynext_offset;
+                    if (get_fromwhere==1){
+                        //int foMPI_Get(void *origin_addr, int origin_count, MPI_Datatype origin_datatype, int target_rank, MPI_Aint target_disp, int target_count, MPI_Datatype target_datatype, foMPI_Win win);
+                        foMPI_Get(&tmp_buf_rd[mycur_offset], get_msgsize, MPI_DOUBLE, recvRankNum, get_offset, get_msgsize, MPI_DOUBLE,rd_winl_get);
+                        foMPI_Win_flush_local(recvRankNum,rd_winl_get);
+                    }else{
+                        //int foMPI_Get(void *origin_addr, int origin_count, MPI_Datatype origin_datatype, int target_rank, MPI_Aint target_disp, int target_count, MPI_Datatype target_datatype, foMPI_Win win);
+                        foMPI_Get(&tmp_buf_rd[mycur_offset], get_msgsize, MPI_DOUBLE, recvRankNum, get_offset, get_msgsize, MPI_DOUBLE,tmp_rd_winl_get);
+                        foMPI_Win_flush_local(recvRankNum,tmp_rd_winl_get);
+                    }
+
+                    mynext_offset+=get_msgsize;
+
+
+                    k = tmp_buf_rd[mycur_offset];
                     lk = LBi( k, grid );
 
-                    get_msgsize=RdTree_GetMsgSize(LRtree_ptr[lk],'d')*nrhs+LSUM_H;
-                    foMPI_Get(recvbuf0, get_msgsize, MPI_DOUBLE, recvRankNum, 0, get_msgsize, MPI_DOUBLE,rd_winl_get);
                     totalsolveRD += 1; //RD_subtotal[rdidx]-RDis_solved[rdidx];
                     RDis_solved[recvRankNum] += 1 ;
 
 				    knsupc = SuperSize( k );
-			 	    tempv = &recvbuf0[LSUM_H];
+			 	    tempv = &tmp_buf_rd[mycur_offset+LSUM_H];
 				    il = LSUM_BLK( lk );
 				    RHS_ITERATE(j) {
 #ifdef _OPENMP
@@ -3324,14 +3598,18 @@ while(nbrecv1< nbrecvx+nbrecvmod){
 #endif
 
 						    if(UBtree_ptr[lk]!=NULL){
-						    	BcTree_forwardMessageOneSide(UBtree_ptr[lk],'d',BCcount,Pc);
+						    	bc_rdma_start[mylocal_bc_put_flag_offset]=ii-XK_H;
+						    	bc_rdma_start[mylocal_bc_put_flag_offset+1]=BcTree_GetMsgSize(UBtree_ptr[lk],'d')*nrhs+XK_H;
+						    	bc_rdma_start[mylocal_bc_put_flag_offset+2]=1;
+						        BcTree_forwardMessageOneSide(UBtree_ptr[lk],'d', &bc_rdma_start[mylocal_bc_put_flag_offset],Pc, BCcount, BCbase);
+						        mylocal_bc_put_flag_offset += RDMA_FLAG_SIZE;
 						    }
 
 						    if ( Urbs[lk] )
 						    	dlsum_bmod_inv_master(lsum, x, &x[ii], rtemp, nrhs, k, bmod, Urbs,Urbs2,
 						    			            Ucb_indptr, Ucb_valptr, xsup, grid, Llu,
 						    			            send_req, stat_loc, sizelsum,sizertemp,thread_id,num_thread,
-                                                    &iam_row, RDcount, &iam_col, BCcount,Pc, maxrecvsz);
+                                                    &iam_row, rd_rdma_start, &iam_col, bc_rdma_start,Pc, maxrecvsz, BCcount, BCbase, RDcount, RDbase, &mylocal_bc_put_flag_offset, &mylocal_rd_put_flag_offset);
 
 					    }else{ // if(RdTree_IsRoot(URtree_ptr[lk],'d')==YES)
 						    il = LSUM_BLK( lk );
@@ -3344,8 +3622,13 @@ while(nbrecv1< nbrecvx+nbrecvmod){
 							    for (jj=0;jj<knsupc*nrhs;jj++)
 								    lsum[il+ jj ] += lsum[il + jj + ii*sizelsum];
 
-						    RdTree_forwardMessageOneSide(URtree_ptr[lk],'d',RDcount, Pc);
-					    }//if(RdTree_IsRoot(URtree_ptr[lk],'d')==YES)
+						    rd_rdma_start[mylocal_rd_put_flag_offset]=il-LSUM_H;
+						    rd_rdma_start[mylocal_rd_put_flag_offset+1]=RdTree_GetMsgSize(URtree_ptr[lk],'d')*nrhs+LSUM_H;
+						    rd_rdma_start[mylocal_rd_put_flag_offset+2]=1;
+						    //RdTree_forwardMessageSimple(URtree_ptr[lk],&lsum[il-LSUM_H],RdTree_GetMsgSize(URtree_ptr[lk],'d')*nrhs+LSUM_H,'d');
+						    RdTree_forwardMessageOneSide(URtree_ptr[lk],'d', &rd_rdma_start[mylocal_rd_put_flag_offset], Pc, RDcount, RDbase);
+					        mylocal_rd_put_flag_offset += RDMA_FLAG_SIZE;
+				        }//if(RdTree_IsRoot(URtree_ptr[lk],'d')==YES)
                 }//if ( bmod_tmp==0 )
             if (RDis_solved[recvRankNum] == BufSize_urd[recvRankNum]) {
                 validRDQindex_u[rdidx]=-1;
@@ -3569,7 +3852,6 @@ while(nbrecv1< nbrecvx+nbrecvmod){
 
 
 
-
 #if ( DEBUGlevel>=2 )
     {
 			double *x_col;
@@ -3602,9 +3884,13 @@ while(nbrecv1< nbrecvx+nbrecvmod){
                           ScalePermstruct, Glu_persist, grid, SOLVEstruct);
 //PROFILE_ICE_FINISH();
 
+
 #if ( PRNTlevel>=1 )
     t = SuperLU_timer_() - t;
-		if ( !iam) printf(".. X to B redistribute time\t%8.4f\n", t);
+		if ( !iam) {
+		    printf(".. X to B redistribute time\t%8.4f\n", t);
+		    fflush(stdout);
+		}
 		t = SuperLU_timer_();
 #endif
 
@@ -3650,15 +3936,22 @@ while(nbrecv1< nbrecvx+nbrecvmod){
     SUPERLU_FREE(BC_taskq);
     SUPERLU_FREE(RD_taskq);
 #elif defined (pget)
+    foMPI_Win_unlock_all(bc_winl);
+    foMPI_Win_unlock_all(rd_winl);
     foMPI_Win_unlock_all(bc_winl_get);
     foMPI_Win_unlock_all(rd_winl_get);
-    SUPERLU_FREE(lsum);
-    SUPERLU_FREE(x);
+    foMPI_Win_unlock_all(tmp_bc_winl_get);
+    foMPI_Win_unlock_all(tmp_rd_winl_get);
+
+    //if (Pr > 1) SUPERLU_FREE(tmp_buf_bc);
+    //if (Pc > 1) SUPERLU_FREE(tmp_buf_rd);
+    if (Pr > 1) SUPERLU_FREE(bc_pget_count);
+    if (Pc > 1) SUPERLU_FREE(rd_pget_count);
 #else
     SUPERLU_FREE(recvbuf_BC_fwd);
+#endif
     SUPERLU_FREE(lsum);
     SUPERLU_FREE(x);
-#endif
 
 
 #if ( PROFlevel>=2 )

@@ -110,32 +110,36 @@ namespace SuperLU_ASYNCOMM {
 
 #ifdef pget
     template< typename T>
-    inline void TreeReduce_slu<T>::forwardMessageOneSide(int* RDcount, int Pc){
+    inline void TreeReduce_slu<T>::forwardMessageOneSide(int* rd_rdma_start, int Pc,int* RDcount, int* RDbase){
 	    //double t1;
         Int new_iProc;
+        int RDsendoffset;
         if(this->myRank_!=this->myRoot_){
             //t1 = SuperLU_timer_();
 		    Int iProc = this->myRoot_;
 		    new_iProc = iProc%Pc;
-
-            foMPI_Accumulate(&RDcount[new_iProc], 1, MPI_INT, new_iProc, new_iProc, 1, MPI_INT,foMPI_REPLACE, rd_winl);
-	        RDcount[new_iProc] += 1;
+            RDsendoffset = RDbase[new_iProc] + RDcount[new_iProc]*(RDMA_FLAG_SIZE);
+            foMPI_Accumulate(rd_rdma_start, RDMA_FLAG_SIZE, MPI_INT, new_iProc, RDsendoffset, RDMA_FLAG_SIZE, MPI_INT,foMPI_REPLACE, rd_winl);
+            foMPI_Win_flush_local(new_iProc,rd_winl);
+            RDcount[new_iProc] += 1;
             //onesidecomm_bc += SuperLU_timer_() - t1;
 	}
  }
 
   template< typename T>
-    inline void TreeReduce_slu<T>::forwardMessageOneSideU(int* RDcount, int Pc){
+    inline void TreeReduce_slu<T>::forwardMessageOneSideU(int* rd_rdma_start, int Pc,int* RDcount, int* RDbase){
         Int new_iProc;
+        int RDsendoffset;
 	    //double t1;
         //t1 = SuperLU_timer_();
         if(this->myRank_!=this->myRoot_){
             //t1 = SuperLU_timer_();
 		    Int iProc = this->myRoot_;
 		    new_iProc = iProc%Pc;
-
-            foMPI_Accumulate(&RDcount[new_iProc], 1, MPI_INT, new_iProc, new_iProc, 1, MPI_INT,foMPI_REPLACE, rd_winl);
-		    RDcount[new_iProc] += 1;
+            RDsendoffset = RDbase[new_iProc] + RDcount[new_iProc]*(RDMA_FLAG_SIZE);
+            foMPI_Accumulate(rd_rdma_start, RDMA_FLAG_SIZE, MPI_INT, new_iProc, RDsendoffset, RDMA_FLAG_SIZE, MPI_INT,foMPI_REPLACE, rd_winl);
+            foMPI_Win_flush_local(new_iProc,rd_winl);
+            RDcount[new_iProc] += 1;
 	}
  }
 
