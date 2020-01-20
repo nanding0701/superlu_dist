@@ -3985,6 +3985,7 @@ while(nbrecv1< nbrecvx+nbrecvmod){
     foMPI_Win_unlock_all(tmp_bc_winl_get);
     foMPI_Win_unlock_all(tmp_rd_winl_get);
 
+    /* if free, free a freed pointer */
     //if (Pr > 1) SUPERLU_FREE(tmp_buf_bc);
     //if (Pc > 1) SUPERLU_FREE(tmp_buf_rd);
     //SUPERLU_FREE(bc_pget_count);
