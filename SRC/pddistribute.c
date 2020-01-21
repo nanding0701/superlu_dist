@@ -1860,6 +1860,7 @@ if ( !iam) printf(".. Construct Reduce tree for L: %.2f\t\n", t);
 #ifdef oneside
                 UBtree_ptr[ljb] = BcTree_Create_oneside(grid->comm, ranks, rank_cnt, msgsize,SeedSTD_BC[ljb],'d',BufSize_u, Pc);
 #elif  defined (pget)
+
                 UBtree_ptr[ljb] = BcTree_Create_oneside(grid->comm, ranks, rank_cnt, msgsize,SeedSTD_BC[ljb],'d',BufSize_u, Pc,&mysendmsg_num_u);
 #else
                 UBtree_ptr[ljb] = BcTree_Create(grid->comm, ranks, rank_cnt, msgsize,SeedSTD_BC[ljb],'d');  	

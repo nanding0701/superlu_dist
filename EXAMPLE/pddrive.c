@@ -23,7 +23,9 @@ at the top-level directory.
 
 #include <math.h>
 #include "superlu_ddefs.h"
+#if defined(oneside) || defined(pget)
 #include "fompi.h"
+#endif
 /*! \brief
  *
  * <pre>
@@ -74,8 +76,11 @@ int main(int argc, char *argv[])
     /* ------------------------------------------------------------
        INITIALIZE MPI ENVIRONMENT. 
        ------------------------------------------------------------*/
+#if defined(oneside) || defined(pget)
     foMPI_Init( &argc, &argv );
-    //MPI_Init_thread( &argc, &argv, MPI_THREAD_MULTIPLE, &omp_mpi_level); 
+#else
+    MPI_Init_thread( &argc, &argv, MPI_THREAD_MULTIPLE, &omp_mpi_level);
+#endif
 	//printf("Init fompi done\n");
     //fflush(stdout);
 #if ( VAMPIR>=1 )

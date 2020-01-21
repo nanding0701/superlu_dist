@@ -1399,7 +1399,10 @@ int num_thread,
 //						stat[thread_id]->utime[SOL_COMM] += t2;
 //#endif
 #elif defined (pget)
+                        //printf("In BC master, iam %d, mylocal_bc_put_flag_offset=%d,ii-XH_K=%d\n",iam,*mylocal_bc_put_flag_offset, ii-XK_H);
+                        //fflush(stdout);
 #if ( PROFlevel>=1 )
+
 						TIC(t1);
 #endif
                         bc_rdma_start[*mylocal_bc_put_flag_offset]=ii-XK_H;
