@@ -1,4 +1,6 @@
+#if defined (oneside) || defined (pget)
 #include "fompi.h"
+#endif
 #ifndef __SUPERLU_TREEREDUCE_IMPL
 #define __SUPERLU_TREEREDUCE_IMPL
 
@@ -58,8 +60,8 @@ namespace SuperLU_ASYNCOMM {
             //t1 = SuperLU_timer_();
 		    Int iProc = this->myRoot_;
 		    new_iProc = iProc%Pc;
-            msgSize = msgSize * 2;
-            *maxrecvsz = *maxrecvsz * 2;
+            msgSize = msgSize;
+            *maxrecvsz = *maxrecvsz;
 		    RDsendoffset = RDbase[new_iProc] + RDcount[new_iProc]*(*maxrecvsz);
  		    
             //printf("I am %d, row_id %d, send to world rank %d/%d, RDcount[%d]=%d, RDbase[%d]=%ld,RDsendoffset=%ld, maxrecvsz=%d\n",iam, *iam_row, iProc, new_iProc, new_iProc, RDcount[new_iProc], new_iProc, RDbase[new_iProc], RDsendoffset, *maxrecvsz);
@@ -69,11 +71,9 @@ namespace SuperLU_ASYNCOMM {
             //foMPI_Accumulate(locBuffer, new_msgSize, MPI_DOUBLE, new_iProc, RDsendoffset, new_msgSize, MPI_DOUBLE, foMPI_REPLACE, rd_winl);		  
             foMPI_Put(locBuffer, msgSize, MPI_DOUBLE, new_iProc, RDsendoffset, msgSize, MPI_DOUBLE,rd_winl);		  
             //foMPI_Put(locBuffer, new_msgSize, MPI_DOUBLE, new_iProc, RDsendoffset, new_msgSize, MPI_DOUBLE,rd_winl);		  
-	        //onesidecomm_bc += SuperLU_timer_() - t1;
-		///foMPI_Accumulate(locBuffer, msgSize, this->type_, new_iProc, RDsendoffset, msgSize, this->type_, foMPI_REPLACE, rd_winl);		  
+		///foMPI_Accumulate(locBuffer, msgSize, this->type_, new_iProc, RDsendoffset, msgSize, this->type_, foMPI_REPLACE, rd_winl);
 		///foMPI_Accumulate(&my_RDtasktail, 1, MPI_DOUBLE, new_iProc, *iam_row, 1, MPI_DOUBLE, foMPI_SUM, rd_winl);		  
-	        //onesidecomm_bc[iam] += SuperLU_timer_() - t1;
-		    RDcount[new_iProc] += 1; 
+		    RDcount[new_iProc] += 1;
  		    //printf("End---I am %d, row_id %d, send to world rank %d/%d \n",iam, *iam_row,iProc, new_iProc);
 		    //fflush(stdout);
 	}
@@ -103,7 +103,6 @@ namespace SuperLU_ASYNCOMM {
  		    //printf("End---I row_id %d, send to world rank %d/%d \n", *iam_row,iProc, new_iProc);
 		    //fflush(stdout);
 	}
-	//onesidecomm_bc += SuperLU_timer_() - t1;
  }
 
 #endif
@@ -123,14 +122,11 @@ namespace SuperLU_ASYNCOMM {
             RDsendoffset = RDbase[new_iProc] + RDcount[new_iProc]*(RDMA_FLAG_SIZE);
             //printf("In RD Accumulate (%d->%d), flag is put into %d, rd_rdma_start=%d,%d,%d\n",myrank,new_iProc,RDsendoffset,rd_rdma_start[0],rd_rdma_start[1],rd_rdma_start[2]);
             //fflush(stdout);
-            foMPI_Win_lock(foMPI_LOCK_SHARED,new_iProc,0,rd_winl);
             foMPI_Accumulate(rd_rdma_start, RDMA_FLAG_SIZE, MPI_INT, new_iProc, RDsendoffset, RDMA_FLAG_SIZE, MPI_INT,foMPI_REPLACE, rd_winl);
-            foMPI_Win_unlock(new_iProc,rd_winl);
             //foMPI_Win_flush_local(new_iProc,rd_winl);
             //printf("In RD Accumulate (%d->%d), END flag is put into %d\n",myrank,new_iProc,RDsendoffset);
             //fflush(stdout);
             RDcount[new_iProc] += 1;
-            //onesidecomm_bc += SuperLU_timer_() - t1;
 	}
  }
 

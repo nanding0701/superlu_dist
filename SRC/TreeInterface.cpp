@@ -65,6 +65,7 @@ namespace SuperLU_ASYNCOMM{
             //printf("EUQAL!!!! k=%lf,size=%d,sum=%lf, realwum=%llu\n",localBuffer[0],msgSize-XK_H, localBuffer[XK_H-1], calcul_hash(&localBuffer[XK_H],sizeof(double)*(msgSize-XK_H)));
             //fflush(stdout);
             //}
+            //localBuffer[XK_H-1] = crc_8((unsigned char*)&localBuffer[XK_H],sizeof(double)*(msgSize-XK_H));
             localBuffer[XK_H-1] = crc_16((unsigned char*)&localBuffer[XK_H],sizeof(double)*(msgSize-XK_H));
             BcastTree->forwardMessageOneSide((double*)localBuffer,msgSize, iam_col, BCcount, BCbase, maxrecvsz, Pc);
 	        //onesidecomm_bc += SuperLU_timer_() - t1;

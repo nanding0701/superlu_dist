@@ -661,6 +661,7 @@ PStatPrint(superlu_dist_options_t *options, SuperLUStat_t *stat, gridinfo_t *gri
 	       0, grid->comm);
     solveflop = flopcnt;
     if ( !iam ) {
+	//printf("\tSOLVE time         %f\n", utime[SOLVE]);
 	printf("\tSOLVE time         %8.3f\n", utime[SOLVE]);
 	if ( utime[SOLVE] != 0.0 )
 	    printf("\tSolve flops\t%e\tMflops \t%8.2f\n",

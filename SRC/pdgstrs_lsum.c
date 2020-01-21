@@ -987,8 +987,8 @@ void dlsum_fmod_inv_master
  int_t recurlevel,
  int_t maxsuper,
  int thread_id,
- int num_thread,
 #ifdef oneside
+int num_thread,
  int* iam_row,
  int* RDcount,
  long* RDbase, 
@@ -998,6 +998,7 @@ void dlsum_fmod_inv_master
  int Pc, 
  int maxrecvsz
 #elif defined (pget)
+int num_thread,
  int* iam_row,
  int* rd_rdma_start,
  int* iam_col,
@@ -1010,6 +1011,8 @@ void dlsum_fmod_inv_master
  int* RDbase,
  int* mylocal_bc_put_flag_offset,
  int* mylocal_rd_put_flag_offset
+#else
+ int num_thread
 #endif
 )
 {
@@ -1274,13 +1277,27 @@ void dlsum_fmod_inv_master
 						for (jj=0;jj<iknsupc*nrhs;jj++)
 							lsum[il + jj ] += lsum[il + jj + ii*sizelsum];
 #ifdef oneside
+//#if ( PROFlevel>=1 )
+//						TIC(t1);
+//#endif
 					RdTree_forwardMessageOneSide(LRtree_ptr[lk],&lsum[il - LSUM_H ],RdTree_GetMsgSize(LRtree_ptr[lk],'d')*nrhs+LSUM_H,'d', iam_row, RDcount, RDbase, &maxrecvsz, Pc);
+//#if ( PROFlevel>=1 )
+//						TOC(t2, t1);
+//						stat[thread_id]->utime[SOL_COMM] += t2;
+//#endif
 #elif defined (pget)
+ #if ( PROFlevel>=1 )
+						TIC(t1);
+#endif
                     rd_rdma_start[*mylocal_rd_put_flag_offset]=il-LSUM_H;
                     rd_rdma_start[*mylocal_rd_put_flag_offset+1]=RdTree_GetMsgSize(LRtree_ptr[lk],'d')*nrhs+LSUM_H;
                     rd_rdma_start[*mylocal_rd_put_flag_offset+2]=1;
 					RdTree_forwardMessageOneSide(LRtree_ptr[lk],'d', &rd_rdma_start[*mylocal_rd_put_flag_offset], Pc,RDcount,RDbase);
                     *mylocal_rd_put_flag_offset += RDMA_FLAG_SIZE;
+#if ( PROFlevel>=1 )
+						TOC(t2, t1);
+						stat[thread_id]->utime[SOL_COMM] += t2;
+#endif
 #else
                     RdTree_forwardMessageSimple(LRtree_ptr[lk],&lsum[il - LSUM_H ],RdTree_GetMsgSize(LRtree_ptr[lk],'d')*nrhs+LSUM_H,'d');
 #endif
@@ -1373,13 +1390,27 @@ void dlsum_fmod_inv_master
 
 					if(LBtree_ptr[lk]!=NULL){
 #ifdef oneside						
+// #if ( PROFlevel>=1 )
+//						TIC(t1);
+//#endif
                         BcTree_forwardMessageOneSide(LBtree_ptr[lk],&x[ii - XK_H],BcTree_GetMsgSize(LBtree_ptr[lk],'d')*nrhs+XK_H,'d',iam_col, BCcount, BCbase, &maxrecvsz, Pc);
+//#if ( PROFlevel>=1 )
+//						TOC(t2, t1);
+//						stat[thread_id]->utime[SOL_COMM] += t2;
+//#endif
 #elif defined (pget)
+#if ( PROFlevel>=1 )
+						TIC(t1);
+#endif
                         bc_rdma_start[*mylocal_bc_put_flag_offset]=ii-XK_H;
                         bc_rdma_start[*mylocal_bc_put_flag_offset+1]=BcTree_GetMsgSize(LBtree_ptr[lk],'d')*nrhs+XK_H;
                         bc_rdma_start[*mylocal_bc_put_flag_offset+2]=1;
                         BcTree_forwardMessageOneSide(LBtree_ptr[lk],'d',&bc_rdma_start[*mylocal_bc_put_flag_offset], Pc,BCcount,BCbase);
                         *mylocal_bc_put_flag_offset += RDMA_FLAG_SIZE;
+#if ( PROFlevel>=1 )
+						TOC(t2, t1);
+						stat[thread_id]->utime[SOL_COMM] += t2;
+#endif
 #else
                         BcTree_forwardMessageSimple(LBtree_ptr[lk],&x[ii - XK_H],BcTree_GetMsgSize(LBtree_ptr[lk],'d')*nrhs+XK_H,'d');
 #endif                    
@@ -1918,8 +1949,8 @@ void dlsum_bmod_inv_master
  int_t sizelsum,
  int_t sizertemp,
  int thread_id,
- int num_thread,
 #ifdef oneside
+int num_thread,
  int* iam_row,
  int* RDcount, 
  long* RDbase, 
@@ -1929,6 +1960,7 @@ void dlsum_bmod_inv_master
  int Pc, 
  int maxrecvsz
 #elif defined (pget)
+int num_thread,
 int* iam_row,
  int* rd_rdma_start,
  int* iam_col,
@@ -1941,6 +1973,8 @@ int* iam_row,
  int* RDbase,
  int* mylocal_bc_put_flag_offset,
  int* mylocal_rd_put_flag_offset
+#else
+ int num_thread
 #endif
  )
 {
@@ -2126,14 +2160,28 @@ int* iam_row,
 					#endif					
 					for (jj=0;jj<iknsupc*nrhs;jj++)
 						lsum[il + jj ] += lsum[il + jj + ii*sizelsum];
-#ifdef oneside				
+#ifdef oneside
+// #if ( PROFlevel>=1 )
+//						TIC(t1);
+//#endif
                 RdTree_forwardMessageOneSide(URtree_ptr[ik],&lsum[il - LSUM_H ],RdTree_GetMsgSize(URtree_ptr[ik],'d')*nrhs+LSUM_H,'d', iam_row, RDcount, RDbase, &maxrecvsz, Pc);
+//#if ( PROFlevel>=1 )
+//						TOC(t2, t1);
+//						stat[thread_id]->utime[SOL_COMM] += t2;
+//#endif
 #elif defined (pget)
+#if ( PROFlevel>=1 )
+            TIC(t1);
+#endif
                 rd_rdma_start[*mylocal_rd_put_flag_offset]=il-LSUM_H;
                 rd_rdma_start[*mylocal_rd_put_flag_offset+1]=RdTree_GetMsgSize(URtree_ptr[ik],'d')*nrhs+LSUM_H;
                 rd_rdma_start[*mylocal_rd_put_flag_offset+2]=1;
                 RdTree_forwardMessageOneSide(URtree_ptr[ik],'d', &rd_rdma_start[*mylocal_rd_put_flag_offset], Pc, RDcount, RDbase);
                 *mylocal_rd_put_flag_offset += RDMA_FLAG_SIZE;
+#if ( PROFlevel>=1 )
+						TOC(t2, t1);
+						stat[thread_id]->utime[SOL_COMM] += t2;
+#endif
 #else
                 RdTree_forwardMessageSimple(URtree_ptr[ik],&lsum[il - LSUM_H ],RdTree_GetMsgSize(URtree_ptr[ik],'d')*nrhs+LSUM_H,'d');
 #endif
@@ -2224,13 +2272,28 @@ int* iam_row,
 					// }
 					if(UBtree_ptr[lk1]!=NULL){
 #ifdef oneside					
-                        BcTree_forwardMessageOneSide(UBtree_ptr[lk1],&x[ii - XK_H],BcTree_GetMsgSize(UBtree_ptr[lk1],'d')*nrhs+XK_H,'d',iam_col, BCcount, BCbase, &maxrecvsz, Pc); 
+//#if ( PROFlevel>=1 )
+//						TIC(t1);
+//#endif
+                        BcTree_forwardMessageOneSide(UBtree_ptr[lk1],&x[ii - XK_H],BcTree_GetMsgSize(UBtree_ptr[lk1],'d')*nrhs+XK_H,'d',iam_col, BCcount, BCbase, &maxrecvsz, Pc);
+//#if ( PROFlevel>=1 )
+//						TOC(t2, t1);
+//						stat[thread_id]->utime[SOL_COMM] += t2;
+//#endif
 #elif defined (pget)
+#if ( PROFlevel>=1 )
+            TIC(t1);
+#endif
+
                         bc_rdma_start[*mylocal_bc_put_flag_offset]=ii-XK_H;
                         bc_rdma_start[*mylocal_bc_put_flag_offset+1]=BcTree_GetMsgSize(UBtree_ptr[lk1],'d')*nrhs+XK_H;
                         bc_rdma_start[*mylocal_bc_put_flag_offset+2]=1;
                         BcTree_forwardMessageOneSide(UBtree_ptr[lk1],'d', &bc_rdma_start[*mylocal_bc_put_flag_offset], Pc, BCcount, BCbase);
                         *mylocal_bc_put_flag_offset += RDMA_FLAG_SIZE;
+#if ( PROFlevel>=1 )
+						TOC(t2, t1);
+						stat[thread_id]->utime[SOL_COMM] += t2;
+#endif
 #else
                         BcTree_forwardMessageSimple(UBtree_ptr[lk1],&x[ii - XK_H],BcTree_GetMsgSize(UBtree_ptr[lk1],'d')*nrhs+XK_H,'d'); 
 #endif
