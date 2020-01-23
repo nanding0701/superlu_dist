@@ -1219,8 +1219,8 @@ if(procs==1){
     memset(RDis_solved, 0, Pc * sizeof(int));
     //foMPI_Win_create(BC_taskq, (BC_buffer_size)*sizeof(double), sizeof(double), MPI_INFO_NULL, col_comm, &bc_winl);
 	//foMPI_Win_create(RD_taskq, (RD_buffer_size)*sizeof(double), sizeof(double), MPI_INFO_NULL, row_comm, &rd_winl);
-    foMPI_Win_lock_all(0, bc_winl);
-    foMPI_Win_lock_all(0, rd_winl);
+    //foMPI_Win_lock_all(0, bc_winl);
+    //foMPI_Win_lock_all(0, rd_winl);
 #if ( DEBUGlevel>=1 )
     printf("iam=%d, End setup oneside L solve\n",iam);
 	printf("(%2d) nfrecvx %4d,  nfrecvmod %4d,  nleaf %4d\n,  nbtree %4d\n,  nrtree %4d\n",
@@ -1346,13 +1346,6 @@ if(procs==1){
     int mylocal_rd_put_flag_offset=0;
 
 
-    foMPI_Win_lock_all(0, bc_winl);
-    foMPI_Win_lock_all(0, rd_winl);
-
-    foMPI_Win_lock_all(0, bc_winl_get);
-    foMPI_Win_lock_all(0, rd_winl_get);
-    foMPI_Win_lock_all(0, tmp_bc_winl_get);
-    foMPI_Win_lock_all(0, tmp_rd_winl_get);
 #if ( DEBUGlevel>=1 )
     printf("iam=%d, End setup oneside L solve\n",iam);
     fflush(stdout);
@@ -2097,13 +2090,14 @@ while( nfrecv1 < nfrecvx+nfrecvmod ){
                     bc_rdma_start[mylocal_bc_put_flag_offset+1]=get_msgsize;
                     bc_rdma_start[mylocal_bc_put_flag_offset+2]=2;
                     BcTree_forwardMessageOneSide(LBtree_ptr[lk],'d',&bc_rdma_start[mylocal_bc_put_flag_offset], Pc,BCcount, BCbase);
+                    mylocal_bc_put_flag_offset += RDMA_FLAG_SIZE;
 #if ( PROFlevel>=1 )
 						TOC(t2, t1);
 						stat_loc[thread_id]->utime[SOL_COMM] += t2;
 #endif
                    // printf("In BC solve (%d), iam %d notify get x ,offset=%d,msgsize=%d\n",tmp_counter, iam, bc_rdma_start[mylocal_bc_put_flag_offset],bc_rdma_start[mylocal_bc_put_flag_offset+1]);
                    // fflush(stdout);
-                    mylocal_bc_put_flag_offset += RDMA_FLAG_SIZE;
+
 		        }
 
                 //printf("In BC solve (%d), iam %d before if lsub\n",tmp_counter, iam );
@@ -2683,12 +2677,14 @@ while( nfrecv1 < nfrecvx+nfrecvmod ){
             RD_taskq[i]=(-1.0);
         }
 #elif defined(pget)
+        /*
     foMPI_Win_unlock_all(bc_winl);
     foMPI_Win_unlock_all(rd_winl);
     foMPI_Win_unlock_all(bc_winl_get);
     foMPI_Win_unlock_all(rd_winl_get);
     foMPI_Win_unlock_all(tmp_bc_winl_get);
     foMPI_Win_unlock_all(tmp_rd_winl_get);
+         */
     //double nbrecv1=0;
     //totalsolveBC=0;
     //totalsolveRD=0;
@@ -3001,13 +2997,14 @@ while( nfrecv1 < nfrecvx+nfrecvmod ){
     for(i=0;i<bc_flag_size;i++) tmp_buf_bc[i]=-1;
     for(i=0;i<rd_flag_size;i++) tmp_buf_rd[i]=-1;
 
-
+/*
    foMPI_Win_lock_all(0, bc_winl);
    foMPI_Win_lock_all(0, rd_winl);
    foMPI_Win_lock_all(0, bc_winl_get);
    foMPI_Win_lock_all(0, rd_winl_get);
    foMPI_Win_lock_all(0, tmp_bc_winl_get);
    foMPI_Win_lock_all(0, tmp_rd_winl_get);
+   */
    // printf("(%2d) nbrecvx %4d,  nbrecvmod %4d,  nroot %4d\n,  nbtree %4d\n,  nrtree %4d\n",
    //		iam, nbrecvx, nbrecvmod, nroot, nbtree, nrtree);
    // printf("(%d) End U solve setup\n",iam);
@@ -4172,17 +4169,11 @@ while(nbrecv1< nbrecvx+nbrecvmod){
 
     SUPERLU_FREE(rootsups);
 #ifdef oneside
-    foMPI_Win_unlock_all(bc_winl);
-    foMPI_Win_unlock_all(rd_winl);
+    //foMPI_Win_unlock_all(bc_winl);
+    //foMPI_Win_unlock_all(rd_winl);
     SUPERLU_FREE(BC_taskq);
     SUPERLU_FREE(RD_taskq);
 #elif defined (pget)
-    foMPI_Win_unlock_all(bc_winl);
-    foMPI_Win_unlock_all(rd_winl);
-    foMPI_Win_unlock_all(bc_winl_get);
-    foMPI_Win_unlock_all(rd_winl_get);
-    foMPI_Win_unlock_all(tmp_bc_winl_get);
-    foMPI_Win_unlock_all(tmp_rd_winl_get);
 
     /* if free, free a freed pointer */
     //if (Pr > 1) SUPERLU_FREE(tmp_buf_bc);
@@ -4191,9 +4182,9 @@ while(nbrecv1< nbrecvx+nbrecvmod){
     //SUPERLU_FREE(rd_pget_count);
 #else
     SUPERLU_FREE(recvbuf_BC_fwd);
-#endif
     SUPERLU_FREE(lsum);
     SUPERLU_FREE(x);
+#endif
 
 
 #if ( PROFlevel>=2 )
