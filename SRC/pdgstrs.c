@@ -4174,7 +4174,6 @@ while(nbrecv1< nbrecvx+nbrecvmod){
     SUPERLU_FREE(BC_taskq);
     SUPERLU_FREE(RD_taskq);
 #elif defined (pget)
-
     /* if free, free a freed pointer */
     //if (Pr > 1) SUPERLU_FREE(tmp_buf_bc);
     //if (Pc > 1) SUPERLU_FREE(tmp_buf_rd);

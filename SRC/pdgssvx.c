@@ -1421,8 +1421,10 @@ pdgssvx(superlu_dist_options_t *options, SuperMatrix *A,
     foMPI_Win_lock_all(0, tmp_bc_winl_get);
     foMPI_Win_lock_all(0, tmp_rd_winl_get);
 #endif
+
 	pdgstrs(n, LUstruct, ScalePermstruct, grid, X, m_loc,
 		fst_row, ldb, nrhs, SOLVEstruct, stat, info);
+
 #if defined (oneside)
 	foMPI_Win_unlock_all(bc_winl);
     foMPI_Win_unlock_all(rd_winl);
