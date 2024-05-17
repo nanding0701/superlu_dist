@@ -22,9 +22,9 @@
 
 #include "dlustruct_gpu.h"
 
-#ifdef HAVE_HIP
-#include "superlu_gpu_utils.hip.cpp"
-#endif
+//#ifdef HAVE_HIP
+//#include "superlu_gpu_utils.hip.cpp"
+//#endif
 
 
 //extern "C" {
