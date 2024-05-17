@@ -11,8 +11,9 @@ module load cmake
 # module load parmetis/4.0.3   # doesn't seem to work
 # module load metis/4.0.3
 
-export PARMETIS_ROOT=/ccs/home/liuyangz/my_software/parmetis-4.0.3_frontier_gcc
-export PARMETIS_BUILD_DIR=${PARMETIS_ROOT}/build/Linux-x86_64
+export PARMETIS_ROOT=/ccs/home/nanding/mysoftware/parmetis-4.0.3/
+export METIS_ROOT=/ccs/home/nanding/mysoftware/metis-5.1.0/
+
 
 export LD_LIBRARY_PATH="$CRAY_LD_LIBRARY_PATH:$LD_LIBRARY_PATH"
 
@@ -28,8 +29,8 @@ rm -rf DartConfiguration.tcl
 
 
 cmake .. \
-	-DTPL_PARMETIS_INCLUDE_DIRS="${PARMETIS_ROOT}/include;${PARMETIS_ROOT}/metis/include" \
-	-DTPL_PARMETIS_LIBRARIES="${PARMETIS_BUILD_DIR}/libparmetis/libparmetis.so;${PARMETIS_BUILD_DIR}/libmetis/libmetis.so;${OLCF_ROCM_ROOT}/lib/libroctx64.so;${OLCF_ROCM_ROOT}/lib/libroctracer64.so" \
+	-DTPL_PARMETIS_INCLUDE_DIRS="${PARMETIS_ROOT}/include;${METIS_ROOT}/include" \
+	-DTPL_PARMETIS_LIBRARIES="${PARMETIS_ROOT}/build/Linux-x86_64/libparmetis/libparmetis.so;${METIS_ROOT}/build/Linux-x86_64/libmetis/libmetis.so;${OLCF_ROCM_ROOT}/lib/libroctx64.so;${OLCF_ROCM_ROOT}/lib/libroctracer64.so" \
 	-DBUILD_SHARED_LIBS=OFF \
 	-DCMAKE_Fortran_COMPILER=ftn \
 	-DCMAKE_C_COMPILER=cc \
@@ -39,12 +40,14 @@ cmake .. \
 	-DTPL_LAPACK_LIBRARIES="${CRAY_LIBSCI_PREFIX_DIR}/lib/libsci_gnu_82_mp.so" \
 	-DCMAKE_BUILD_TYPE=Release \
 	-DTPL_ENABLE_HIPLIB=TRUE \
-	-DHIP_HIPCC_FLAGS="--amdgpu-target=gfx90a -I${CRAY_MPICH_DIR}/include" \
+	-DHIP_HIPCC_FLAGS="--amdgpu-target=gfx90a -I${CRAY_MPICH_DIR}/include -I/ccs/home/nanding/myproject/superLU/SRC/cuda" \
 	-DCMAKE_VERBOSE_MAKEFILE:BOOL=ON \
+	-Denable_complex16=OFF \
+	-Denable_sinle=OFF \
 	-DCMAKE_CXX_FLAGS="-Wno-format -Wno-unused-value -Wno-return-type -Wno-unsequenced -Wno-switch -Wno-parentheses -DPRNTlevel=1 -DPROFlevel=0 -DDEBUGlevel=0 " \
 	-DCMAKE_C_FLAGS="-Wno-format -Wno-unused-value -Wno-return-type -Wno-unsequenced -Wno-switch -Wno-parentheses -DPRNTlevel=1 -DPROFlevel=0 -DDEBUGlevel=0 "
 make pddrive	
-make pddrive3d		
+#:make pddrive3d		
 #	-DTPL_BLAS_LIBRARIES="/opt/intel/compilers_and_libraries_2017.2.174/linux/mkl/lib/intel64/libmkl_intel_lp64.so;/opt/intel/compilers_and_libraries_2017.2.174/linux/mkl/lib/intel64/libmkl_sequential.so;/opt/intel/compilers_and_libraries_2017.2.174/linux/mkl/lib/intel64/libmkl_core.so"
 
 #	-DTPL_BLAS_LIBRARIES="/opt/intel/compilers_and_libraries_2017.2.174/linux/mkl/lib/intel64/libmkl_intel_lp64.so;/opt/intel/compilers_and_libraries_2017.2.174/linux/mkl/lib/intel64/libmkl_sequential.so;/opt/intel/compilers_and_libraries_2017.2.174/linux/mkl/lib/intel64/libmkl_core.so" \
