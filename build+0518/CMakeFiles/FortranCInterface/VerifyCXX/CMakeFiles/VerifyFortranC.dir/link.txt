@@ -1,1 +1,0 @@
-/opt/cray/pe/craype/2.7.19/bin/CC -fopenmp  -Wno-format -Wno-unused-value -Wno-return-type -Wno-unsequenced -Wno-switch -Wno-parentheses -DPRNTlevel=1 -DPROFlevel=0 -DDEBUGlevel=0 -O3 -DNDEBUG CMakeFiles/VerifyFortranC.dir/main.c.o CMakeFiles/VerifyFortranC.dir/VerifyC.c.o CMakeFiles/VerifyFortranC.dir/VerifyCXX.cxx.o -o VerifyFortranC  libVerifyFortran.a -lmpifort_gnu_91 
