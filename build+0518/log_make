@@ -1,0 +1,1333 @@
+/autofs/nccs-svm1_sw/frontier/spack-envs/base/opt/linux-sles15-x86_64/gcc-7.5.0/cmake-3.23.2-4r4mpiba7cwdw2hlakh5i7tchi64s3qd/bin/cmake -S/ccs/home/nanding/myproject/superLU/superlu_dist -B/ccs/home/nanding/myproject/superLU/superlu_dist/build+0518 --check-build-system CMakeFiles/Makefile.cmake 0
+-- Cray Programming Environment 2.7.19 C
+-- NOTE: CRAYPE_LINK_TYPE LOADEDMODULES changed since initial config!
+-- NOTE: this may cause unexpected build errors.
+-- Cray Programming Environment 2.7.19 CXX
+-- Cray Programming Environment 2.7.19 Fortran
+-- SuperLU_DIST will be built as a static library.
+-- OpenMP_EXE_LINKER_FLAGS=''
+-- CMAKE_EXE_LINKER_FLAGS=' -Wl,-rpath=/sw/frontier/spack-envs/base/opt/cray-sles15-zen3/cce-15.0.0/darshan-runtime-3.4.0-t6el25xrwgfg5j65rdrhrs3qjp4ojssp/lib -Wl,-no-as-needed -L/autofs/nccs-svm1_sw/frontier/spack-envs/base/opt/cray-sles15-zen3/cce-15.0.0/darshan-runtime-3.4.0-t6el25xrwgfg5j65rdrhrs3qjp4ojssp/lib -Wl,-rpath=/sw/frontier/spack-envs/base/opt/cray-sles15-zen3/cce-15.0.0/darshan-runtime-3.4.0-t6el25xrwgfg5j65rdrhrs3qjp4ojssp/lib -Wl,-no-as-needed -L/autofs/nccs-svm1_sw/frontier/spack-envs/base/opt/cray-sles15-zen3/cce-15.0.0/darshan-runtime-3.4.0-t6el25xrwgfg5j65rdrhrs3qjp4ojssp/lib '
+-- Enabled support for HIP.
+-- hip::amdhip64 is SHARED_LIBRARY
+-- hip::amdhip64 is SHARED_LIBRARY
+-- hip::amdhip64 is SHARED_LIBRARY
+-- hip::amdhip64 is SHARED_LIBRARY
+HIP_LIB roc::hipblas;roc::rocblas;roc::rocsolver
+-- Using TPL_BLAS_LIBRARIES='/opt/cray/pe/libsci/22.12.1.1/GNU/9.1/x86_64/lib/libsci_gnu_82_mp.so'
+-- Will not link with LAPACK.
+-- Will not link with MAGMA.
+-- Enabled support for PARMETIS.
+-- Will not link with COLAMD.
+-- Will not link with CombBLAS.
+-- EXTRA_LIB_EXPORT='-lgcc_s -lgcc -lc -lgcc_s -lgcc -lpthread -lm -lmvec -lquadmath -lgfortran -lxpmem -lpmi2 -lpmi -ldsmml -ldl -lsci_gnu_82 -lsci_gnu_82_mpi -lmpi_gtl_hsa -lmpi_gnu_91 -lz -ldarshan '
+-- EXTRA_FLIB_EXPORT=' -ldarshan -lz -lmpifort_gnu_91 -lmpi_gnu_91 -lmpi_gtl_hsa -lsci_gnu_82_mpi -lsci_gnu_82 -ldl -ldsmml -lpmi -lpmi2 -lxpmem -lgfortran -lquadmath -lpthread -lgfortran -lm -lgcc_s -lgcc -lquadmath -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc'
+-- superlu_dist_fortran will be built as a static library.
+-- Configuring done
+CMake Warning at TEST/CMakeLists.txt:75 (add_executable):
+  Cannot generate a safe runtime search path for target pdtest because files
+  in some directories may conflict with libraries in implicit directories:
+
+    runtime library [libgomp.so.1] in /opt/cray/pe/gcc/11.2.0/snos/lib64 may be hidden by files in:
+      /opt/cray/pe/gcc/10.3.0/snos/lib64
+
+  Some of these libraries may not be found correctly.
+
+
+CMake Warning at EXAMPLE/CMakeLists.txt:39 (add_executable):
+  Cannot generate a safe runtime search path for target pddrive because files
+  in some directories may conflict with libraries in implicit directories:
+
+    runtime library [libgomp.so.1] in /opt/cray/pe/gcc/11.2.0/snos/lib64 may be hidden by files in:
+      /opt/cray/pe/gcc/10.3.0/snos/lib64
+
+  Some of these libraries may not be found correctly.
+
+
+CMake Warning at EXAMPLE/CMakeLists.txt:44 (add_executable):
+  Cannot generate a safe runtime search path for target pddrive1 because
+  files in some directories may conflict with libraries in implicit
+  directories:
+
+    runtime library [libgomp.so.1] in /opt/cray/pe/gcc/11.2.0/snos/lib64 may be hidden by files in:
+      /opt/cray/pe/gcc/10.3.0/snos/lib64
+
+  Some of these libraries may not be found correctly.
+
+
+CMake Warning at EXAMPLE/CMakeLists.txt:50 (add_executable):
+  Cannot generate a safe runtime search path for target pddrive2 because
+  files in some directories may conflict with libraries in implicit
+  directories:
+
+    runtime library [libgomp.so.1] in /opt/cray/pe/gcc/11.2.0/snos/lib64 may be hidden by files in:
+      /opt/cray/pe/gcc/10.3.0/snos/lib64
+
+  Some of these libraries may not be found correctly.
+
+
+CMake Warning at EXAMPLE/CMakeLists.txt:56 (add_executable):
+  Cannot generate a safe runtime search path for target pddrive3 because
+  files in some directories may conflict with libraries in implicit
+  directories:
+
+    runtime library [libgomp.so.1] in /opt/cray/pe/gcc/11.2.0/snos/lib64 may be hidden by files in:
+      /opt/cray/pe/gcc/10.3.0/snos/lib64
+
+  Some of these libraries may not be found correctly.
+
+
+CMake Warning at EXAMPLE/CMakeLists.txt:62 (add_executable):
+  Cannot generate a safe runtime search path for target pddrive4 because
+  files in some directories may conflict with libraries in implicit
+  directories:
+
+    runtime library [libgomp.so.1] in /opt/cray/pe/gcc/11.2.0/snos/lib64 may be hidden by files in:
+      /opt/cray/pe/gcc/10.3.0/snos/lib64
+
+  Some of these libraries may not be found correctly.
+
+
+CMake Warning at EXAMPLE/CMakeLists.txt:67 (add_executable):
+  Cannot generate a safe runtime search path for target pddrive3d because
+  files in some directories may conflict with libraries in implicit
+  directories:
+
+    runtime library [libgomp.so.1] in /opt/cray/pe/gcc/11.2.0/snos/lib64 may be hidden by files in:
+      /opt/cray/pe/gcc/10.3.0/snos/lib64
+
+  Some of these libraries may not be found correctly.
+
+
+CMake Warning at EXAMPLE/CMakeLists.txt:72 (add_executable):
+  Cannot generate a safe runtime search path for target pddrive3d_block_diag
+  because files in some directories may conflict with libraries in implicit
+  directories:
+
+    runtime library [libgomp.so.1] in /opt/cray/pe/gcc/11.2.0/snos/lib64 may be hidden by files in:
+      /opt/cray/pe/gcc/10.3.0/snos/lib64
+
+  Some of these libraries may not be found correctly.
+
+
+CMake Warning at EXAMPLE/CMakeLists.txt:77 (add_executable):
+  Cannot generate a safe runtime search path for target pddrive3d1 because
+  files in some directories may conflict with libraries in implicit
+  directories:
+
+    runtime library [libgomp.so.1] in /opt/cray/pe/gcc/11.2.0/snos/lib64 may be hidden by files in:
+      /opt/cray/pe/gcc/10.3.0/snos/lib64
+
+  Some of these libraries may not be found correctly.
+
+
+CMake Warning at EXAMPLE/CMakeLists.txt:82 (add_executable):
+  Cannot generate a safe runtime search path for target pddrive3d2 because
+  files in some directories may conflict with libraries in implicit
+  directories:
+
+    runtime library [libgomp.so.1] in /opt/cray/pe/gcc/11.2.0/snos/lib64 may be hidden by files in:
+      /opt/cray/pe/gcc/10.3.0/snos/lib64
+
+  Some of these libraries may not be found correctly.
+
+
+CMake Warning at EXAMPLE/CMakeLists.txt:87 (add_executable):
+  Cannot generate a safe runtime search path for target pddrive3d3 because
+  files in some directories may conflict with libraries in implicit
+  directories:
+
+    runtime library [libgomp.so.1] in /opt/cray/pe/gcc/11.2.0/snos/lib64 may be hidden by files in:
+      /opt/cray/pe/gcc/10.3.0/snos/lib64
+
+  Some of these libraries may not be found correctly.
+
+
+CMake Warning at EXAMPLE/CMakeLists.txt:92 (add_executable):
+  Cannot generate a safe runtime search path for target pddrive_ABglobal
+  because files in some directories may conflict with libraries in implicit
+  directories:
+
+    runtime library [libgomp.so.1] in /opt/cray/pe/gcc/11.2.0/snos/lib64 may be hidden by files in:
+      /opt/cray/pe/gcc/10.3.0/snos/lib64
+
+  Some of these libraries may not be found correctly.
+
+
+CMake Warning at EXAMPLE/CMakeLists.txt:97 (add_executable):
+  Cannot generate a safe runtime search path for target pddrive1_ABglobal
+  because files in some directories may conflict with libraries in implicit
+  directories:
+
+    runtime library [libgomp.so.1] in /opt/cray/pe/gcc/11.2.0/snos/lib64 may be hidden by files in:
+      /opt/cray/pe/gcc/10.3.0/snos/lib64
+
+  Some of these libraries may not be found correctly.
+
+
+CMake Warning at EXAMPLE/CMakeLists.txt:102 (add_executable):
+  Cannot generate a safe runtime search path for target pddrive2_ABglobal
+  because files in some directories may conflict with libraries in implicit
+  directories:
+
+    runtime library [libgomp.so.1] in /opt/cray/pe/gcc/11.2.0/snos/lib64 may be hidden by files in:
+      /opt/cray/pe/gcc/10.3.0/snos/lib64
+
+  Some of these libraries may not be found correctly.
+
+
+CMake Warning at EXAMPLE/CMakeLists.txt:107 (add_executable):
+  Cannot generate a safe runtime search path for target pddrive3_ABglobal
+  because files in some directories may conflict with libraries in implicit
+  directories:
+
+    runtime library [libgomp.so.1] in /opt/cray/pe/gcc/11.2.0/snos/lib64 may be hidden by files in:
+      /opt/cray/pe/gcc/10.3.0/snos/lib64
+
+  Some of these libraries may not be found correctly.
+
+
+CMake Warning at EXAMPLE/CMakeLists.txt:112 (add_executable):
+  Cannot generate a safe runtime search path for target pddrive4_ABglobal
+  because files in some directories may conflict with libraries in implicit
+  directories:
+
+    runtime library [libgomp.so.1] in /opt/cray/pe/gcc/11.2.0/snos/lib64 may be hidden by files in:
+      /opt/cray/pe/gcc/10.3.0/snos/lib64
+
+  Some of these libraries may not be found correctly.
+
+
+CMake Warning at EXAMPLE/CMakeLists.txt:117 (add_executable):
+  Cannot generate a safe runtime search path for target pddrive_spawn because
+  files in some directories may conflict with libraries in implicit
+  directories:
+
+    runtime library [libgomp.so.1] in /opt/cray/pe/gcc/11.2.0/snos/lib64 may be hidden by files in:
+      /opt/cray/pe/gcc/10.3.0/snos/lib64
+
+  Some of these libraries may not be found correctly.
+
+
+CMake Warning at EXAMPLE/CMakeLists.txt:125 (add_executable):
+  Cannot generate a safe runtime search path for target psdrive because files
+  in some directories may conflict with libraries in implicit directories:
+
+    runtime library [libgomp.so.1] in /opt/cray/pe/gcc/11.2.0/snos/lib64 may be hidden by files in:
+      /opt/cray/pe/gcc/10.3.0/snos/lib64
+
+  Some of these libraries may not be found correctly.
+
+
+CMake Warning at EXAMPLE/CMakeLists.txt:130 (add_executable):
+  Cannot generate a safe runtime search path for target psdrive1 because
+  files in some directories may conflict with libraries in implicit
+  directories:
+
+    runtime library [libgomp.so.1] in /opt/cray/pe/gcc/11.2.0/snos/lib64 may be hidden by files in:
+      /opt/cray/pe/gcc/10.3.0/snos/lib64
+
+  Some of these libraries may not be found correctly.
+
+
+CMake Warning at EXAMPLE/CMakeLists.txt:136 (add_executable):
+  Cannot generate a safe runtime search path for target psdrive2 because
+  files in some directories may conflict with libraries in implicit
+  directories:
+
+    runtime library [libgomp.so.1] in /opt/cray/pe/gcc/11.2.0/snos/lib64 may be hidden by files in:
+      /opt/cray/pe/gcc/10.3.0/snos/lib64
+
+  Some of these libraries may not be found correctly.
+
+
+CMake Warning at EXAMPLE/CMakeLists.txt:142 (add_executable):
+  Cannot generate a safe runtime search path for target psdrive3 because
+  files in some directories may conflict with libraries in implicit
+  directories:
+
+    runtime library [libgomp.so.1] in /opt/cray/pe/gcc/11.2.0/snos/lib64 may be hidden by files in:
+      /opt/cray/pe/gcc/10.3.0/snos/lib64
+
+  Some of these libraries may not be found correctly.
+
+
+CMake Warning at EXAMPLE/CMakeLists.txt:148 (add_executable):
+  Cannot generate a safe runtime search path for target psdrive4 because
+  files in some directories may conflict with libraries in implicit
+  directories:
+
+    runtime library [libgomp.so.1] in /opt/cray/pe/gcc/11.2.0/snos/lib64 may be hidden by files in:
+      /opt/cray/pe/gcc/10.3.0/snos/lib64
+
+  Some of these libraries may not be found correctly.
+
+
+CMake Warning at EXAMPLE/CMakeLists.txt:153 (add_executable):
+  Cannot generate a safe runtime search path for target psdrive3d because
+  files in some directories may conflict with libraries in implicit
+  directories:
+
+    runtime library [libgomp.so.1] in /opt/cray/pe/gcc/11.2.0/snos/lib64 may be hidden by files in:
+      /opt/cray/pe/gcc/10.3.0/snos/lib64
+
+  Some of these libraries may not be found correctly.
+
+
+CMake Warning at EXAMPLE/CMakeLists.txt:158 (add_executable):
+  Cannot generate a safe runtime search path for target psdrive3d1 because
+  files in some directories may conflict with libraries in implicit
+  directories:
+
+    runtime library [libgomp.so.1] in /opt/cray/pe/gcc/11.2.0/snos/lib64 may be hidden by files in:
+      /opt/cray/pe/gcc/10.3.0/snos/lib64
+
+  Some of these libraries may not be found correctly.
+
+
+CMake Warning at EXAMPLE/CMakeLists.txt:163 (add_executable):
+  Cannot generate a safe runtime search path for target psdrive3d2 because
+  files in some directories may conflict with libraries in implicit
+  directories:
+
+    runtime library [libgomp.so.1] in /opt/cray/pe/gcc/11.2.0/snos/lib64 may be hidden by files in:
+      /opt/cray/pe/gcc/10.3.0/snos/lib64
+
+  Some of these libraries may not be found correctly.
+
+
+CMake Warning at EXAMPLE/CMakeLists.txt:168 (add_executable):
+  Cannot generate a safe runtime search path for target psdrive3d3 because
+  files in some directories may conflict with libraries in implicit
+  directories:
+
+    runtime library [libgomp.so.1] in /opt/cray/pe/gcc/11.2.0/snos/lib64 may be hidden by files in:
+      /opt/cray/pe/gcc/10.3.0/snos/lib64
+
+  Some of these libraries may not be found correctly.
+
+
+CMake Warning at FORTRAN/CMakeLists.txt:80 (add_executable):
+  Cannot generate a safe runtime search path for target f_pddrive because
+  files in some directories may conflict with libraries in implicit
+  directories:
+
+    runtime library [libgomp.so.1] in /opt/cray/pe/gcc/11.2.0/snos/lib64 may be hidden by files in:
+      /opt/cray/pe/gcc/10.3.0/snos/lib64
+
+  Some of these libraries may not be found correctly.
+
+
+CMake Warning at FORTRAN/CMakeLists.txt:88 (add_executable):
+  Cannot generate a safe runtime search path for target f_pddrive3d because
+  files in some directories may conflict with libraries in implicit
+  directories:
+
+    runtime library [libgomp.so.1] in /opt/cray/pe/gcc/11.2.0/snos/lib64 may be hidden by files in:
+      /opt/cray/pe/gcc/10.3.0/snos/lib64
+
+  Some of these libraries may not be found correctly.
+
+
+CMake Warning at FORTRAN/CMakeLists.txt:93 (add_executable):
+  Cannot generate a safe runtime search path for target f_5x5 because files
+  in some directories may conflict with libraries in implicit directories:
+
+    runtime library [libgomp.so.1] in /opt/cray/pe/gcc/11.2.0/snos/lib64 may be hidden by files in:
+      /opt/cray/pe/gcc/10.3.0/snos/lib64
+
+  Some of these libraries may not be found correctly.
+
+
+-- Generating done
+-- Build files have been written to: /ccs/home/nanding/myproject/superLU/superlu_dist/build+0518
+make  -f CMakeFiles/Makefile2 pddrive
+make[1]: Entering directory '/autofs/nccs-svm1_home1/nanding/myproject/superLU/superlu_dist/build+0518'
+/autofs/nccs-svm1_sw/frontier/spack-envs/base/opt/linux-sles15-x86_64/gcc-7.5.0/cmake-3.23.2-4r4mpiba7cwdw2hlakh5i7tchi64s3qd/bin/cmake -S/ccs/home/nanding/myproject/superLU/superlu_dist -B/ccs/home/nanding/myproject/superLU/superlu_dist/build+0518 --check-build-system CMakeFiles/Makefile.cmake 0
+/autofs/nccs-svm1_sw/frontier/spack-envs/base/opt/linux-sles15-x86_64/gcc-7.5.0/cmake-3.23.2-4r4mpiba7cwdw2hlakh5i7tchi64s3qd/bin/cmake -E cmake_progress_start /ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/CMakeFiles 60
+make  -f CMakeFiles/Makefile2 EXAMPLE/CMakeFiles/pddrive.dir/all
+make[2]: Entering directory '/autofs/nccs-svm1_home1/nanding/myproject/superLU/superlu_dist/build+0518'
+make  -f SRC/CMakeFiles/superlu_dist.dir/build.make SRC/CMakeFiles/superlu_dist.dir/depend
+make[3]: Entering directory '/autofs/nccs-svm1_home1/nanding/myproject/superLU/superlu_dist/build+0518'
+[  0%] Building HIPCC object SRC/CMakeFiles/superlu_dist.dir/hip/superlu_dist_generated_superlu_gpu_utils.hip.cpp.o
+cd /ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC/CMakeFiles/superlu_dist.dir/hip && /autofs/nccs-svm1_sw/frontier/spack-envs/base/opt/linux-sles15-x86_64/gcc-7.5.0/cmake-3.23.2-4r4mpiba7cwdw2hlakh5i7tchi64s3qd/bin/cmake -E make_directory /ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC/CMakeFiles/superlu_dist.dir/hip/.
+cd /ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC/CMakeFiles/superlu_dist.dir/hip && /autofs/nccs-svm1_sw/frontier/spack-envs/base/opt/linux-sles15-x86_64/gcc-7.5.0/cmake-3.23.2-4r4mpiba7cwdw2hlakh5i7tchi64s3qd/bin/cmake -D verbose:BOOL=1 -D build_configuration:STRING=RELEASE -D generated_file:STRING=/ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC/CMakeFiles/superlu_dist.dir/hip/./superlu_dist_generated_superlu_gpu_utils.hip.cpp.o -P /ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC/CMakeFiles/superlu_dist.dir/hip/superlu_dist_generated_superlu_gpu_utils.hip.cpp.o.cmake
+-- Removing /ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC/CMakeFiles/superlu_dist.dir/hip/./superlu_dist_generated_superlu_gpu_utils.hip.cpp.o
+/autofs/nccs-svm1_sw/frontier/spack-envs/base/opt/linux-sles15-x86_64/gcc-7.5.0/cmake-3.23.2-4r4mpiba7cwdw2hlakh5i7tchi64s3qd/bin/cmake -E remove /ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC/CMakeFiles/superlu_dist.dir/hip/./superlu_dist_generated_superlu_gpu_utils.hip.cpp.o
+-- Generating dependency file: /ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC/CMakeFiles/superlu_dist.dir/hip/superlu_dist_generated_superlu_gpu_utils.hip.cpp.o.depend.pre
+/opt/rocm-5.2.0/hip/bin/hipcc -M /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp -o /ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC/CMakeFiles/superlu_dist.dir/hip/superlu_dist_generated_superlu_gpu_utils.hip.cpp.o.depend.pre --amdgpu-target=gfx90a -I/opt/cray/pe/mpich/8.1.23/ofi/gnu/9.1/include -I/ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda -DSUPERLU_DIST_EXPORTS -D__HIP_PLATFORM_HCC__=1 -D__HIP_PLATFORM_AMD__=1 -I/ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC -I/ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include -I/ccs/home/nanding/mysoftware/parmetis-4.0.3/include -I/ccs/home/nanding/mysoftware/metis-5.1.0/include -I/opt/rocm-5.2.0/include -I/opt/rocm-5.2.0/include -I/opt/rocm-5.2.0/include -I/opt/rocm-5.2.0/include -I/opt/rocm-5.2.0/hip/include -I/opt/rocm-5.2.0/include -I/opt/rocm-5.2.0/include -I/opt/rocm-5.2.0/include -I/ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC -I/ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include -I/ccs/home/nanding/mysoftware/parmetis-4.0.3/include -I/ccs/home/nanding/mysoftware/metis-5.1.0/include
+-- Generating temporary cmake readable file: /ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC/CMakeFiles/superlu_dist.dir/hip/superlu_dist_generated_superlu_gpu_utils.hip.cpp.o.depend.tmp
+/autofs/nccs-svm1_sw/frontier/spack-envs/base/opt/linux-sles15-x86_64/gcc-7.5.0/cmake-3.23.2-4r4mpiba7cwdw2hlakh5i7tchi64s3qd/bin/cmake -D input_file:FILEPATH=/ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC/CMakeFiles/superlu_dist.dir/hip/superlu_dist_generated_superlu_gpu_utils.hip.cpp.o.depend.pre -D output_file:FILEPATH=/ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC/CMakeFiles/superlu_dist.dir/hip/superlu_dist_generated_superlu_gpu_utils.hip.cpp.o.depend.tmp -D verbose=1 -P /ccs/home/nanding/myproject/superLU/superlu_dist/cmake/FindHIP/run_make2cmake.cmake
+-- Copy if different /ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC/CMakeFiles/superlu_dist.dir/hip/superlu_dist_generated_superlu_gpu_utils.hip.cpp.o.depend.tmp to /ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC/CMakeFiles/superlu_dist.dir/hip/superlu_dist_generated_superlu_gpu_utils.hip.cpp.o.depend
+/autofs/nccs-svm1_sw/frontier/spack-envs/base/opt/linux-sles15-x86_64/gcc-7.5.0/cmake-3.23.2-4r4mpiba7cwdw2hlakh5i7tchi64s3qd/bin/cmake -E copy_if_different /ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC/CMakeFiles/superlu_dist.dir/hip/superlu_dist_generated_superlu_gpu_utils.hip.cpp.o.depend.tmp /ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC/CMakeFiles/superlu_dist.dir/hip/superlu_dist_generated_superlu_gpu_utils.hip.cpp.o.depend
+-- Removing /ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC/CMakeFiles/superlu_dist.dir/hip/superlu_dist_generated_superlu_gpu_utils.hip.cpp.o.depend.tmp and /ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC/CMakeFiles/superlu_dist.dir/hip/superlu_dist_generated_superlu_gpu_utils.hip.cpp.o.depend.pre
+/autofs/nccs-svm1_sw/frontier/spack-envs/base/opt/linux-sles15-x86_64/gcc-7.5.0/cmake-3.23.2-4r4mpiba7cwdw2hlakh5i7tchi64s3qd/bin/cmake -E remove /ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC/CMakeFiles/superlu_dist.dir/hip/superlu_dist_generated_superlu_gpu_utils.hip.cpp.o.depend.tmp /ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC/CMakeFiles/superlu_dist.dir/hip/superlu_dist_generated_superlu_gpu_utils.hip.cpp.o.depend.pre
+-- Generating /ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC/CMakeFiles/superlu_dist.dir/hip/./superlu_dist_generated_superlu_gpu_utils.hip.cpp.o
+/opt/rocm-5.2.0/hip/bin/hipcc -c /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp -o /ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC/CMakeFiles/superlu_dist.dir/hip/./superlu_dist_generated_superlu_gpu_utils.hip.cpp.o --amdgpu-target=gfx90a -I/opt/cray/pe/mpich/8.1.23/ofi/gnu/9.1/include -I/ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda -DSUPERLU_DIST_EXPORTS -D__HIP_PLATFORM_HCC__=1 -D__HIP_PLATFORM_AMD__=1 -I/ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC -I/ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include -I/ccs/home/nanding/mysoftware/parmetis-4.0.3/include -I/ccs/home/nanding/mysoftware/metis-5.1.0/include -I/opt/rocm-5.2.0/include -I/opt/rocm-5.2.0/include -I/opt/rocm-5.2.0/include -I/opt/rocm-5.2.0/include -I/opt/rocm-5.2.0/hip/include -I/opt/rocm-5.2.0/include -I/opt/rocm-5.2.0/include -I/opt/rocm-5.2.0/include -I/ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC -I/ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include -I/ccs/home/nanding/mysoftware/parmetis-4.0.3/include -I/ccs/home/nanding/mysoftware/metis-5.1.0/include
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:112:
+/opt/rocm-5.2.0/hip/include/hip/hip_runtime_api.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:112:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime_api.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime_api.h:36:
+/opt/rocm-5.2.0/hip/include/hip/hip_common.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:112:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime_api.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime_api.h:503:
+/opt/rocm-5.2.0/hip/include/hip/amd_detail/host_defines.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:112:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime_api.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime_api.h:504:
+/opt/rocm-5.2.0/hip/include/hip/driver_types.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:112:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime_api.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime_api.h:505:
+/opt/rocm-5.2.0/hip/include/hip/texture_types.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:112:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime_api.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime_api.h:505:
+In file included from /opt/rocm-5.2.0/hip/include/hip/texture_types.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/texture_types.h:38:
+/opt/rocm-5.2.0/hip/include/hip/channel_descriptor.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:112:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime_api.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime_api.h:505:
+In file included from /opt/rocm-5.2.0/hip/include/hip/texture_types.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/texture_types.h:38:
+In file included from /opt/rocm-5.2.0/hip/include/hip/channel_descriptor.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/channel_descriptor.h:32:
+/opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_channel_descriptor.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:112:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime_api.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime_api.h:505:
+In file included from /opt/rocm-5.2.0/hip/include/hip/texture_types.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/texture_types.h:38:
+In file included from /opt/rocm-5.2.0/hip/include/hip/channel_descriptor.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/channel_descriptor.h:32:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_channel_descriptor.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_channel_descriptor.h:28:
+/opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_vector_types.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:112:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime_api.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime_api.h:506:
+/opt/rocm-5.2.0/hip/include/hip/surface_types.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:112:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime_api.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime_api.h:1184:
+/opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_runtime_pt_api.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:113:
+/opt/rocm-5.2.0/hip/include/hip/hip_runtime.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:113:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime.h:62:
+/opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_runtime.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:113:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime.h:62:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_hip_runtime.h:32:
+/opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_common.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:113:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime.h:62:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_hip_runtime.h:110:
+/opt/rocm-5.2.0/hip/include/hip/amd_detail/hip_ldg.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:113:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime.h:62:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_hip_runtime.h:112:
+/opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_atomic.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:113:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime.h:62:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_hip_runtime.h:112:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_atomic.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_hip_atomic.h:25:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_device_functions.h:34:
+/opt/rocm-5.2.0/hip/include/hip/hip_vector_types.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:113:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime.h:62:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_hip_runtime.h:112:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_atomic.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_hip_atomic.h:25:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_device_functions.h:35:
+/opt/rocm-5.2.0/hip/include/hip/amd_detail/device_library_decls.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:113:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime.h:62:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_hip_runtime.h:112:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_atomic.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_hip_atomic.h:25:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_device_functions.h:36:
+/opt/rocm-5.2.0/hip/include/hip/amd_detail/llvm_intrinsics.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:113:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime.h:62:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_hip_runtime.h:114:
+/opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_device_functions.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:113:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime.h:62:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_hip_runtime.h:115:
+/opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_surface_functions.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:113:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime.h:62:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_hip_runtime.h:115:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_surface_functions.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_surface_functions.h:30:
+/opt/rocm-5.2.0/hip/include/hip/amd_detail/ockl_image.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:113:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime.h:62:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_hip_runtime.h:116:
+/opt/rocm-5.2.0/hip/include/hip/amd_detail/texture_fetch_functions.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:113:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime.h:62:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_hip_runtime.h:116:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/texture_fetch_functions.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/texture_fetch_functions.h:28:
+/opt/rocm-5.2.0/hip/include/hip/hip_texture_types.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:113:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime.h:62:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_hip_runtime.h:117:
+/opt/rocm-5.2.0/hip/include/hip/amd_detail/texture_indirect_functions.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:113:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime.h:62:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_hip_runtime.h:390:
+/opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_math_functions.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:113:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime.h:114:
+/opt/rocm-5.2.0/hip/include/hip/library_types.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+26 warnings generated when compiling for gfx90a.
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:112:
+/opt/rocm-5.2.0/hip/include/hip/hip_runtime_api.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:112:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime_api.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime_api.h:36:
+/opt/rocm-5.2.0/hip/include/hip/hip_common.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:112:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime_api.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime_api.h:503:
+/opt/rocm-5.2.0/hip/include/hip/amd_detail/host_defines.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:112:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime_api.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime_api.h:504:
+/opt/rocm-5.2.0/hip/include/hip/driver_types.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:112:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime_api.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime_api.h:505:
+/opt/rocm-5.2.0/hip/include/hip/texture_types.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:112:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime_api.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime_api.h:505:
+In file included from /opt/rocm-5.2.0/hip/include/hip/texture_types.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/texture_types.h:38:
+/opt/rocm-5.2.0/hip/include/hip/channel_descriptor.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:112:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime_api.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime_api.h:505:
+In file included from /opt/rocm-5.2.0/hip/include/hip/texture_types.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/texture_types.h:38:
+In file included from /opt/rocm-5.2.0/hip/include/hip/channel_descriptor.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/channel_descriptor.h:32:
+/opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_channel_descriptor.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:112:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime_api.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime_api.h:505:
+In file included from /opt/rocm-5.2.0/hip/include/hip/texture_types.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/texture_types.h:38:
+In file included from /opt/rocm-5.2.0/hip/include/hip/channel_descriptor.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/channel_descriptor.h:32:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_channel_descriptor.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_channel_descriptor.h:28:
+/opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_vector_types.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:112:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime_api.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime_api.h:506:
+/opt/rocm-5.2.0/hip/include/hip/surface_types.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:112:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime_api.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime_api.h:1184:
+/opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_runtime_pt_api.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:113:
+/opt/rocm-5.2.0/hip/include/hip/hip_runtime.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:113:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime.h:62:
+/opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_runtime.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:113:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime.h:62:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_hip_runtime.h:32:
+/opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_common.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:113:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime.h:62:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_hip_runtime.h:110:
+/opt/rocm-5.2.0/hip/include/hip/amd_detail/hip_ldg.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:113:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime.h:62:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_hip_runtime.h:112:
+/opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_atomic.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:113:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime.h:62:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_hip_runtime.h:112:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_atomic.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_hip_atomic.h:25:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_device_functions.h:34:
+/opt/rocm-5.2.0/hip/include/hip/hip_vector_types.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:113:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime.h:62:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_hip_runtime.h:112:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_atomic.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_hip_atomic.h:25:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_device_functions.h:35:
+/opt/rocm-5.2.0/hip/include/hip/amd_detail/device_library_decls.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:113:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime.h:62:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_hip_runtime.h:112:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_atomic.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_hip_atomic.h:25:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_device_functions.h:36:
+/opt/rocm-5.2.0/hip/include/hip/amd_detail/llvm_intrinsics.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:113:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime.h:62:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_hip_runtime.h:114:
+/opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_device_functions.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:113:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime.h:62:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_hip_runtime.h:115:
+/opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_surface_functions.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:113:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime.h:62:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_hip_runtime.h:115:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_surface_functions.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_surface_functions.h:30:
+/opt/rocm-5.2.0/hip/include/hip/amd_detail/ockl_image.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:113:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime.h:62:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_hip_runtime.h:116:
+/opt/rocm-5.2.0/hip/include/hip/amd_detail/texture_fetch_functions.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:113:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime.h:62:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_hip_runtime.h:116:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/texture_fetch_functions.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/texture_fetch_functions.h:28:
+/opt/rocm-5.2.0/hip/include/hip/hip_texture_types.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:113:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime.h:62:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_hip_runtime.h:117:
+/opt/rocm-5.2.0/hip/include/hip/amd_detail/texture_indirect_functions.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:113:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime.h:62:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_hip_runtime.h:390:
+/opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_math_functions.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/superlu_gpu_utils.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/superlu_gpu_utils.cu:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:113:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime.h:114:
+/opt/rocm-5.2.0/hip/include/hip/library_types.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+26 warnings generated when compiling for host.
+Generated /ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC/CMakeFiles/superlu_dist.dir/hip/./superlu_dist_generated_superlu_gpu_utils.hip.cpp.o successfully.
+[  1%] Building HIPCC object SRC/CMakeFiles/superlu_dist.dir/hip/superlu_dist_generated_dsuperlu_gpu.hip.cpp.o
+cd /ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC/CMakeFiles/superlu_dist.dir/hip && /autofs/nccs-svm1_sw/frontier/spack-envs/base/opt/linux-sles15-x86_64/gcc-7.5.0/cmake-3.23.2-4r4mpiba7cwdw2hlakh5i7tchi64s3qd/bin/cmake -E make_directory /ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC/CMakeFiles/superlu_dist.dir/hip/.
+cd /ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC/CMakeFiles/superlu_dist.dir/hip && /autofs/nccs-svm1_sw/frontier/spack-envs/base/opt/linux-sles15-x86_64/gcc-7.5.0/cmake-3.23.2-4r4mpiba7cwdw2hlakh5i7tchi64s3qd/bin/cmake -D verbose:BOOL=1 -D build_configuration:STRING=RELEASE -D generated_file:STRING=/ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC/CMakeFiles/superlu_dist.dir/hip/./superlu_dist_generated_dsuperlu_gpu.hip.cpp.o -P /ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC/CMakeFiles/superlu_dist.dir/hip/superlu_dist_generated_dsuperlu_gpu.hip.cpp.o.cmake
+-- Removing /ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC/CMakeFiles/superlu_dist.dir/hip/./superlu_dist_generated_dsuperlu_gpu.hip.cpp.o
+/autofs/nccs-svm1_sw/frontier/spack-envs/base/opt/linux-sles15-x86_64/gcc-7.5.0/cmake-3.23.2-4r4mpiba7cwdw2hlakh5i7tchi64s3qd/bin/cmake -E remove /ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC/CMakeFiles/superlu_dist.dir/hip/./superlu_dist_generated_dsuperlu_gpu.hip.cpp.o
+-- Generating dependency file: /ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC/CMakeFiles/superlu_dist.dir/hip/superlu_dist_generated_dsuperlu_gpu.hip.cpp.o.depend.pre
+/opt/rocm-5.2.0/hip/bin/hipcc -M /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/dsuperlu_gpu.hip.cpp -o /ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC/CMakeFiles/superlu_dist.dir/hip/superlu_dist_generated_dsuperlu_gpu.hip.cpp.o.depend.pre --amdgpu-target=gfx90a -I/opt/cray/pe/mpich/8.1.23/ofi/gnu/9.1/include -I/ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda -DSUPERLU_DIST_EXPORTS -D__HIP_PLATFORM_HCC__=1 -D__HIP_PLATFORM_AMD__=1 -I/ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC -I/ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include -I/ccs/home/nanding/mysoftware/parmetis-4.0.3/include -I/ccs/home/nanding/mysoftware/metis-5.1.0/include -I/opt/rocm-5.2.0/include -I/opt/rocm-5.2.0/include -I/opt/rocm-5.2.0/include -I/opt/rocm-5.2.0/include -I/opt/rocm-5.2.0/hip/include -I/opt/rocm-5.2.0/include -I/opt/rocm-5.2.0/include -I/opt/rocm-5.2.0/include -I/ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC -I/ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include -I/ccs/home/nanding/mysoftware/parmetis-4.0.3/include -I/ccs/home/nanding/mysoftware/metis-5.1.0/include
+-- Generating temporary cmake readable file: /ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC/CMakeFiles/superlu_dist.dir/hip/superlu_dist_generated_dsuperlu_gpu.hip.cpp.o.depend.tmp
+/autofs/nccs-svm1_sw/frontier/spack-envs/base/opt/linux-sles15-x86_64/gcc-7.5.0/cmake-3.23.2-4r4mpiba7cwdw2hlakh5i7tchi64s3qd/bin/cmake -D input_file:FILEPATH=/ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC/CMakeFiles/superlu_dist.dir/hip/superlu_dist_generated_dsuperlu_gpu.hip.cpp.o.depend.pre -D output_file:FILEPATH=/ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC/CMakeFiles/superlu_dist.dir/hip/superlu_dist_generated_dsuperlu_gpu.hip.cpp.o.depend.tmp -D verbose=1 -P /ccs/home/nanding/myproject/superLU/superlu_dist/cmake/FindHIP/run_make2cmake.cmake
+-- Copy if different /ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC/CMakeFiles/superlu_dist.dir/hip/superlu_dist_generated_dsuperlu_gpu.hip.cpp.o.depend.tmp to /ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC/CMakeFiles/superlu_dist.dir/hip/superlu_dist_generated_dsuperlu_gpu.hip.cpp.o.depend
+/autofs/nccs-svm1_sw/frontier/spack-envs/base/opt/linux-sles15-x86_64/gcc-7.5.0/cmake-3.23.2-4r4mpiba7cwdw2hlakh5i7tchi64s3qd/bin/cmake -E copy_if_different /ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC/CMakeFiles/superlu_dist.dir/hip/superlu_dist_generated_dsuperlu_gpu.hip.cpp.o.depend.tmp /ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC/CMakeFiles/superlu_dist.dir/hip/superlu_dist_generated_dsuperlu_gpu.hip.cpp.o.depend
+-- Removing /ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC/CMakeFiles/superlu_dist.dir/hip/superlu_dist_generated_dsuperlu_gpu.hip.cpp.o.depend.tmp and /ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC/CMakeFiles/superlu_dist.dir/hip/superlu_dist_generated_dsuperlu_gpu.hip.cpp.o.depend.pre
+/autofs/nccs-svm1_sw/frontier/spack-envs/base/opt/linux-sles15-x86_64/gcc-7.5.0/cmake-3.23.2-4r4mpiba7cwdw2hlakh5i7tchi64s3qd/bin/cmake -E remove /ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC/CMakeFiles/superlu_dist.dir/hip/superlu_dist_generated_dsuperlu_gpu.hip.cpp.o.depend.tmp /ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC/CMakeFiles/superlu_dist.dir/hip/superlu_dist_generated_dsuperlu_gpu.hip.cpp.o.depend.pre
+-- Generating /ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC/CMakeFiles/superlu_dist.dir/hip/./superlu_dist_generated_dsuperlu_gpu.hip.cpp.o
+/opt/rocm-5.2.0/hip/bin/hipcc -c /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/dsuperlu_gpu.hip.cpp -o /ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC/CMakeFiles/superlu_dist.dir/hip/./superlu_dist_generated_dsuperlu_gpu.hip.cpp.o --amdgpu-target=gfx90a -I/opt/cray/pe/mpich/8.1.23/ofi/gnu/9.1/include -I/ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda -DSUPERLU_DIST_EXPORTS -D__HIP_PLATFORM_HCC__=1 -D__HIP_PLATFORM_AMD__=1 -I/ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC -I/ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include -I/ccs/home/nanding/mysoftware/parmetis-4.0.3/include -I/ccs/home/nanding/mysoftware/metis-5.1.0/include -I/opt/rocm-5.2.0/include -I/opt/rocm-5.2.0/include -I/opt/rocm-5.2.0/include -I/opt/rocm-5.2.0/include -I/opt/rocm-5.2.0/hip/include -I/opt/rocm-5.2.0/include -I/opt/rocm-5.2.0/include -I/opt/rocm-5.2.0/include -I/ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC -I/ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include -I/ccs/home/nanding/mysoftware/parmetis-4.0.3/include -I/ccs/home/nanding/mysoftware/metis-5.1.0/include
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/dsuperlu_gpu.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/dsuperlu_gpu.cu:17:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:112:
+/opt/rocm-5.2.0/hip/include/hip/hip_runtime_api.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/dsuperlu_gpu.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/dsuperlu_gpu.cu:17:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:112:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime_api.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime_api.h:36:
+/opt/rocm-5.2.0/hip/include/hip/hip_common.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/dsuperlu_gpu.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/dsuperlu_gpu.cu:17:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:112:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime_api.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime_api.h:503:
+/opt/rocm-5.2.0/hip/include/hip/amd_detail/host_defines.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/dsuperlu_gpu.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/dsuperlu_gpu.cu:17:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:112:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime_api.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime_api.h:504:
+/opt/rocm-5.2.0/hip/include/hip/driver_types.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/dsuperlu_gpu.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/dsuperlu_gpu.cu:17:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:112:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime_api.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime_api.h:505:
+/opt/rocm-5.2.0/hip/include/hip/texture_types.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/dsuperlu_gpu.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/dsuperlu_gpu.cu:17:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:112:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime_api.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime_api.h:505:
+In file included from /opt/rocm-5.2.0/hip/include/hip/texture_types.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/texture_types.h:38:
+/opt/rocm-5.2.0/hip/include/hip/channel_descriptor.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/dsuperlu_gpu.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/dsuperlu_gpu.cu:17:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:112:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime_api.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime_api.h:505:
+In file included from /opt/rocm-5.2.0/hip/include/hip/texture_types.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/texture_types.h:38:
+In file included from /opt/rocm-5.2.0/hip/include/hip/channel_descriptor.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/channel_descriptor.h:32:
+/opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_channel_descriptor.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/dsuperlu_gpu.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/dsuperlu_gpu.cu:17:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:112:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime_api.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime_api.h:505:
+In file included from /opt/rocm-5.2.0/hip/include/hip/texture_types.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/texture_types.h:38:
+In file included from /opt/rocm-5.2.0/hip/include/hip/channel_descriptor.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/channel_descriptor.h:32:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_channel_descriptor.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_channel_descriptor.h:28:
+/opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_vector_types.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/dsuperlu_gpu.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/dsuperlu_gpu.cu:17:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:112:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime_api.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime_api.h:506:
+/opt/rocm-5.2.0/hip/include/hip/surface_types.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/dsuperlu_gpu.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/dsuperlu_gpu.cu:17:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:112:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime_api.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime_api.h:1184:
+/opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_runtime_pt_api.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/dsuperlu_gpu.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/dsuperlu_gpu.cu:17:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:113:
+/opt/rocm-5.2.0/hip/include/hip/hip_runtime.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/dsuperlu_gpu.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/dsuperlu_gpu.cu:17:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:113:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime.h:62:
+/opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_runtime.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/dsuperlu_gpu.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/dsuperlu_gpu.cu:17:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:113:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime.h:62:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_hip_runtime.h:32:
+/opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_common.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/dsuperlu_gpu.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/dsuperlu_gpu.cu:17:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:113:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime.h:62:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_hip_runtime.h:110:
+/opt/rocm-5.2.0/hip/include/hip/amd_detail/hip_ldg.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/dsuperlu_gpu.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/dsuperlu_gpu.cu:17:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:113:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime.h:62:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_hip_runtime.h:112:
+/opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_atomic.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/dsuperlu_gpu.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/dsuperlu_gpu.cu:17:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:113:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime.h:62:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_hip_runtime.h:112:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_atomic.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_hip_atomic.h:25:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_device_functions.h:34:
+/opt/rocm-5.2.0/hip/include/hip/hip_vector_types.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/dsuperlu_gpu.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/dsuperlu_gpu.cu:17:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:113:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime.h:62:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_hip_runtime.h:112:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_atomic.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_hip_atomic.h:25:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_device_functions.h:35:
+/opt/rocm-5.2.0/hip/include/hip/amd_detail/device_library_decls.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/dsuperlu_gpu.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/dsuperlu_gpu.cu:17:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:113:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime.h:62:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_hip_runtime.h:112:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_atomic.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_hip_atomic.h:25:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_device_functions.h:36:
+/opt/rocm-5.2.0/hip/include/hip/amd_detail/llvm_intrinsics.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/dsuperlu_gpu.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/dsuperlu_gpu.cu:17:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:113:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime.h:62:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_hip_runtime.h:114:
+/opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_device_functions.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/dsuperlu_gpu.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/dsuperlu_gpu.cu:17:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:113:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime.h:62:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_hip_runtime.h:115:
+/opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_surface_functions.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/dsuperlu_gpu.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/dsuperlu_gpu.cu:17:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:113:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime.h:62:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_hip_runtime.h:115:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_surface_functions.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_surface_functions.h:30:
+/opt/rocm-5.2.0/hip/include/hip/amd_detail/ockl_image.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/dsuperlu_gpu.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/dsuperlu_gpu.cu:17:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:113:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime.h:62:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_hip_runtime.h:116:
+/opt/rocm-5.2.0/hip/include/hip/amd_detail/texture_fetch_functions.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/dsuperlu_gpu.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/dsuperlu_gpu.cu:17:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:113:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime.h:62:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_hip_runtime.h:116:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/texture_fetch_functions.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/texture_fetch_functions.h:28:
+/opt/rocm-5.2.0/hip/include/hip/hip_texture_types.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/dsuperlu_gpu.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/dsuperlu_gpu.cu:17:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:113:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime.h:62:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_hip_runtime.h:117:
+/opt/rocm-5.2.0/hip/include/hip/amd_detail/texture_indirect_functions.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/dsuperlu_gpu.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/dsuperlu_gpu.cu:17:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:113:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime.h:62:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/amd_detail/../../../../include/hip/amd_detail/amd_hip_runtime.h:390:
+/opt/rocm-5.2.0/hip/include/hip/amd_detail/amd_math_functions.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/dsuperlu_gpu.hip.cpp:1:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/dsuperlu_gpu.cu:17:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/superlu_defs.h:109:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_api_utils.h:26:
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/include/gpu_wrapper.h:113:
+In file included from /opt/rocm-5.2.0/hip/include/hip/hip_runtime.h:26:
+In file included from /opt/rocm-5.2.0/hip/include/hip/../../../include/hip/hip_runtime.h:114:
+/opt/rocm-5.2.0/hip/include/hip/library_types.h:25:9: warning: This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip [-W#pragma-messages]
+#pragma message("This file is deprecated. Use file from include path /opt/rocm-ver/include/ and prefix with hip")
+        ^
+In file included from /ccs/home/nanding/myproject/superLU/superlu_dist/SRC/hip/dsuperlu_gpu.hip.cpp:1:
+/ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/dsuperlu_gpu.cu:650:11: warning: format specifies type 'long long' but the argument has type 'int_t' (aka 'int') [-Wformat]
+                               nrows, ncols, buffer_size);
+                               ^~~~~
+/ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/dsuperlu_gpu.cu:650:18: warning: format specifies type 'long long' but the argument has type 'int' [-Wformat]
+                               nrows, ncols, buffer_size);
+                                      ^~~~~
+/ccs/home/nanding/myproject/superLU/superlu_dist/SRC/cuda/dsuperlu_gpu.cu:650:25: warning: format specifies type 'long long' but the argument has type 'int_t' (aka 'int') [-Wformat]
+                               nrows, ncols, buffer_size);
+                                             ^~~~~~~~~~~
+29 warnings generated when compiling for gfx90a.
+lld: error: undefined hidden symbol: incScan(int*, int*, int)
+>>> referenced by /tmp/dsuperlu_gpu-247d33/dsuperlu_gpu-gfx90a.o:(Scatter_GPU_kernel(int, int, int, int, int, int, int, int, int, int, int, dLUstruct_gpu_t*))
+>>> referenced by /tmp/dsuperlu_gpu-247d33/dsuperlu_gpu-gfx90a.o:(Scatter_GPU_kernel(int, int, int, int, int, int, int, int, int, int, int, dLUstruct_gpu_t*))
+clang-14: error: amdgcn-link command failed with exit code 1 (use -v to see invocation)
+-- Removing /ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC/CMakeFiles/superlu_dist.dir/hip/./superlu_dist_generated_dsuperlu_gpu.hip.cpp.o
+/autofs/nccs-svm1_sw/frontier/spack-envs/base/opt/linux-sles15-x86_64/gcc-7.5.0/cmake-3.23.2-4r4mpiba7cwdw2hlakh5i7tchi64s3qd/bin/cmake -E remove /ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC/CMakeFiles/superlu_dist.dir/hip/./superlu_dist_generated_dsuperlu_gpu.hip.cpp.o
+CMake Error at superlu_dist_generated_dsuperlu_gpu.hip.cpp.o.cmake:192 (message):
+  Error generating file
+  /ccs/home/nanding/myproject/superLU/superlu_dist/build+0518/SRC/CMakeFiles/superlu_dist.dir/hip/./superlu_dist_generated_dsuperlu_gpu.hip.cpp.o
+
+
+make[3]: *** [SRC/CMakeFiles/superlu_dist.dir/build.make:407: SRC/CMakeFiles/superlu_dist.dir/hip/superlu_dist_generated_dsuperlu_gpu.hip.cpp.o] Error 1
+make[3]: Leaving directory '/autofs/nccs-svm1_home1/nanding/myproject/superLU/superlu_dist/build+0518'
+make[2]: *** [CMakeFiles/Makefile2:967: SRC/CMakeFiles/superlu_dist.dir/all] Error 2
+make[2]: Leaving directory '/autofs/nccs-svm1_home1/nanding/myproject/superLU/superlu_dist/build+0518'
+make[1]: *** [CMakeFiles/Makefile2:1027: EXAMPLE/CMakeFiles/pddrive.dir/rule] Error 2
+make[1]: Leaving directory '/autofs/nccs-svm1_home1/nanding/myproject/superLU/superlu_dist/build+0518'
+make: *** [Makefile:572: pddrive] Error 2
