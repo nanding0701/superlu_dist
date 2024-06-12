@@ -63,6 +63,7 @@ set(sources
   prec-independent/pxerr_dist.c
   prec-independent/superlu_timer.c
   prec-independent/symbfact.c
+  prec-independent/ilu_level_symbfact.c
   prec-independent/psymbfact.c
   prec-independent/psymbfact_util.c
   prec-independent/get_perm_c_parmetis.c
@@ -362,10 +363,10 @@ if (TPL_ENABLE_HIPLIB)
     hip/superlu_gpu_utils.hip.cpp
   )
   if(enable_single)
-  list(APPEND hipsources hip/ssuperlu_gpu.hip.cpp)
+  list(APPEND hipsources hip/psgstrs_lsum_cuda.hip.cpp hip/ssuperlu_gpu.hip.cpp)
   endif()
   if(enable_complex16)
-  list(APPEND hipsources hip/zsuperlu_gpu.hip.cpp)
+  list(APPEND hipsources hip/pzgstrs_lsum_cuda.hip.cpp hip/zsuperlu_gpu.hip.cpp)
   endif()
   hip_add_library(superlu_dist ${hipsources})
   if (BUILD_SHARED_LIBS AND BUILD_STATIC_LIBS)

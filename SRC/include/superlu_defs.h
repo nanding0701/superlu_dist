@@ -737,6 +737,8 @@ typedef struct {
     yes_no_t      PivotGrowth;
     yes_no_t      ConditionNumber;
     rowperm_t     RowPerm;
+    yes_no_t      SolveOnly;      /* Treat the input matrix A as the L & U factors */
+    int           ILU_level;      /* level-based ILU */
     int 	  ILU_DropRule;
     double	  ILU_DropTol;    /* threshold for dropping */
     double	  ILU_FillFactor; /* gamma in the secondary dropping */
@@ -1119,6 +1121,8 @@ extern int_t symbfact_SubInit(superlu_dist_options_t *options,
 extern int_t symbfact_SubXpand(int_t, int_t, int_t, MemType, int_t *,
 			       Glu_freeable_t *);
 extern int symbfact_SubFree(Glu_freeable_t *);
+extern int_t ilu_level_symbfact(superlu_dist_options_t *, SuperMatrix *, int_t *,
+			      int_t *, Glu_persist_t *, Glu_freeable_t *);
 extern void    countnz_dist (const int_t, int_t *, int_t *, int_t *,
 			     Glu_persist_t *, Glu_freeable_t *);
 extern int64_t fixupL_dist (const int_t, const int_t *, Glu_persist_t *,
@@ -1271,14 +1275,14 @@ typedef struct
 
 #endif
 
-extern void C_RdTree_Create(C_Tree* tree, MPI_Comm comm, int* ranks, int rank_cnt, int msgSize, char precision);
+// extern void C_RdTree_Create(C_Tree* tree, MPI_Comm comm, int* ranks, int rank_cnt, int msgSize, char precision);
 extern void C_RdTree_Create_nv(C_Tree* tree, MPI_Comm comm, int* ranks, int rank_cnt, int msgSize, char precision, int* needrecvrd,int* needsendrd);
 extern void C_RdTree_Nullify(C_Tree* tree);
 extern yes_no_t C_RdTree_IsRoot(C_Tree* tree);
 extern void C_RdTree_forwardMessageSimple(C_Tree* Tree, void* localBuffer, int msgSize);
 extern void C_RdTree_waitSendRequest(C_Tree* Tree);
 
-extern void C_BcTree_Create(C_Tree* tree, MPI_Comm comm, int* ranks, int rank_cnt, int msgSize, char precision);
+// extern void C_BcTree_Create(C_Tree* tree, MPI_Comm comm, int* ranks, int rank_cnt, int msgSize, char precision);
 extern void C_BcTree_Create_nv(C_Tree* tree, MPI_Comm comm, int* ranks, int rank_cnt, int msgSize, char precision, int* needrecv);
 extern void C_BcTree_Nullify(C_Tree* tree);
 extern yes_no_t C_BcTree_IsRoot(C_Tree* tree);
@@ -1298,7 +1302,7 @@ extern void treeImbalance3D(gridinfo3d_t *grid3d, SCT_t* SCT);
 extern void slu_SCT_printComm3D(gridinfo3d_t *grid3d, SCT_t* SCT);
 extern int_t zAllocBcast(int_t size, void** ptr, gridinfo3d_t* grid3d);
 extern int_t zAllocBcast_gridID(int_t size, void** ptr, int_t gridID, gridinfo3d_t* grid3d);
-extern void permCol_SymbolicFact3d(superlu_dist_options_t *options, int_t n, SuperMatrix *GA, int_t *perm_c, int_t *etree, 
+extern void permCol_SymbolicFact3d(superlu_dist_options_t *options, int n, SuperMatrix *GA, int_t *perm_c, int_t *etree, 
                            Glu_persist_t *Glu_persist, Glu_freeable_t *Glu_freeable, SuperLUStat_t *stat,
 						   superlu_dist_mem_usage_t*symb_mem_usage,
 						   gridinfo3d_t* grid3d);
